@@ -1,0 +1,43 @@
+prefix := @prefix@
+exec_prefix := @exec_prefix@
+includedir := @includedir@
+libdir := @libdir@
+libexecdir := @libexecdir@/@PACKAGE@
+
+CXX := @CXX@
+CXXFLAGS := -I$(includedir) @CXXFLAGS@
+DEFS := -DLIBEXECDIR='"$(libexecdir)"'
+LDFLAGS := -L$(libdir) @LDFLAGS@
+LIBS := -lwassail @LIBS@
+RM := rm -rf
+
+ifdef STATIC
+LDFLAGS := @LDFLAGS@
+LIBS := $(libdir)/lib@PACKAGE@.a @LIBS@
+endif
+
+all: wassail-check wassail-compare wassail-compare-all wassail-dump wassail-dump-async wassail-environment wassail-standalone
+
+clean:
+	$(RM) wassail-*
+
+wassail-check: check.cpp print.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-compare: compare.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-compare-all: compare-all.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-dump: dump.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-dump-async: dump-async.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-environment: environment.cpp print.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-standalone: standalone.cpp print.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)

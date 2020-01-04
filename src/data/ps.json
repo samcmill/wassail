@@ -1,0 +1,103 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/ps.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail ps building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "ps command line",
+          "type": "string"
+        },
+        "elapsed": {
+          "description": "Number of seconds the command took to execute",
+          "type": "number"
+        },
+        "processes": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "description": "Command and arguments",
+              "type": "string"
+            },
+            "pcpu": {
+              "description": "Percent CPU usage",
+              "type": "number"
+            },
+            "pid": {
+              "description": "Process ID",
+              "type": "number"
+            },
+            "pmem": {
+              "description": "Percent memory usage",
+              "type": "number"
+            },
+            "rss": {
+              "description": "The real memory (resident set) size of the process (in 1024 byte units)",
+              "type": "number"
+            },
+            "start": {
+              "description": "The time the process started",
+              "type": "string"
+            },
+            "state": {
+              "description": "The state of the process",
+              "type": "string"
+            },
+            "time": {
+              "description": "Accumulated CPU time, user + system",
+              "type": "string"
+            },
+            "tt": {
+              "description": "Controlling terminal",
+              "type": "string"
+            },
+            "user": {
+              "description": "User name of the process owner",
+              "type": "string"
+            },
+            "vsz": {
+              "description": "Virtual size in Kbytes",
+              "type": "number"
+            }
+          }
+        },
+        "returncode": {
+          "description": "shell exit status",
+          "type": "number"
+        },
+        "stderr": {
+          "description": "standard error",
+          "type": "string"
+        },
+        "stdout": {
+          "description": "standard error",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

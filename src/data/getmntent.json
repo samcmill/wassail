@@ -1,0 +1,91 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/getmntent.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail getmntent building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "file_systems": {
+          "type": "object",
+          "properties": {
+            "bavail": {
+              "description": "# free blocks for unprivileged users",
+              "type": "number"
+            },
+            "bfree": {
+              "description": "# free blocks",
+              "type": "number"
+            },
+            "blocks": {
+              "description": "size of fs in frsize units",
+              "type": "number"
+            },
+            "bsize": {
+              "description": "file system block size",
+              "type": "number"
+            },
+            "dir": {
+              "description": "file system path prefix",
+              "type": "string"
+            },
+            "favail": {
+              "description": "# free inodes for unprivileged users",
+              "type": "number"
+            },
+            "ffree": {
+              "description": "# free inodes",
+              "type": "number"
+            },
+            "files": {
+              "description": "# inodes",
+              "type": "number"
+            },
+            "flag": {
+              "description": "mount flags",
+              "type": "number"
+            },
+            "frsize": {
+              "description": "fragment size",
+              "type": "number"
+            },
+            "fsid": {
+              "description": "file system ID",
+              "type": "number"
+            },
+            "fsname": {
+              "description": "name of mounted file system",
+              "type": "string"
+            },
+            "type": {
+              "description": "mount type",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

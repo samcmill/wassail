@@ -1,0 +1,204 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/sysctl.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail sysctl building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "hw": {
+          "type": "object",
+          "properties": {
+            "cpufamily": {
+              "description": "Processor family",
+              "type": "number"
+            },
+            "cpufrequency": {
+              "description": "Current CPU frequency in Hz",
+              "type": "number"
+            },
+            "cpufrequency_max": {
+              "description": "Max CPU frequency in Hz",
+              "type": "number"
+            },
+            "cputype": {
+              "description": "mach-o CPU type",
+              "type": "number"
+            },
+            "logicalcpu": {
+              "description": "Current number of logical processors",
+              "type": "number"
+            },
+            "logicalcpu_max": {
+              "description": "Max number of logical processors",
+              "type": "number"
+            },
+            "machine": {
+              "description": "Machine class",
+              "type": "string"
+            },
+            "memsize": {
+              "description": "Physical memory size in bytes",
+              "type": "number"
+            },
+            "model": {
+              "description": "Specific machine model",
+              "type": "string"
+            },
+            "ncpu": {
+              "description": "Maximum number of CPUs",
+              "type": "number"
+            },
+            "packages": {
+              "description": "Number of processor packages",
+              "type": "number"
+            },
+            "physicalcpu": {
+              "description": "Current number of physical processors",
+              "type": "number"
+            },
+            "physicalcpu_max": {
+              "description": "Max number of physical processors",
+              "type": "number"
+            }
+          }
+        },
+        "kern": {
+          "type": "object",
+          "properties": {
+            "hostname": {
+              "description": "System hostname",
+              "type": "string"
+            },
+            "osrelease": {
+              "description": "System release string",
+              "type": "string"
+            },
+            "osrevision": {
+              "description": "System revision number",
+              "type": "number"
+            },
+            "ostype": {
+              "description": "System type string",
+              "type": "string"
+            },
+            "osversion": {
+              "description": "System version string",
+              "type": "string"
+            },
+            "version": {
+              "description": "System version string",
+              "type": "string"
+            }
+          }
+        },
+        "machdep": {
+          "type": "object",
+          "properties": {
+            "brand_string": {
+              "description": "CPU brand string",
+              "type": "string"
+            },
+            "core_count": {
+              "description": "Number of cores",
+              "type": "number"
+            },
+            "cores_per_package": {
+              "description": "Number of cores per CPU package",
+              "type": "number"
+            },
+            "family": {
+              "description": "CPU family",
+              "type": "number"
+            },
+            "logical_per_package": {
+              "description": "Number of cores per CPU packages",
+              "type": "number"
+            },
+            "model": {
+              "description": "CPU model",
+              "type": "number"
+            },
+            "stepping": {
+              "description": "CPU stepping",
+              "type": "number"
+            },
+            "vendor": {
+              "description": "CPU vendor string",
+              "type": "string"
+            }
+          }
+        },
+        "vm": {
+          "type": "object",
+          "properties": {
+            "loadavg": {
+              "type": "object",
+              "properties": {
+                "fscale": {
+                  "description": "Scaling factor",
+                  "type": "number"
+                },
+                "load1": {
+                  "description": "1 minute load average",
+                  "type": "number"
+                },
+                "load5": {
+                  "description": "5 minute load average",
+                  "type": "number"
+                },
+                "load15": {
+                  "description": "15 minute load average",
+                  "type": "number"
+                }
+              } 
+            },
+            "swapusage": {
+              "type": "object",
+              "properties": {
+                "xsu_total": {
+                  "description": "Total virtual memory",
+                  "type": "number"
+                },
+                "xsu_avail": {
+                  "description": "Available virtual memory",
+                  "type": "number"
+                },
+                "xsu_used": {
+                  "description": "Used virtual memory",
+                  "type": "number"
+                },
+                "xsu_pagesize": {
+                  "description": "Size of a virtual memory page",
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

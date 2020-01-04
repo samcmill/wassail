@@ -1,0 +1,90 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/sysinfo.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail sysinfo building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "load1": {
+          "description": "1 minute load average",
+          "type": "number"
+        },
+        "load5": {
+          "description": "5 minute load average",
+          "type": "number"
+        },
+        "load15": {
+          "description": "15 minute load average",
+          "type": "number"
+        },
+        "totalram": {
+          "description": "Total usable main memory size",
+          "type": "number"
+        },
+        "freeram": {
+          "description": "Available memory size",
+          "type": "number"
+        },
+        "sharedram": {
+          "description": "Amount of shared memory",
+          "type": "number"
+        },
+        "bufferram": {
+          "description": "Memory used by buffers",
+          "type": "number"
+        },
+        "totalswap": {
+          "description": "Total swap space size",
+          "type": "number"
+        },
+        "freeswap": {
+          "description": "swap space still available",
+          "type": "number"
+        },
+        "procs": {
+          "description": "Number of current processes",
+          "type": "number"
+        },
+        "totalhigh": {
+          "description": "Total high memory size",
+          "type": "number"
+        },
+        "freehigh": {
+          "description": "Available high memory size",
+          "type": "number"
+        },
+        "mem_unit": {
+          "description": "Memory unit size in bytes",
+          "type": "number"
+        },
+        "loads_scale": {
+          "description": "Load average scale factor",
+          "type": "number"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

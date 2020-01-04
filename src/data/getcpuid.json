@@ -1,0 +1,58 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/getcpuid.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail getcpuid building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "description": "Processor family",
+          "type": "number"
+        },
+        "model": {
+          "description": "Processor model",
+          "type": "number"
+        },
+        "name": {
+          "description": "Processor brand string",
+          "type": "string"
+        },
+        "stepping": {
+          "description": "Processor stepping",
+          "type": "number"
+        },
+        "type": {
+          "description": "Processor type",
+          "type": "number"
+        },
+        "vendor": {
+          "description": "Processor vendor",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

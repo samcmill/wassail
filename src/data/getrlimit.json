@@ -1,0 +1,116 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/skeleton.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail skeleton data source building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "hard": {
+          "type": "object",
+          "properties": {
+            "core": {
+              "description": "The largest size (in bytes) core file that may be created",
+              "type": "number"
+            },
+            "cpu": {
+              "description": "The maximum amount of cpu time (in seconds) to be used by each process",
+              "type": "number"
+            },
+            "data": {
+              "description": "The maximum size (in bytes) of the data segment for a process",
+              "type": "number"
+            },
+            "fsize": {
+              "description": "The largest size (in bytes) file that may be created",
+              "type": "number"
+            },
+            "memlock": {
+              "description": "The maximum size (in bytes) which a process may lock into memory using the mlock(2) function",
+              "type": "number"
+            },
+            "nofile": {
+              "description": "The maximum number of open files for this process",
+              "type": "number"
+            },
+            "nproc": {
+              "description": "The maximum number of simultaneous processes for this user id",
+              "type": "number"
+            },
+            "rss": {
+              "description": "The maximum size (in bytes) to which a process's resident set size may grow",
+              "type": "number"
+            },
+            "stack": {
+              "description": " The maximum size (in bytes) of the stack segment for a process",
+              "type": "number"
+            }
+          }
+        },
+        "soft": {
+          "type": "object",
+          "properties": {
+            "core": {
+              "description": "The largest size (in bytes) core file that may be created",
+              "type": "number"
+            },
+            "cpu": {
+              "description": "The maximum amount of cpu time (in seconds) to be used by each process",
+              "type": "number"
+            },
+            "data": {
+              "description": "The maximum size (in bytes) of the data segment for a process",
+              "type": "number"
+            },
+            "fsize": {
+              "description": "The largest size (in bytes) file that may be created",
+              "type": "number"
+            },
+            "memlock": {
+              "description": "The maximum size (in bytes) which a process may lock into memory using the mlock(2) function",
+              "type": "number"
+            },
+            "nofile": {
+              "description": "The maximum number of open files for this process",
+              "type": "number"
+            },
+            "nproc": {
+              "description": "The maximum number of simultaneous processes for this user id",
+              "type": "number"
+            },
+            "rss": {
+              "description": "The maximum size (in bytes) to which a process's resident set size may grow",
+              "type": "number"
+            },
+            "stack": {
+              "description": " The maximum size (in bytes) of the stack segment for a process",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

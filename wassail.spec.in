@@ -1,0 +1,100 @@
+# Copyright (c) 2018-2020 Scott McMillan <scott.andrew.mcmillan@gmail.com>
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+%bcond_with python
+
+Name: @PACKAGE@
+Summary: @PACKAGE@ system health library
+Version: @VERSION@
+License: Mozilla Public License, v. 2.0
+Release: 1%{?dist}
+Group: System Environment/Libraries
+Source0: %{name}-%{version}.tar.gz
+
+BuildRequires: libtool, make
+# GCC 4.8 included with RHEL / CentOS 7 and Fedora 21 and earlier
+# does not support C++14. Probably the best thing to do is to install
+# the devtoolset-7-gcc-c++ package from SCL and build the RPM with 
+# --define '__cc /opt/rh/devtoolset-7/root/usr/bin/gcc' and
+# --define '__cxx /opt/rh/devtoolset-7/root/usr/bin/g++'
+%{?el8:BuildRequires: gcc-c++}
+%if 0%{?fedora} >= 22
+BuildRequires: gcc-c++
+%endif
+%if 0%{?suse_version}
+BuildRequires: gcc-c++
+%endif
+
+%description
+%{name} is a library of building blocks to check the health of
+UNIX-based system.
+
+%package devel
+Summary: Header files, libraries, and samples for @PACKAGE@
+Requires: %name = %{version}-%{release}
+
+%description devel
+This package contains the header files, static libraries, samples,
+and development documentation for %{name}.  If you want to develop
+programs using %{name}, you will need to install %{name}-devel.
+
+%if %{with python}
+%package python
+Summary: Python bindings and samples for @PACKAGE@
+Requires: %name = %{version}-%{release}
+
+%description python
+This package contains the Python binding and samples for %{name}.  
+If you want to use %{name} with Python, you will need to install
+%{name}-python.
+%endif
+
+%prep
+%setup -q -n @PACKAGE@-@VERSION@
+
+%build
+CC=%{__cc} CXX=%{__cxx} ./configure --prefix %{_prefix} --libdir=%{_libdir} \
+  --libexecdir=%{_libexecdir} --docdir=%{_docdir}/@PACKAGE@ \
+  --datadir=%{_datadir} \
+  %{!?with_python:--disable-python} %{?with_python:--enable-python}
+%{__make} %{?_smp_mflags}
+
+%install
+%{__make} DESTDIR=%{buildroot} install
+
+%clean
+[ %{buildroot} != "/" ] && rm -rf %{buildroot}
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-,root,root)
+%{_libdir}/*.so*
+%{_libexecdir}/@PACKAGE@
+
+%files devel
+%defattr(-,root,root)
+%{_libdir}/*.a
+%exclude %{_libdir}/*.la
+%{_includedir}/@PACKAGE@
+%{_datadir}/@PACKAGE@
+%exclude %{_datadir}/@PACKAGE@/samples/python
+%doc %{_docdir}/@PACKAGE@
+
+%if %{with python}
+%files python
+%defattr(-,root,root)
+%{python_sitelib}
+%exclude %{python_sitelib}/*.la
+%{_datadir}/@PACKAGE@/samples/python
+%exclude %{_datadir}/@PACKAGE@/samples/python/*.pyc
+%exclude %{_datadir}/@PACKAGE@/samples/python/*.pyo
+%endif
+
+%changelog
+* Fri Nov 8 2019 Scott McMillan <scott.andrew.mcmillan@gmail.com>
+- Initial spec file

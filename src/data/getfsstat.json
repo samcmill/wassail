@@ -1,0 +1,83 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/getfsstat.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail getfsstat building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "file_systems": {
+          "type": "object",
+          "properties": {
+            "bavail": {
+              "description": "free blocks avail to non-superuser",
+              "type": "number"
+            },
+            "bfree": {
+              "description": "free blocks in fs",
+              "type": "number"
+            },
+            "blocks": {
+              "description": "total data blocks in file system",
+              "type": "number"
+            },
+            "bsize": {
+              "description": "fundamental file system block size",
+              "type": "number"
+            },
+            "ffree": {
+              "description": "free file nodes in fs",
+              "type": "number"
+            },
+            "files": {
+              "description": "total file nodes in file system",
+              "type": "number"
+            },
+            "flags": {
+              "description": "copy of mount flags",
+              "type": "number"
+            },
+            "fstypename": {
+              "description": "fs type name",
+              "type": "string"
+            },
+            "mntfromname": {
+              "description": "mounted file system",
+              "type": "string"
+            },
+            "mnttoname": {
+              "description": "directory on which mounted",
+              "type": "string"
+            },
+            "owner": {
+              "description": "user that mounted the file system",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

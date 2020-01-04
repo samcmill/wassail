@@ -1,0 +1,46 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/getloadavg.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail getloadavg building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "load1": {
+          "description": "1 minute load average",
+          "type": "number"
+        },
+        "load5": {
+          "description": "5 minute load average",
+          "type": "number"
+        },
+        "load15": {
+          "description": "15 minute load average",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

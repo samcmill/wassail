@@ -1,0 +1,128 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/umad.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail umad data source building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "object",
+          "properties": {
+            "ca_type": {
+              "description": "CA type",
+              "type": "string"
+            },
+            "fw_ver": {
+              "description": "FW version",
+              "type": "string"
+            },
+            "hw_ver": {
+              "description": "Hardware version",
+              "type": "string"
+            },
+            "name": {
+              "description": "Name of the device",
+              "type": "string"
+            },
+            "node_guid": {
+              "description": "Node GUID",
+              "type": "number"
+            },
+            "node_type": {
+              "description": "Type of the device",
+              "type": "number"
+            },
+            "numports": {
+              "description": "Number of physical ports",
+              "type": "number"
+            },
+            "ports": {
+              "type": "object",
+              "properties": {
+                "base_lid": {
+                  "description": "Base port LID",
+                  "type": "number"
+                },
+                "ca_name": {
+                  "description": "Name of the device",
+                  "type": "string"
+                },
+                "capmask": {
+                  "description": "Port capabilities",
+                  "type": "number"
+                },
+                "gid_prefix": {
+                  "description": "Gid prefix of this port",
+                  "type": "number"
+                },
+                "link_layer": {
+                  "description": "Link layer",
+                  "type": "string"
+                },
+                "lmc": {
+                  "description": "LMC of LID",
+                  "type": "number"
+                },
+                "phys_state": {
+                  "description": "Physical port state",
+                  "type": "number"
+                },
+                "port_guid": {
+                  "description": "GUID of this port",
+                  "type": "number"
+                },
+                "portnum": {
+                  "description": "Physical port number",
+                  "type": "number"
+                },
+                "rate": {
+                  "description": "Port link bit rate",
+                  "type": "number"
+                },
+                "sm_lid": {
+                  "description": "SM LID",
+                  "type": "number"
+                },
+                "sm_sl": {
+                  "description": "SM service level",
+                  "type": "number"
+                },
+                "state": {
+                  "description": "Logical port state",
+                  "type": "number"
+                }
+              }
+            },
+            "system_guid": {
+              "description": "System image GUID",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

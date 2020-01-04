@@ -1,0 +1,50 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/sysconf.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail sysconf building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "nprocessors_conf": {
+          "description": "Number of processors configured",
+          "type": "number"
+        },
+        "nprocessors_onln": {
+          "description": "Number of processors currently online",
+          "type": "number"
+        },
+        "page_size": {
+          "description": "Size of a system page in bytes",
+          "type": "number"
+        },
+        "phys_pages": {
+          "description": "Number of pages of physical memory",
+          "type": "number"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

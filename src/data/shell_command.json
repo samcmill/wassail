@@ -1,0 +1,54 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/shell_command.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail shell_command building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "shell command line",
+          "type": "string"
+        },
+        "elapsed": {
+          "description": "Number of seconds the command took to execute",
+          "type": "number"
+        },
+        "returncode": {
+          "description": "shell exit status",
+          "type": "number"
+        },
+        "stderr": {
+          "description": "standard error",
+          "type": "string"
+        },
+        "stdout": {
+          "description": "standard error",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

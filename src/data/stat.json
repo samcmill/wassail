@@ -1,0 +1,90 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/stat.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail stat data source building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "device": {
+          "description": "ID of device containing file",
+          "type": "number"
+        },
+        "mode": {
+          "description": "protection mode of file",
+          "type": "number"
+        }, 
+        "inode": {
+          "description": "file serial number",
+          "type": "number"
+        },
+        "nlink": {
+          "description": "number of hard links",
+          "type": "number"
+        },
+        "uid": {
+          "description": "user ID of file",
+          "type": "number"
+        },
+        "gid": {
+          "description": "group ID of file",
+          "type": "number"
+        },
+        "rdev": {
+          "description": "device ID",
+          "type": "number"
+        },
+        "atime": {
+          "description": "time of last access",
+          "type": "number"
+        },
+        "mtime": {
+          "description": "time of last modification",
+          "type": "number"
+        },
+        "ctime": {
+          "description": "time of file status change",
+          "type": "number"
+        },
+        "size": {
+          "description": "file size, in bytes",
+          "type": "number"
+        },
+        "blocks": {
+          "description": "blocks allocated for file",
+          "type": "number"
+        },
+        "blksize": {
+          "description": "blocksize for file system I/O",
+          "type": "number"
+        },
+        "path": {
+          "description": "filesystem path for file",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

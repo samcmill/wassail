@@ -1,0 +1,75 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/stream.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail stream building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "stream command line",
+          "type": "string"
+        },
+        "elapsed": {
+          "description": "Number of seconds the command took to execute",
+          "type": "number"
+        },
+        "processes": {
+          "type": "object",
+          "properties": {
+            "add": {
+              "description": "Add kernel memory bandwidth (MB/s)",
+              "type": "number"
+            },
+            "copy": {
+              "description": "Copy kernel memory bandwidth (MB/s)",
+              "type": "number"
+            },
+            "scale": {
+              "description": "Scale kernel memory bandwidth (MB/s)",
+              "type": "number"
+            },
+            "triad": {
+              "description": "Triad kernel memory bandwidth (MB/s)",
+              "type": "number"
+            }
+          }
+        },
+        "returncode": {
+          "description": "shell exit status",
+          "type": "number"
+        },
+        "stderr": {
+          "description": "standard error",
+          "type": "string"
+        },
+        "stdout": {
+          "description": "standard error",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}
