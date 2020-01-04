@@ -110,10 +110,10 @@ wassail incorporates the following third party software.
  Copyright (c) 2012 - present, Victor Zverovich
 
 - [json](https://github.com/nlohmann/json)
- Copyright (c) 2013-2019 Niels Lohmann <http://nlohmann.me>.
+ Copyright (c) 2013-2019 Niels Lohmann &lt;http://nlohmann.me&gt;.
 
 - [pybind11](https://github.com/pybind/pybind11)
- Copyright (c) 2016 Wenzel Jakob <wenzel.jakob@epfl.ch>
+ Copyright (c) 2016 Wenzel Jakob &lt;wenzel.jakob@epfl.ch&gt;
 
 - [spdlog](https://github.com/gabime/spdlog)
  Copyright (c) 2015-present, Gabi Melman & spdlog contributors.
@@ -126,10 +126,10 @@ wassail incorporates the following third party software.
 wassail originates from the Middle English "wæs hæil", or "be in good
 health".  May your system be in good health!
 
-> Here we come a-wassailing
-> Among the leaves so green
-> Here we come a-wand'ring
-> So fair to be seen
+> Here we come a-wassailing  
+> Among the leaves so green  
+> Here we come a-wand'ring  
+> So fair to be seen  
 
 > Love and joy come to you,  
 > And to you your wassail too;  
