@@ -126,9 +126,12 @@ namespace wassail {
         while ((dev = _pci_device_next(i)) != NULL) {
           pci_item item;
           char slot[16];
-          const char *dev_name, *subdev_name, *subvend_name;
+          const char *dev_name, *subdev_name, *subvend_name, *vendor_name;
 
-          item.vendor_name = _pci_device_get_vendor_name(dev);
+          vendor_name = _pci_device_get_vendor_name(dev);
+          if (vendor_name != NULL) {
+            item.vendor_name = vendor_name;
+          }
 
           dev_name = _pci_device_get_device_name(dev);
           if (dev_name != NULL) {
