@@ -27,5 +27,8 @@ jobs:
     - name: make check
       run: VERBOSE=1 make check -j$(nproc)
 
-    - name: make distcheck
-      run: make distcheck
+    - name: make install
+      run: sudo make install
+
+    - name: make installcheck
+      run: LD_LIBRARY_PATH=/usr/local/lib make installcheck

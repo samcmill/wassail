@@ -33,6 +33,7 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_CONFIG_MACRO_DIRS([m4])
 m4_include([m4/ax_check_compile_flag.m4])
+m4_include([m4/ax_code_coverage.m4])
 m4_include([m4/ax_cxx_compile_stdcxx.m4])
 m4_include([m4/ax_cxx_compile_stdcxx_14.m4])
 m4_include([m4/ax_cxx_compile_stdcxx_17.m4])
