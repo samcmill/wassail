@@ -11,19 +11,19 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: install dependencies
-      run: brew install autoconf autoconf-archive automake coreutils libtool
+      run: brew install autoconf autoconf-archive automake libtool
 
     - name: autoreconf
-      run: autoreconf -fiv
+      run: LIBTOOL=glibtool LIBTOOLIZE=glibtoolize autoreconf -fiv
 
     - name: configure
       run: ./configure
 
     - name: make
-      run: make -j$(nproc)
+      run: make -j(sysctl -n hw.physicalcpu)
 
     - name: make check
-      run: VERBOSE=1 make check -j$(nproc)
+      run: VERBOSE=1 make check -j(sysctl -n hw.physicalcpu)
 
     - name: make distcheck
       run: make distcheck
