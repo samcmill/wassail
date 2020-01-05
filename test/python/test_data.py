@@ -244,7 +244,7 @@ class Test(unittest.TestCase):
             self.assertGreater(j['data']['totalram'], 0)
             self.assertLess(j['data']['freeram'], j['data']['totalram'])
             self.assertGreaterEqual(j['data']['totalswap'], 0)
-            self.assertLess(j['data']['freeswap'], j['data']['totalswap'])
+            self.assertLessEqual(j['data']['freeswap'], j['data']['totalswap'])
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()

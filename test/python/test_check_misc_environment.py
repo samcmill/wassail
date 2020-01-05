@@ -30,13 +30,13 @@ class Test(unittest.TestCase):
         except:
             pass
         else:
-            c = wassail.check.misc.environment('SHELL', os.environ['SHELL'])
+            c = wassail.check.misc.environment('PATH', os.environ['PATH'])
             r = c.check(d)
             self.assertEqual(r.issue, wassail.issue_t.NO)
 
     def test_invalid_input(self):
         """invalid input"""
-        c = wassail.check.misc.environment('SHELL', os.environ['SHELL'])
+        c = wassail.check.misc.environment('PATH', '/bin:/usr/bin')
 
         with self.assertRaises(RuntimeError):
             c.check("invalid")
