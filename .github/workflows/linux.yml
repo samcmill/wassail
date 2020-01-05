@@ -1,0 +1,31 @@
+name: Linux build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: install dependencies
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file libtool make pkg-config libdispatch-dev libibumad-dev libpciaccess-dev libssh-dev pciutils-dev
+
+    - name: autoreconf
+      run: autoreconf -fiv
+
+    - name: configure
+      run: ./configure
+
+    - name: make
+      run: make -j$(nproc)
+
+    - name: make check
+      run: VERBOSE=1 make check -j$(nproc)
+
+    - name: make distcheck
+      run: make distcheck
