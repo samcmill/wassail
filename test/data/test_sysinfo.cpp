@@ -23,7 +23,7 @@ TEST_CASE("sysinfo basic usage") {
     REQUIRE(j["data"]["freeram"].get<unsigned long>() <
             j["data"]["totalram"].get<unsigned long>());
     REQUIRE(j["data"]["totalswap"].get<unsigned long>() >= 0);
-    REQUIRE(j["data"]["freeswap"].get<unsigned long>() <
+    REQUIRE(j["data"]["freeswap"].get<unsigned long>() <=
             j["data"]["totalswap"].get<unsigned long>());
   }
   else {
