@@ -111,7 +111,6 @@ namespace wassail {
     void to_json(json &j, const environment &d) {
       j = dynamic_cast<const wassail::data::common &>(d);
 
-      /* j["data"]["foo"] = d.pimpl->data.foo; */
       for (auto &e : d.pimpl->data.envvar) {
         j["data"][e.first] = e.second;
       }
