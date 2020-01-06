@@ -2,6 +2,7 @@
 
 [![Build status](https://github.com/samcmill/wassail/workflows/Linux%20build/badge.svg)](https://github.com/samcmill/wassail/actions?query=workflow%3A%22Linux+build%22)
 [![Build status](https://github.com/samcmill/wassail/workflows/macOS%20build/badge.svg)](https://github.com/samcmill/wassail/actions?query=workflow%3A%22macOS+build%22)
+[![License](https://img.shields.io/github/license/samcmill/wassail)](https://github.com/samcmill/wassail/blob/master/LICENSE)
 
 wassail is a set of C++ building blocks to check the health of
 UNIX-based systems.  Python bindings are also included.
