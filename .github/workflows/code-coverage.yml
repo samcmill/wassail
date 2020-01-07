@@ -1,0 +1,34 @@
+name: Code coverage 
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: install dependencies
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file lcov libtool make pkg-config libdispatch-dev libibumad-dev libpciaccess-dev libssh-dev pciutils-dev
+
+    - name: autoreconf
+      run: autoreconf -fiv
+
+    - name: configure
+      run: ./configure --enable-code-coverage
+
+    - name: make
+      run: make -j$(nproc)
+
+    - name: make check-code-coverage
+      run: CODE_COVERAGE_OUTPUT_FILE=wassail-coverage.info VERBOSE=1 make check-code-coverage -j$(nproc)
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./wassail-coverage.info
