@@ -1,0 +1,51 @@
+# wassail container
+
+FROM centos:8
+
+RUN yum install -y dnf-utils && \
+    yum-config-manager --set-enabled PowerTools && \
+    yum install -y \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libtool \
+        make && \
+    rm -rf /var/cache/yum/*
+
+# Python
+RUN yum install -y \
+        python3 \
+        python3-devel && \
+    rm -rf /var/cache/yum/*
+
+# GNU compiler
+RUN yum install -y \
+        gcc \
+        gcc-c++ && \
+    rm -rf /var/cache/yum/*
+
+RUN yum install -y \
+        libpciaccess-devel \
+        libssh-devel \
+        pciutils-devel \
+        rdma-core-devel \
+        tbb && \
+    rm -rf /var/cache/yum/*
+
+# https://github.com/samcmill/wassail
+RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
+    cd /var/tmp/wassail && \
+    autoreconf -iv && \
+    cd /var/tmp/wassail &&  CC=gcc CXX=g++ ./configure --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make -j$(nproc) check && \
+    make -j$(nproc) install && \
+    rm -rf /var/tmp/wassail
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+

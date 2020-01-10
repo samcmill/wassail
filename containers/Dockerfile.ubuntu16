@@ -1,0 +1,53 @@
+# wassail container
+
+FROM ubuntu:16.04
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libtool \
+        make && \
+    rm -rf /var/lib/apt/lists/*
+
+# Python
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3 \
+        python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++ \
+        gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libdispatch-dev \
+        libibumad-dev \
+        libpciaccess-dev \
+        libssh-dev \
+        pciutils-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/samcmill/wassail
+RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
+    cd /var/tmp/wassail && \
+    autoreconf -iv && \
+    cd /var/tmp/wassail &&  CC=gcc CXX=g++ ./configure --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make -j$(nproc) check && \
+    make -j$(nproc) install && \
+    rm -rf /var/tmp/wassail
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+
