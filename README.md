@@ -3,6 +3,7 @@
 [![Build status](https://img.shields.io/github/workflow/status/samcmill/wassail/Linux%20build/master?label=Linux%20Build)](https://github.com/samcmill/wassail/actions?query=workflow%3A%22Linux+build%22)
 [![Build status](https://img.shields.io/github/workflow/status/samcmill/wassail/macOS%20build/master?label=macOS%20Build)](https://github.com/samcmill/wassail/actions?query=workflow%3A%22macOS+build%22)
 [![Coverage Status](https://coveralls.io/repos/github/samcmill/wassail/badge.svg?branch=master)](https://coveralls.io/github/samcmill/wassail?branch=master)
+[![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://samcmill.github.io/wassail/docs)
 [![License](https://img.shields.io/github/license/samcmill/wassail)](https://github.com/samcmill/wassail/blob/master/LICENSE)
 
 wassail is a set of C++ building blocks to check the health of
