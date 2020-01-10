@@ -98,7 +98,7 @@ __pycache__
 
 # Doxygen
 /Doxyfile
-/doxygen/*
+/docs/wassail.tag
 
 # Dist packages
 /wassail-*.tar.gz

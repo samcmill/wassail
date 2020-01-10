@@ -56,7 +56,7 @@ dnl Doxygen
 DX_HTML_FEATURE(ON)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN([$PACKAGE_NAME], [Doxyfile], [doxygen])
+DX_INIT_DOXYGEN([$PACKAGE_NAME], [Doxyfile], [docs])
 
 dnl Python
 AC_ARG_ENABLE([python],
