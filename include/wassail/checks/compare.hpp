@@ -206,7 +206,7 @@ namespace wassail {
 
         auto child = [&](auto &r, const json j, const json::json_pointer &key,
                          Tcompare cmp, const T &reference_value) {
-          auto r_ = check(j, key, cmp, reference_value);
+          auto r_ = this->check(j, key, cmp, reference_value);
           r->add_child(r_);
         };
 
