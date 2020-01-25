@@ -10,6 +10,7 @@
 
 #include <cstdio>
 #include <list>
+#include <shared_mutex>
 #include <string>
 #include <wassail/data/getmntent.hpp>
 #ifdef HAVE_MNTENT_H
@@ -51,6 +52,9 @@ namespace wassail {
         std::list<fs_item> file_systems;
       } data; /*!< Mounted filesystems */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::getmntent::evaluate() */
       void evaluate(getmntent &d, bool force);
 
@@ -81,6 +85,8 @@ namespace wassail {
     void getmntent::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void getmntent::impl::evaluate(getmntent &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef HAVE_GETMNTENT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -130,6 +136,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, getmntent &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -164,6 +172,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const getmntent &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto i : d.pimpl->data.file_systems) {

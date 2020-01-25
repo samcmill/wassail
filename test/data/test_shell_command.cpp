@@ -193,6 +193,27 @@ TEST_CASE("non-exclusive shell_command") {
   }
 }
 
+TEST_CASE("overlapping reader and writer access") {
+  auto d = wassail::data::shell_command("sleep 1 && echo 'foo'");
+
+  if (d.enabled()) {
+    std::future<void> f1 =
+        std::async(std::launch::async, [&d]() { d.evaluate(); });
+    std::future<json> f2 =
+        std::async(std::launch::async, [&d]() { return static_cast<json>(d); });
+
+    f1.wait();
+    f2.wait();
+
+    auto j = f2.get();
+
+    REQUIRE(j["data"]["stdout"].get<std::string>() == "foo\n");
+  }
+  else {
+    REQUIRE_THROWS(d.evaluate());
+  }
+}
+
 TEST_CASE("shell_command JSON conversion") {
   auto jin = R"(
     {

@@ -10,6 +10,8 @@
 #include "3rdparty/catch/catch_reporter_automake.hpp"
 
 #include <chrono>
+#include <future>
+#include <thread>
 #include <wassail/data/stream.hpp>
 
 TEST_CASE("stream basic usage") {
@@ -18,6 +20,27 @@ TEST_CASE("stream basic usage") {
   if (d.enabled()) {
     d.evaluate();
     json j = d;
+
+    REQUIRE(j["data"]["triad"] >= 1);
+  }
+  else {
+    REQUIRE_THROWS(d.evaluate());
+  }
+}
+
+TEST_CASE("overlapping reader and writer access") {
+  auto d = wassail::data::stream();
+
+  if (d.enabled()) {
+    std::future<void> f1 =
+        std::async(std::launch::async, [&d]() { d.evaluate(); });
+    std::future<json> f2 =
+        std::async(std::launch::async, [&d]() { return static_cast<json>(d); });
+
+    f1.wait();
+    f2.wait();
+
+    auto j = f2.get();
 
     REQUIRE(j["data"]["triad"] >= 1);
   }

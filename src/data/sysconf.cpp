@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
@@ -30,6 +31,9 @@ namespace wassail {
         long phys_pages;       /*!< Number of pages of physical memory */
       } data;                  /*!< System configuration */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::sysconf::evaluate() */
       void evaluate(sysconf &d, bool force);
     };
@@ -50,6 +54,8 @@ namespace wassail {
     void sysconf::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void sysconf::impl::evaluate(sysconf &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef HAVE_SYSCONF
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -69,6 +75,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, sysconf &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -93,6 +101,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const sysconf &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["data"]["nprocessors_conf"] = d.pimpl->data.nprocessors_conf;

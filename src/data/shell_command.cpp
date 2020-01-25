@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <memory>
 #include <poll.h>
+#include <shared_mutex>
 #include <signal.h>
 #include <stdexcept>
 #include <string>
@@ -42,6 +43,9 @@ namespace wassail {
         std::string stderr = ""; /*!< Standard error */
         std::string stdout = ""; /*!< Standard output */
       } data;                    /*!< Shell command output data */
+
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
 
       /*! Private implementation of wassail::data::shell_command::evaluate() */
       void evaluate(shell_command &d, bool force);
@@ -81,6 +85,8 @@ namespace wassail {
     void shell_command::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void shell_command::impl::evaluate(shell_command &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (d.command.empty()) {
         throw std::runtime_error("Missing command");
       }
@@ -273,6 +279,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, shell_command &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -296,6 +304,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const shell_command &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["data"]["command"] = d.command;

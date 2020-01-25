@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <map>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
@@ -34,6 +35,9 @@ namespace wassail {
         std::map<std::string, std::string> envvar;
       } data; /*!< System data */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::environment::evaluate() */
       void evaluate(environment &d, bool force);
     };
@@ -55,6 +59,8 @@ namespace wassail {
     void environment::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void environment::impl::evaluate(environment &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef WITH_DATA_ENVIRONMENT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -89,6 +95,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, environment &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -109,6 +117,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const environment &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto &e : d.pimpl->data.envvar) {

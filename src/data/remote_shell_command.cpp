@@ -14,6 +14,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 #include <stdexcept>
 #include <unistd.h>
 #include <wassail/data/remote_shell_command.hpp>
@@ -49,6 +50,9 @@ namespace wassail {
       };
 
       std::list<item> data; /*!< Remote shell command data */
+
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
 
       /*! Private implementation of
        * wassail::data::remote_shell_command::evaluate() */
@@ -109,6 +113,8 @@ namespace wassail {
 
     void remote_shell_command::impl::evaluate(remote_shell_command &d,
                                               bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
 #ifdef WITH_DATA_REMOTE_SHELL_COMMAND
       std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -248,6 +254,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, remote_shell_command &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -282,6 +290,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const remote_shell_command &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto i : d.pimpl->data) {

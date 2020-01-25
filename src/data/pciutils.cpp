@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <list>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <wassail/data/pciutils.hpp>
@@ -49,6 +50,9 @@ namespace wassail {
       struct {
         std::list<pci_item> devices;
       } data; /*!< PCI devices */
+
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
 
       /*! Private implementation of wassail::data::pciutils::evaluate() */
       void evaluate(pciutils &d, bool force);
@@ -185,6 +189,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const pciutils &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto i : d.pimpl->data.devices) {

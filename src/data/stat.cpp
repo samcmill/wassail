@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <time.h>
 #include <wassail/data/stat.hpp>
@@ -52,6 +53,9 @@ namespace wassail {
         blksize_t blksize; /*<! blocksize for file system I/O */
       } data;              /*!< file information data */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::stat::evaluate() */
       void evaluate(stat &d, bool force);
     };
@@ -76,6 +80,8 @@ namespace wassail {
     void stat::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void stat::impl::evaluate(stat &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef WITH_DATA_STAT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -128,6 +134,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, stat &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -160,6 +168,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const stat &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["data"]["path"] = d.path;

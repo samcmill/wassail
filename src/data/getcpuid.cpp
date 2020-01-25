@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <unistd.h>
@@ -36,6 +37,9 @@ namespace wassail {
         std::string vendor; /*!< Processor vendor */
       } data;               /*!< CPU data */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::getcpuid::evaluate() */
       void evaluate(getcpuid &d, bool force);
 
@@ -59,6 +63,8 @@ namespace wassail {
     void getcpuid::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void getcpuid::impl::evaluate(getcpuid &d, bool force = false) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -144,6 +150,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, getcpuid &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -168,6 +176,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const getcpuid &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["data"]["family"] = d.pimpl->data.family;

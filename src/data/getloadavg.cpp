@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <wassail/data/getloadavg.hpp>
 
@@ -27,6 +28,9 @@ namespace wassail {
         double load5;  /*!< 5 minute load average */
         double load15; /*!< 15 minute load average */
       } data;          /*!< System load average data */
+
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
 
       /*! Private implementation of wassail::data::getloadavg::evaluate() */
       void evaluate(getloadavg &d, bool force);
@@ -49,6 +53,8 @@ namespace wassail {
     void getloadavg::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void getloadavg::impl::evaluate(getloadavg &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef HAVE_GETLOADAVG
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -70,6 +76,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, getloadavg &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -91,6 +99,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const getloadavg &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["data"]["load1"] = d.pimpl->data.load1;

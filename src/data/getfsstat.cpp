@@ -9,6 +9,7 @@
 #include "internal.hpp"
 
 #include <list>
+#include <shared_mutex>
 #include <wassail/data/getfsstat.hpp>
 #ifdef HAVE_SYS_MOUNT_H
 #include <sys/mount.h>
@@ -51,6 +52,9 @@ namespace wassail {
         std::list<fs_item> file_systems;
       } data; /*!< Mounted filesystems */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::getfsstat::evaluate() */
       void evaluate(getfsstat &d, bool force);
 
@@ -74,6 +78,8 @@ namespace wassail {
     void getfsstat::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void getfsstat::impl::evaluate(getfsstat &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef HAVE_GETFSSTAT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -129,6 +135,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, getfsstat &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -161,6 +169,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const getfsstat &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto i : d.pimpl->data.file_systems) {

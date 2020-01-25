@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <wassail/data/sysinfo.hpp>
@@ -42,6 +43,9 @@ namespace wassail {
         unsigned long loads_scale; /*!< Load average scale factor */
       } data;                      /*!< System information */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::sysinfo::evaluate() */
       void evaluate(sysinfo &d, bool force);
     };
@@ -62,6 +66,8 @@ namespace wassail {
     void sysinfo::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void sysinfo::impl::evaluate(sysinfo &d, bool force = false) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef HAVE_SYSINFO
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -97,6 +103,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, sysinfo &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -131,6 +139,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const sysinfo &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       j["name"] = d.name();

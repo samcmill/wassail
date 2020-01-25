@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <list>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <string>
 #include <wassail/data/pciaccess.hpp>
@@ -55,6 +56,9 @@ namespace wassail {
         std::list<pci_item> devices;
       } data; /*!< PCI devices */
 
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
+
       /*! Private implementation of wassail::data::pciaccess::evaluate() */
       void evaluate(pciaccess &d, bool force);
     };
@@ -75,6 +79,8 @@ namespace wassail {
     void pciaccess::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void pciaccess::impl::evaluate(pciaccess &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef WITH_DATA_PCIACCESS
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -181,6 +187,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, pciaccess &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -219,6 +227,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const pciaccess &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       for (auto i : d.pimpl->data.devices) {

@@ -11,6 +11,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <memory>
+#include <shared_mutex>
 #include <stdexcept>
 #include <wassail/data/skeleton.hpp>
 
@@ -25,6 +26,9 @@ namespace wassail {
       /*! \brief System data */
       struct {
       } data; /*!< System data */
+
+      /* \brief Mutex to control concurrent reads and writes */
+      std::shared_timed_mutex rw_mutex;
 
       /*! Private implementation of wassail::data::skeleton::evaluate() */
       void evaluate(skeleton &d, bool force);
@@ -46,6 +50,8 @@ namespace wassail {
     void skeleton::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void skeleton::impl::evaluate(skeleton &d, bool force) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (force or not collected) {
 #ifdef WITH_DATA_SKELETON
         /* collect data */
@@ -57,6 +63,8 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, skeleton &d) {
+      std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
+
       if (j.at("version").get<uint16_t>() != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
@@ -75,6 +83,8 @@ namespace wassail {
     }
 
     void to_json(json &j, const skeleton &d) {
+      std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
+
       j = dynamic_cast<const wassail::data::common &>(d);
 
       /* j["data"]["foo"] = d.pimpl->data.foo; */
