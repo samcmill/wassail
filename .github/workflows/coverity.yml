@@ -1,0 +1,51 @@
+name: Coverity scan
+
+on: 
+  schedule:
+    - cron: '0 0 * * 0' # Weekly
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: download Coverity tool
+      run: |
+        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=samcmill-wassail" -O cov-analysis-linux64.tar.gz
+        mkdir cov-analysis-linux64
+        tar -xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+
+    - uses: actions/checkout@v1
+
+    - name: install dependencies
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates curl file libtool make pkg-config libdispatch-dev libibumad-dev libpciaccess-dev libssh-dev pciutils-dev
+
+    - name: autoreconf
+      run: autoreconf -fiv
+
+    - name: configure
+      run: ./configure
+
+    - name: make
+      run: |
+        export PATH=$(pwd)/cov-analysis-linux64/bin:$PATH
+        cov-build --dir cov-int make
+
+    - name: submit
+      run: |
+        tar -czvf wassail.tgz cov-int
+        curl \
+          --form project=samcmill-wassail \
+          --form token=$TOKEN \
+          --form email=scott.andrew.mcmillan@gmail.com \
+          --form file=@wassail.tgz \
+          --form version=master \
+          --form description="https://github.com/samcmill/wassail" \
+          https://scan.coverity.com/builds?project=samcmill-wassail
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
