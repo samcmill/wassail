@@ -14,13 +14,9 @@
 
 from __future__ import print_function
 
-import json
-import logging
-import sys
-
 try:
     import wassail
-except:
+except ModuleNotFoundError:
     # If the wassail module is installed in a non-default location,
     # you may need to set the PYTHONPATH environment variable to that
     # location.  Also use the same python version the module was built

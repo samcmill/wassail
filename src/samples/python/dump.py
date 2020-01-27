@@ -15,7 +15,7 @@ import logging
 
 try:
     import wassail
-except:
+except ModuleNotFoundError:
     # If the wassail module is installed in a non-default location,
     # you may need to set the PYTHONPATH environment variable to that
     # location.  Also use the same python version the module was built

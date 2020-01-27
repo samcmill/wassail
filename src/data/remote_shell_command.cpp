@@ -240,7 +240,7 @@ namespace wassail {
         channel.sendEof();
         channel.close();
       }
-      catch (ssh::SshException e) {
+      catch (ssh::SshException &e) {
         node.shell.stderr.append(e.getError());
       }
 
