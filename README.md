@@ -4,6 +4,7 @@
 [![Build status](https://img.shields.io/github/workflow/status/samcmill/wassail/macOS%20build/master?label=macOS%20Build)](https://github.com/samcmill/wassail/actions?query=workflow%3A%22macOS+build%22)
 [![Coverage Status](https://coveralls.io/repos/github/samcmill/wassail/badge.svg?branch=master)](https://coveralls.io/github/samcmill/wassail?branch=master)
 [![Coverity Status](https://scan.coverity.com/projects/20226/badge.svg)](https://scan.coverity.com/projects/samcmill-wassail)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/samcmill/wassail.svg)](https://lgtm.com/projects/g/samcmill/wassail/context:cpp)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://samcmill.github.io/wassail)
 [![License](https://img.shields.io/github/license/samcmill/wassail)](https://github.com/samcmill/wassail/blob/master/LICENSE)
 
