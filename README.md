@@ -33,7 +33,7 @@ auto r = c.check(d); /* implicitly evalutes d */
 std::cout << static_cast<json>(r) << std::endl;
 ```
 
-The three categories of key buildings are shown in this example.
+The three categories of building blocks are shown in this example.
 
 1. Data building blocks collect information about the system.  wassail
    provides multiple data sources in the `wassail::data` namespace.
@@ -85,21 +85,7 @@ Several C++ and Python [samples](src/samples) are included.
 
 ## Installation
 
-A C++14 compiler is required (C++17 preferred).
-
-Documentation:
-
-```
-$ ./configure
-$ make doxygen-run
-```
-
-Code coverage:
-
-```
-$ ./configure --enable-code-coverage
-$ make check-code-coverage
-```
+A C++14 compiler is required (C++17 preferred).  See [INSTALL](INSTALL).
 
 ## License
 
@@ -118,7 +104,7 @@ wassail incorporates the following third party software.
  Copyright (c) 2012 - present, Victor Zverovich
 
 - [json](https://github.com/nlohmann/json)
- Copyright (c) 2013-2019 Niels Lohmann &lt;http://nlohmann.me&gt;.
+ Copyright (c) 2013-2019 Niels Lohmann &lt;http://nlohmann.me&gt;
 
 - [pybind11](https://github.com/pybind/pybind11)
  Copyright (c) 2016 Wenzel Jakob &lt;wenzel.jakob@epfl.ch&gt;
