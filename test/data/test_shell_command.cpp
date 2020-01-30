@@ -10,7 +10,9 @@
 #include "3rdparty/catch/catch_reporter_automake.hpp"
 
 #include <chrono>
+#include <condition_variable>
 #include <future>
+#include <mutex>
 #include <thread>
 #include <wassail/data/shell_command.hpp>
 
@@ -194,18 +196,35 @@ TEST_CASE("non-exclusive shell_command") {
 }
 
 TEST_CASE("overlapping reader and writer access") {
+  /* The guarantee is that the json cast (reader) will block while the data
+   * building block is being evaluated (writer).  It is still necessary to
+   * ensure that the writer starts before the reader, otherwise the reader will
+   * return immediately with "empty" data.
+   */
+
   auto d = wassail::data::shell_command("sleep 1 && echo 'foo'");
 
   if (d.enabled()) {
-    std::future<void> f1 =
-        std::async(std::launch::async, [&d]() { d.evaluate(); });
-    std::future<json> f2 =
-        std::async(std::launch::async, [&d]() { return static_cast<json>(d); });
+    std::mutex m;
+    std::condition_variable cv;
+    bool started = false;
 
-    f1.wait();
-    f2.wait();
+    std::thread t([&]() {
+      {
+        std::lock_guard<std::mutex> lock(m);
+        started = true;
+      }
+      cv.notify_all();
+      d.evaluate();
+    });
 
-    auto j = f2.get();
+    {
+      std::unique_lock<std::mutex> lock(m);
+      cv.wait(lock, [&started] { return started; });
+    }
+    auto j = static_cast<json>(d);
+
+    t.join();
 
     REQUIRE(j["data"]["stdout"].get<std::string>() == "foo\n");
   }
