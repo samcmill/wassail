@@ -55,6 +55,7 @@ TEST_CASE("overlapping reader and writer access") {
       std::unique_lock<std::mutex> lock(m);
       cv.wait(lock, [&started] { return started; });
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     auto j = static_cast<json>(d);
 
     t.join();
