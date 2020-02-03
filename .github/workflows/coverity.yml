@@ -33,8 +33,7 @@ jobs:
 
     - name: make
       run: |
-        export PATH=$(pwd)/cov-analysis-linux64/bin:$PATH
-        cov-build --dir cov-int make
+        ./cov-analysis-linux64/bin/cov-build --dir cov-int make
 
     - name: submit
       run: |
