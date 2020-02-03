@@ -33,7 +33,7 @@ jobs:
 
     - name: make
       run: |
-        ./cov-analysis-linux64/bin/cov-build --dir cov-int make
+        $(pwd)/cov-analysis-linux64/bin/cov-build --dir cov-int make
 
     - name: submit
       run: |
