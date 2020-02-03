@@ -2,7 +2,7 @@ name: Coverity scan
 
 on: 
   schedule:
-    - cron: '0 0 * * 2' # Weekly
+    - cron: '0 0 * * 1' # Weekly
 
 jobs:
   build:
@@ -13,8 +13,8 @@ jobs:
     - name: download Coverity tool
       run: |
         wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=samcmill/wassail" -O cov-analysis-linux64.tar.gz
-        mkdir cov-analysis-linux64
-        tar -xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+        mkdir /tmp/cov-analysis-linux64
+        tar -xzf cov-analysis-linux64.tar.gz --strip 1 -C /tmp/cov-analysis-linux64
       env:
         TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
 
@@ -33,7 +33,7 @@ jobs:
 
     - name: make
       run: |
-        $(pwd)/cov-analysis-linux64/bin/cov-build --dir cov-int make
+        /tmp/cov-analysis-linux64/bin/cov-build --dir cov-int make
 
     - name: submit
       run: |
