@@ -57,6 +57,21 @@ TEST_CASE("rules_engine basic JSON input") {
   REQUIRE(r4->issue == wassail::result::issue_t::YES);
 }
 
+TEST_CASE("rules_engine bad rule") {
+  json j = {
+      {"name", "fake"},
+      {"data", {{"v_int", 4096}, {"v_float", 3.1415}, {"v_string", "foo"}}},
+      {"timestamp", 1234}};
+
+  auto c = wassail::check::rules_engine();
+
+  c.add_rule([](json j) {
+    return j.at(json::json_pointer("/bad/key")).get<std::string>() == "missing";
+  });
+  auto r = c.check(j);
+  REQUIRE(r->issue == wassail::result::issue_t::MAYBE);
+}
+
 TEST_CASE("rules_engine sysconf input") {
   auto c = wassail::check::rules_engine();
   c.add_rule([](json j) {
