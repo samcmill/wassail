@@ -23,7 +23,7 @@ void usage() {
       << std::endl;
   std::cout << "  -h, --help          Show this help message and exit"
             << std::endl;
-  std::cout << "  -m N, --method N    Use method N (0-6)" << std::endl;
+  std::cout << "  -m N, --method N    Use method N (0-9)" << std::endl;
 }
 
 int parse_args(int argc, char **argv) {
@@ -60,7 +60,8 @@ int parse_args(int argc, char **argv) {
 int main(int argc, char **argv) {
   int method = parse_args(argc, argv);
 
-  wassail::initialize();
+  /* only output errors */
+  wassail::initialize(wassail::log_level::err);
 
   if (method == 0) {
     /* No check, just print the raw data */
@@ -69,7 +70,7 @@ int main(int argc, char **argv) {
     std::cout << static_cast<json>(d) << std::endl;
   }
   else if (method == 1) {
-    /* Check that the environment varible FOO equals "bar" */
+    /* Check that the environment variable FOO equals "bar" */
     auto d = wassail::data::environment();
     auto c = wassail::check::misc::environment("FOO", "bar");
     auto r = c.check(d); /* implicitly evalutes d */
@@ -77,7 +78,7 @@ int main(int argc, char **argv) {
     std::cout << static_cast<json>(r) << std::endl;
   }
   else if (method == 2) {
-    /* Check that the environment varible FOO equals "bar" */
+    /* Check that the environment variable FOO equals "bar" */
     auto d = wassail::data::environment();
     d.evaluate(); /* explicitly evaluate d */
 
@@ -87,7 +88,7 @@ int main(int argc, char **argv) {
     std::cout << r << std::endl;
   }
   else if (method == 3) {
-    /* Check that the environment varible FOO equals "bar" */
+    /* Check that the environment variable FOO equals "bar" */
     auto d = wassail::data::environment();
     d.evaluate();
     json j = d; /* convert to JSON */
@@ -147,6 +148,57 @@ int main(int argc, char **argv) {
      */
     r->issue = r->max_issue();
     r->priority = r->max_priority();
+
+    std::cout << r << std::endl;
+  }
+  else if (method == 7) {
+    /* Check that the environment variable FOO equals "bar" */
+    auto d = wassail::data::environment();
+    d.evaluate();
+    json j = d; /* convert to JSON */
+
+    auto c = wassail::check::compare();
+    auto r = c.check(j, json::json_pointer("/data/FOO"),
+                     std::equal_to<std::string>{}, std::string("bar"));
+
+    std::cout << r << std::endl;
+  }
+  else if (method == 8) {
+    /* Check that the environment variable FOO equals "bar" */
+    auto d = wassail::data::environment();
+    d.evaluate();
+    json j = d; /* convert to JSON */
+
+    auto c = wassail::check::compare("Checking environment variable 'FOO'",
+                                     "Value '{0}' does not match '{1}'",
+                                     "Unable to perform comparison: '{0}'",
+                                     "Value '{0}' matches '{1}'");
+    auto r = c.check(j, json::json_pointer("/data/FOO"),
+                     std::equal_to<std::string>{}, std::string("bar"));
+
+    std::cout << r << std::endl;
+  }
+  else if (method == 9) {
+    /* Check that the environment variable FOO equals "bar" */
+    auto d = wassail::data::environment();
+    d.evaluate();
+    json j = d; /* convert to JSON */
+
+    auto c = wassail::check::rules_engine("Checking environment variable 'FOO'",
+                                          "Value '{0}' does not match 'bar'",
+                                          "Unable to perform comparison: '{0}'",
+                                          "Value '{0}' matches 'bar'");
+    c.add_rule([](json j) {
+      return j.at(json::json_pointer("/data/FOO")).get<std::string>() == "bar";
+    });
+    auto r = c.check(j);
+
+    /* apply actual value to the detail format strings */
+    if (r->issue == wassail::result::issue_t::YES or
+        r->issue == wassail::result::issue_t::NO) {
+      r->format_detail(
+          r->detail, j.at(json::json_pointer("/data/FOO")).get<std::string>());
+    }
 
     std::cout << r << std::endl;
   }
