@@ -6,6 +6,7 @@ EXTRA_DIST =
 # Checks
 nobase_pkginclude_HEADERS += checks/check.hpp
 nobase_pkginclude_HEADERS += checks/compare.hpp
+nobase_pkginclude_HEADERS += checks/rules_engine.hpp
 nobase_pkginclude_HEADERS += checks/cpu/core_count.hpp
 nobase_pkginclude_HEADERS += checks/disk/amount_free.hpp
 nobase_pkginclude_HEADERS += checks/disk/percent_free.hpp
