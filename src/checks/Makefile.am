@@ -19,9 +19,12 @@ libwassail_checks_la_SOURCES = $(top_srcdir)/include/wassail/checks/check.hpp \
 
 noinst_HEADERS = $(top_srcdir)/include/wassail/checks/check.hpp \
                  $(top_srcdir)/include/wassail/checks/compare.hpp \
+                 $(top_srcdir)/include/wassail/checks/rules_engine.hpp \
                  $(top_srcdir)/include/wassail/result.hpp
 nobase_dist_pkgdata_DATA = skeleton_check/skeleton.hpp \
                            skeleton_check/skeleton.cpp
+
+libwassail_checks_la_SOURCES += rules_engine.cpp
 
 libwassail_checks_la_SOURCES += cpu/core_count.cpp \
     $(top_srcdir)/include/wassail/checks/cpu/core_count.hpp \

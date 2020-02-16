@@ -15,23 +15,36 @@
 #include <pybind11/stl.h>
 #pragma GCC diagnostic pop
 
+#include <pybind11_json/pybind11_json.hpp>
 #include <wassail/json/json.hpp>
 #include <wassail/wassail.hpp>
 
 using json = nlohmann::json;
 namespace py = pybind11;
 
-void json_conversion(py::module &);
 void py_check(py::module &);
 void py_data(py::module &);
 void py_enum(py::module &);
 void py_result(py::module &);
 
 PYBIND11_MODULE(wassail, m) {
-  m.def("initialize", &wassail::initialize);
-
   /* Inter-convert Python and C++ JSON objects */
-  json_conversion(m);
+  py::class_<json>(m, "json")
+      .def(py::init<>())
+      .def(py::init<py::object>())
+      .def("__getitem__",
+           [](const json &j, const std::string s) {
+             return static_cast<py::object>(j.at(s));
+           })
+      .def("__getitem__",
+           [](const json &j, const size_t i) {
+             return static_cast<py::object>(j.at(i));
+           })
+      .def("__str__",
+           [](const json &j) { return static_cast<json>(j).dump(); });
+  py::implicitly_convertible<py::object, json>();
+
+  m.def("initialize", &wassail::initialize);
 
   /* Version functions */
   m.def("version", &wassail::version);

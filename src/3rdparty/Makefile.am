@@ -1,6 +1,6 @@
 SUBDIRS = fmt stream
 
-EXTRA_DIST = pybind11 spdlog
+EXTRA_DIST = pybind11 pybind11_json spdlog
 
 noinst_LTLIBRARIES = libwassail_3rdparty.la
 

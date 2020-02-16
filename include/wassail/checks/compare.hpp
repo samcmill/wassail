@@ -112,7 +112,7 @@ namespace wassail {
           }
         }
         catch (std::exception &e) {
-          logger(log_level::err, e.what() + std::string(": ") + j.dump());
+          logger(log_level::warn, e.what() + std::string(": ") + j.dump());
           r->issue = result::issue_t::MAYBE;
           r->format_detail(fmt_str.detail_maybe, e.what(), j.dump());
         }

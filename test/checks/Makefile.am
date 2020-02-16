@@ -22,6 +22,9 @@ noinst_HEADERS += $(top_srcdir)/include/wassail/wassail.hpp
 check_PROGRAMS += compare.test
 compare_test_SOURCES = $(top_srcdir)/test/tostring.h test_compare.cpp
 
+check_PROGRAMS += rules_engine.test
+rules_engine_test_SOURCES = $(top_srcdir)/test/tostring.h test_rules_engine.cpp
+
 check_PROGRAMS += cpu_core_count.test
 cpu_core_count_test_SOURCES = $(top_srcdir)/test/tostring.h \
                               test_cpu_core_count.cpp

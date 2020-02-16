@@ -8,7 +8,7 @@ wassail_la_CXXFLAGS = $(PYBIND11_EXTRA_CXXFLAGS) \
 wassail_la_LDFLAGS = -avoid-version -module -shared \
                      -shrext $(PYTHON_EXTENSION_SUFFIX)
 wassail_la_LIBADD = $(top_builddir)/src/libwassail.la
-wassail_la_SOURCES = check.cpp data.cpp enum.cpp json.cpp pybind.cpp result.cpp
+wassail_la_SOURCES = check.cpp data.cpp enum.cpp pybind.cpp result.cpp
 else
-EXTRA_DIST = check.cpp data.cpp enum.cpp json.cpp pybind.cpp result.cpp
+EXTRA_DIST = check.cpp data.cpp enum.cpp pybind.cpp result.cpp
 endif

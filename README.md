@@ -109,6 +109,9 @@ wassail incorporates the following third party software.
 - [pybind11](https://github.com/pybind/pybind11)
  Copyright (c) 2016 Wenzel Jakob &lt;wenzel.jakob@epfl.ch&gt;
 
+- [pybind11_json](https://github.com/pybind/pybind11_json)
+ Copyright (c) 2019, Martin Renou
+
 - [spdlog](https://github.com/gabime/spdlog)
  Copyright (c) 2015-present, Gabi Melman & spdlog contributors.
 

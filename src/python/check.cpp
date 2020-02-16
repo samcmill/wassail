@@ -12,8 +12,11 @@
 #include <pybind11/pybind11.h>
 
 #include <pybind11/cast.h>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #pragma GCC diagnostic pop
+
+#include <pybind11_json/pybind11_json.hpp>
 
 #include <wassail/json/json.hpp>
 #include <wassail/wassail.hpp>
@@ -25,6 +28,13 @@ void py_check(py::module &m) {
   /* wassail.check.compare() is templated, so no Python binding */
 
   py::module check = m.def_submodule("check", "Check building blocks");
+
+  py::class_<wassail::check::rules_engine>(check, "rules_engine")
+      .def(py::init<>())
+      .def(py::init<std::string, std::string, std::string, std::string>())
+      .def("add_rule", &wassail::check::rules_engine::add_rule)
+      .def("check", &wassail::check::rules_engine::check);
+
   py::module check_cpu =
       check.def_submodule("cpu", "CPU check building blocks");
 
