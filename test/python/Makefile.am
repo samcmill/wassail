@@ -1,6 +1,7 @@
 EXTRA_DIST = test_check_cpu_core_count.py \
              test_check_disk_amount_free.py \
              test_check_disk_percent_free.py \
+             test_check_file_permissions.py \
              test_check_memory_physical_size.py \
              test_check_misc_load_average.py \
              test_check_rules_engine.py \

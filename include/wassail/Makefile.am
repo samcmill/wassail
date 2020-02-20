@@ -10,6 +10,7 @@ nobase_pkginclude_HEADERS += checks/rules_engine.hpp
 nobase_pkginclude_HEADERS += checks/cpu/core_count.hpp
 nobase_pkginclude_HEADERS += checks/disk/amount_free.hpp
 nobase_pkginclude_HEADERS += checks/disk/percent_free.hpp
+nobase_pkginclude_HEADERS += checks/file/permissions.hpp
 nobase_pkginclude_HEADERS += checks/memory/physical_size.hpp
 nobase_pkginclude_HEADERS += checks/misc/environment.hpp
 nobase_pkginclude_HEADERS += checks/misc/load_average.hpp

@@ -77,6 +77,18 @@ void py_check(py::module &m) {
       .def("check", py::overload_cast<wassail::data::getmntent &>(
                         &wassail::check::disk::percent_free::check));
 
+  py::module check_file =
+      check.def_submodule("file", "File check building blocks");
+
+  py::class_<wassail::check::file::permissions>(check_file, "permissions")
+      .def(py::init<uint16_t>())
+      .def(py::init<uint16_t, std::string, std::string, std::string,
+                    std::string>())
+      .def("check", py::overload_cast<const json &>(
+                        &wassail::check::file::permissions::check))
+      .def("check", py::overload_cast<wassail::data::stat &>(
+                        &wassail::check::file::permissions::check));
+
   py::module check_memory =
       check.def_submodule("memory", "Memory check building blocks");
 

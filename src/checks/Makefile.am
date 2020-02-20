@@ -38,6 +38,10 @@ libwassail_checks_la_SOURCES += disk/amount_free.cpp disk/percent_free.cpp \
     $(top_srcdir)/include/wassail/data/getfsstat.hpp \
     $(top_srcdir)/include/wassail/data/getmntent.hpp
 
+libwassail_checks_la_SOURCES += file/permissions.cpp \
+    $(top_srcdir)/include/wassail/checks/file/permissions.hpp \
+    $(top_srcdir)/include/wassail/data/stat.hpp
+
 libwassail_checks_la_SOURCES += memory/physical_size.cpp \
     $(top_srcdir)/include/wassail/checks/memory/physical_size.hpp \
     $(top_srcdir)/include/wassail/data/sysconf.hpp \

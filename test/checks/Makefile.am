@@ -37,6 +37,10 @@ check_PROGRAMS += disk_percent_free.test
 disk_percent_free_test_SOURCES = $(top_srcdir)/test/tostring.h \
                                  test_disk_percent_free.cpp
 
+check_PROGRAMS += file_permissions.test
+file_permissions_test_SOURCES = $(top_srcdir)/test/tostring.h \
+                                test_file_permissions.cpp
+
 check_PROGRAMS += memory_physical_size.test
 memory_physical_size_test_SOURCES = $(top_srcdir)/test/tostring.h \
                                     test_memory_physical_size.cpp

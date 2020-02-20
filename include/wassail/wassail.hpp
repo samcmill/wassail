@@ -47,6 +47,7 @@ using json = nlohmann::json;
 #include <wassail/checks/cpu/core_count.hpp>
 #include <wassail/checks/disk/amount_free.hpp>
 #include <wassail/checks/disk/percent_free.hpp>
+#include <wassail/checks/file/permissions.hpp>
 #include <wassail/checks/memory/physical_size.hpp>
 #include <wassail/checks/misc/environment.hpp>
 #include <wassail/checks/misc/load_average.hpp>
