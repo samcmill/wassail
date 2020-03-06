@@ -31,12 +31,18 @@ namespace wassail {
 
         /*! Construct an instance
          *  \param[in] mode octal protection mode to check
+         *
+         * Template field 0 is the name of the file. In the case of error, field
+         * 0 contains the error message. Template field 1 is the observed octal
+         * permissions. Template field 2 is the expected or reference octal
+         * permissions.
          */
         permissions(uint16_t mode)
-            : rules_engine("Checking permissions on '{0}'",
-                           "Observed permissions of {0} do not match {1}",
-                           "Unable to check permissions: '{0}'",
-                           "Observed permissions of {0} match {1}"),
+            : rules_engine(
+                  "Checking permissions on '{0}'",
+                  "Observed permissions of {1} do not match expected {2}",
+                  "Unable to check permissions: '{0}'",
+                  "Observed permissions of {1} match expected {2}"),
               config{mode} {};
 
         /*! Construct an instance
@@ -71,7 +77,7 @@ namespace wassail {
 
       private:
         /*! Unique name for this building block */
-        std::string name() const { return "permissions"; };
+        std::string name() const { return "file/permissions"; };
       };
     } // namespace file
   }   // namespace check

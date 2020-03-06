@@ -13,25 +13,25 @@ namespace wassail {
   namespace check {
     namespace cpu {
       std::shared_ptr<wassail::result> core_count::check(const json &j) {
-        try {
-          if (j.at("name").get<std::string>() == "sysconf") {
-            return compare::check(j,
-                                  json::json_pointer("/data/nprocessors_onln"),
-                                  std::equal_to<uint16_t>{}, config.num_cores);
-          }
-          else if (j.at("name").get<std::string>() == "sysctl") {
-            return compare::check(
-                j, json::json_pointer("/data/machdep/cpu/core_count"),
-                std::equal_to<uint16_t>{}, config.num_cores);
-          }
-          else {
-            throw std::runtime_error("Unrecognized JSON object");
-          }
+        json::json_pointer key;
+
+        if (j.value("name", "") == "sysconf") {
+          key = json::json_pointer("/data/nprocessors_onln");
         }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
+        else if (j.value("name", "") == "sysctl") {
+          key = json::json_pointer("/data/machdep/cpu/core_count");
         }
+        else {
+          throw std::runtime_error("Unrecognized JSON object");
+        }
+
+        /* check key exists */
+        add_rule([&](json j) { return j.contains(key); });
+
+        /* check observed value is equal to the reference value */
+        add_rule([&](json j) { return j.value(key, 0) == config.num_cores; });
+
+        return rules_engine::check(j, j.value(key, 0), config.num_cores);
       }
 
       std::shared_ptr<wassail::result>

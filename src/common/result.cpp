@@ -15,7 +15,6 @@
 #include <shared_mutex>
 #include <string>
 #include <vector>
-#include <wassail/fmt/format.h>
 #include <wassail/json/json.hpp>
 #include <wassail/result.hpp>
 
@@ -38,10 +37,6 @@ namespace wassail {
     std::vector<std::shared_ptr<result>> v;
     _flatten(v, std::make_shared<result>(*this));
     return v;
-  }
-
-  std::string result::format(const std::string fmt, fmt::format_args args) {
-    return fmt::vformat(fmt, args);
   }
 
   void result::add_child(std::shared_ptr<result> child) {
@@ -93,6 +88,11 @@ namespace wassail {
                        [&_priority](std::shared_ptr<result> r) {
                          return r->priority == _priority;
                        });
+  }
+
+  void result::propagate() {
+    issue = max_issue();
+    priority = max_priority();
   }
 
   std::shared_ptr<wassail::result> make_result(const json &j) {

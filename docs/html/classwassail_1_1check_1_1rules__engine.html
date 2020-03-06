@@ -86,8 +86,12 @@ $(function() {
  <div class="center">
   <img src="classwassail_1_1check_1_1rules__engine.png" usemap="#wassail::check::rules_5Fengine_map" alt=""/>
   <map id="wassail::check::rules_5Fengine_map" name="wassail::check::rules_5Fengine_map">
-<area href="classwassail_1_1check_1_1common.html" title="Parent class for all check building blocks. " alt="wassail::check::common" shape="rect" coords="0,0,188,24"/>
-<area href="classwassail_1_1check_1_1file_1_1permissions.html" title="Check building block class for the permissions on a file. " alt="wassail::check::file::permissions" shape="rect" coords="0,112,188,136"/>
+<area href="classwassail_1_1check_1_1common.html" title="Parent class for all check building blocks. " alt="wassail::check::common" shape="rect" coords="470,0,695,24"/>
+<area href="classwassail_1_1check_1_1cpu_1_1core__count.html" title="Check building block class for the number of cpu cores. " alt="wassail::check::cpu::core_count" shape="rect" coords="0,112,225,136"/>
+<area href="classwassail_1_1check_1_1file_1_1permissions.html" title="Check building block class for the permissions on a file. " alt="wassail::check::file::permissions" shape="rect" coords="235,112,460,136"/>
+<area href="classwassail_1_1check_1_1memory_1_1physical__size.html" title="Check building block class for the amount of physical memory. " alt="wassail::check::memory::physical_size" shape="rect" coords="470,112,695,136"/>
+<area href="classwassail_1_1check_1_1misc_1_1environment.html" title="Check building block class for environment variables. " alt="wassail::check::misc::environment" shape="rect" coords="705,112,930,136"/>
+<area href="classwassail_1_1check_1_1misc_1_1load__average.html" title="Check building block class for the system load average. " alt="wassail::check::misc::load_average" shape="rect" coords="940,112,1165,136"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -106,6 +110,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2d03612c3a2623dee280ddebc20b980e"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classwassail_1_1result.html">wassail::result</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1rules__engine.html#a2d03612c3a2623dee280ddebc20b980e">check</a> (const json &amp;j)</td></tr>
 <tr class="memdesc:a2d03612c3a2623dee280ddebc20b980e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply all rules.  <a href="#a2d03612c3a2623dee280ddebc20b980e">More...</a><br /></td></tr>
 <tr class="separator:a2d03612c3a2623dee280ddebc20b980e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9198338cde276358a03b8c980beabed3"><td class="memTemplParams" colspan="2">template&lt;typename... T&gt; </td></tr>
+<tr class="memitem:a9198338cde276358a03b8c980beabed3"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classwassail_1_1result.html">wassail::result</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1rules__engine.html#a9198338cde276358a03b8c980beabed3">check</a> (const json &amp;j, const T &amp;... args)</td></tr>
+<tr class="memdesc:a9198338cde276358a03b8c980beabed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply all rules Also set the result brief and detail strings based on the arguments.  <a href="#a9198338cde276358a03b8c980beabed3">More...</a><br /></td></tr>
+<tr class="separator:a9198338cde276358a03b8c980beabed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classwassail_1_1check_1_1common"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classwassail_1_1check_1_1common')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classwassail_1_1check_1_1common.html">wassail::check::common</a></td></tr>
 <tr class="memitem:a219c530a5dc4002ac3caa8b4e0d95c74 inherit pub_methods_classwassail_1_1check_1_1common"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1common.html#a219c530a5dc4002ac3caa8b4e0d95c74">common</a> ()</td></tr>
 <tr class="separator:a219c530a5dc4002ac3caa8b4e0d95c74 inherit pub_methods_classwassail_1_1check_1_1common"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,7 +229,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="a2d03612c3a2623dee280ddebc20b980e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d03612c3a2623dee280ddebc20b980e">&#9670;&nbsp;</a></span>check()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d03612c3a2623dee280ddebc20b980e">&#9670;&nbsp;</a></span>check() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,6 +262,54 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>result object </dd></dl>
 
 <p>Implements <a class="el" href="classwassail_1_1check_1_1common.html#a91f5ec62a1b0a843e457bb4cb99f7b45">wassail::check::common</a>.</p>
+
+</div>
+</div>
+<a id="a9198338cde276358a03b8c980beabed3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9198338cde276358a03b8c980beabed3">&#9670;&nbsp;</a></span>check() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classwassail_1_1result.html">wassail::result</a>&gt; wassail::check::rules_engine::check </td>
+          <td>(</td>
+          <td class="paramtype">const json &amp;&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Apply all rules Also set the result brief and detail strings based on the arguments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">j</td><td>JSON object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>argument list </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>result object </dd></dl>
 
 </div>
 </div>

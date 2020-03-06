@@ -37,15 +37,21 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] fs Mount point to check
          *  \param[in] amount Reference amount free
+         *
+         * Template field 0 is the name of the filesystem. Template field 1 is
+         * the observed amount of free disk space. Template field 2 is the
+         * expected or reference amount of free disk space. Template field 3 is
+         * the units of free disk space.
          */
         amount_free(std::string fs, uint64_t amount)
             : common("Checking amount of free disk space on filesystem '{0}'",
-                     "Observed amount of free disk space {0} {2} is less than "
-                     "reference threshold value {1} {2}",
-                     "Unable to check amount of free disk space: '{0}'",
-                     "Observed amount of free disk space {0} {2} is greater "
+                     "Observed amount of free disk space {1} {3} is less than "
+                     "reference threshold value {2} {3}",
+                     "Unable to check amount of free disk space on filesystem "
+                     "'{0}'",
+                     "Observed amount of free disk space {1} {3} is greater "
                      "than or "
-                     "equal to the reference threshold value {1} {2}"),
+                     "equal to the reference threshold value {2} {3}"),
               config{fs, amount} {};
 
         /*! \brief Construct an instance

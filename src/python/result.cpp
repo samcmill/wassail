@@ -39,6 +39,7 @@ void py_result(py::module &m) {
       .def("max_priority", &wassail::result::max_priority)
       .def("match_issue", &wassail::result::match_issue)
       .def("match_priority", &wassail::result::match_priority)
+      .def("propagate", &wassail::result::propagate)
       .def_readwrite("action", &wassail::result::action)
       .def_readwrite("brief", &wassail::result::brief)
       .def_readwrite("children", &wassail::result::children)

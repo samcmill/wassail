@@ -111,7 +111,7 @@ TEST_CASE("percent_free basic getfsstat input") {
   /* percent = 100 * 5771575 / 61228134 = 9.43% */
   auto c1 = wassail::check::disk::percent_free("/");
   c1.fmt_str.brief = "Brief {0}";
-  c1.fmt_str.detail_no = "{0:.1f} >= {1:.1f}";
+  c1.fmt_str.detail_no = "{1:.1f} >= {2:.1f}";
   auto r1 = c1.check(d);
 
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
@@ -119,8 +119,8 @@ TEST_CASE("percent_free basic getfsstat input") {
   REQUIRE(r1->detail == "9.4 >= 0.0");
 
   auto c2 = wassail::check::disk::percent_free("/", 100, "Something brief {0}",
-                                               "{0:.1f} < {1:.1f}", "{0}",
-                                               "{0} >= {1}");
+                                               "{1:.1f} < {2:.1f}", "{0}",
+                                               "{1} >= {2}");
   auto r2 = c2.check(d);
 
   REQUIRE(r2->issue == wassail::result::issue_t::YES);
@@ -207,7 +207,7 @@ TEST_CASE("percent_free basic getmntent input") {
   /* percent = 100 * 76420 / 1621504 = 4.71% */
   auto c1 = wassail::check::disk::percent_free("/");
   c1.fmt_str.brief = "Brief {0}";
-  c1.fmt_str.detail_no = "{0:.1f} >= {1:.1f}";
+  c1.fmt_str.detail_no = "{1:.1f} >= {2:.1f}";
   auto r1 = c1.check(d);
 
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
@@ -215,8 +215,8 @@ TEST_CASE("percent_free basic getmntent input") {
   REQUIRE(r1->detail == "4.7 >= 0.0");
 
   auto c2 = wassail::check::disk::percent_free("/", 100, "Something brief {0}",
-                                               "{0:.1f} < {1:.1f}", "{0}",
-                                               "{0} >= {1}");
+                                               "{1:.1f} < {2:.1f}", "{0}",
+                                               "{1} >= {2}");
   auto r2 = c2.check(d);
 
   REQUIRE(r2->issue == wassail::result::issue_t::YES);

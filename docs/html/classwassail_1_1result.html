@@ -114,18 +114,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad1f49889158140337a8eb3c1efc0f4e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#ad1f49889158140337a8eb3c1efc0f4e7">add_child</a> (std::shared_ptr&lt; <a class="el" href="classwassail_1_1result.html">result</a> &gt; child)</td></tr>
 <tr class="memdesc:ad1f49889158140337a8eb3c1efc0f4e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add child result.  <a href="#ad1f49889158140337a8eb3c1efc0f4e7">More...</a><br /></td></tr>
 <tr class="separator:ad1f49889158140337a8eb3c1efc0f4e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e4c702df8e7228444cc7a38f90d4737"><td class="memTemplParams" colspan="2">template&lt;typename... T&gt; </td></tr>
-<tr class="memitem:a5e4c702df8e7228444cc7a38f90d4737"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#a5e4c702df8e7228444cc7a38f90d4737">format_action</a> (const std::string fmt, const T &amp;... args)</td></tr>
-<tr class="memdesc:a5e4c702df8e7228444cc7a38f90d4737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the action string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>.  <a href="#a5e4c702df8e7228444cc7a38f90d4737">More...</a><br /></td></tr>
-<tr class="separator:a5e4c702df8e7228444cc7a38f90d4737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a948732e00ae5ebaab742b6079f5b7938"><td class="memTemplParams" colspan="2">template&lt;typename... T&gt; </td></tr>
-<tr class="memitem:a948732e00ae5ebaab742b6079f5b7938"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#a948732e00ae5ebaab742b6079f5b7938">format_brief</a> (const std::string fmt, const T &amp;... args)</td></tr>
-<tr class="memdesc:a948732e00ae5ebaab742b6079f5b7938"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the brief string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>.  <a href="#a948732e00ae5ebaab742b6079f5b7938">More...</a><br /></td></tr>
-<tr class="separator:a948732e00ae5ebaab742b6079f5b7938"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e89be0a72047894dcf3b40161fcda29"><td class="memTemplParams" colspan="2">template&lt;typename... T&gt; </td></tr>
-<tr class="memitem:a3e89be0a72047894dcf3b40161fcda29"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#a3e89be0a72047894dcf3b40161fcda29">format_detail</a> (const std::string fmt, const T &amp;... args)</td></tr>
-<tr class="memdesc:a3e89be0a72047894dcf3b40161fcda29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the detail string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>.  <a href="#a3e89be0a72047894dcf3b40161fcda29">More...</a><br /></td></tr>
-<tr class="separator:a3e89be0a72047894dcf3b40161fcda29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa51fdfa234c32629b024ce16b9150bc4"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="classwassail_1_1result.html#aabb2777af60c292a24ecd96955a70e30">issue_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#aa51fdfa234c32629b024ce16b9150bc4">max_issue</a> ()</td></tr>
 <tr class="memdesc:aa51fdfa234c32629b024ce16b9150bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the maximum (i.e., most serious) issue state among all children, grandchildren, etc.  <a href="#aa51fdfa234c32629b024ce16b9150bc4">More...</a><br /></td></tr>
 <tr class="separator:aa51fdfa234c32629b024ce16b9150bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +126,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aba6a773e1352e2befc23a0b6fbacca47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#aba6a773e1352e2befc23a0b6fbacca47">match_priority</a> (enum <a class="el" href="classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97">priority_t</a> _priority)</td></tr>
 <tr class="memdesc:aba6a773e1352e2befc23a0b6fbacca47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if any children, grandchildren, etc. match the specified priority state.  <a href="#aba6a773e1352e2befc23a0b6fbacca47">More...</a><br /></td></tr>
 <tr class="separator:aba6a773e1352e2befc23a0b6fbacca47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a42de173e68dc0e05c134645d9052d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1result.html#a33a42de173e68dc0e05c134645d9052d">propagate</a> ()</td></tr>
+<tr class="memdesc:a33a42de173e68dc0e05c134645d9052d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagate child result values to parent.  <a href="#a33a42de173e68dc0e05c134645d9052d">More...</a><br /></td></tr>
+<tr class="separator:a33a42de173e68dc0e05c134645d9052d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -328,147 +319,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a5e4c702df8e7228444cc7a38f90d4737"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e4c702df8e7228444cc7a38f90d4737">&#9670;&nbsp;</a></span>format_action()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void wassail::result::format_action </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the action string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">fmt</td><td>format template </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>argument list </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a948732e00ae5ebaab742b6079f5b7938"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a948732e00ae5ebaab742b6079f5b7938">&#9670;&nbsp;</a></span>format_brief()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void wassail::result::format_brief </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the brief string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">fmt</td><td>format template </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>argument list </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a3e89be0a72047894dcf3b40161fcda29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e89be0a72047894dcf3b40161fcda29">&#9670;&nbsp;</a></span>format_detail()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void wassail::result::format_detail </td>
-          <td>(</td>
-          <td class="paramtype">const std::string&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the detail string based on a format template and an argument list. The format template syntax description can be found at <a href="http://fmtlib.net/latest/syntax.html">http://fmtlib.net/latest/syntax.html</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">fmt</td><td>format template </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>argument list </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="ab0606aeeaa04347d88356e1b7653a36b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0606aeeaa04347d88356e1b7653a36b">&#9670;&nbsp;</a></span>match_issue()</h2>
 
@@ -560,6 +410,26 @@ template&lt;typename... T&gt; </div>
 
 <p>Return the maximum (i.e., most serious) priority among all children, grandchildren, etc. </p>
 <dl class="section return"><dt>Returns</dt><dd>priority </dd></dl>
+
+</div>
+</div>
+<a id="a33a42de173e68dc0e05c134645d9052d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33a42de173e68dc0e05c134645d9052d">&#9670;&nbsp;</a></span>propagate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wassail::result::propagate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Propagate child result values to parent. </p>
+<p>Update the result values based on children. The issue and priority values are set to the maximum child value, respectively. </p>
 
 </div>
 </div>

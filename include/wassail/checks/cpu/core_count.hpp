@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 #include <wassail/checks/check.hpp>
-#include <wassail/checks/compare.hpp>
+#include <wassail/checks/rules_engine.hpp>
 #include <wassail/data/sysconf.hpp>
 #include <wassail/data/sysctl.hpp>
 #include <wassail/data/sysinfo.hpp>
@@ -23,7 +23,7 @@ namespace wassail {
   namespace check {
     namespace cpu {
       /*! \brief Check building block class for the number of cpu cores */
-      class core_count : public wassail::check::compare {
+      class core_count : public wassail::check::rules_engine {
       public:
         struct {
           uint16_t num_cores = 0; /*!< Reference number of cores */
@@ -34,14 +34,18 @@ namespace wassail {
 
         /*! Construct an instance
          *  \param[in] num_cores Reference number of cores
+         *
+         * Template field 0 is the observed number of CPU cores.  In the case
+         * of error, field 0 contains the error message. Template field 1 is
+         * the expected or reference number of CPU cores.
          */
         core_count(uint16_t num_cores)
-            : compare(
+            : rules_engine(
                   "Checking number of CPU cores",
-                  "Observed number of cores {0} not equal to reference value "
+                  "Observed number of cores {0} not equal to expected value "
                   "{1}",
                   "Unable to check number of cores: '{0}'",
-                  "Observed number of cores {0} equal to reference value {1}"),
+                  "Observed number of cores {0} equal to expected value {1}"),
               config{num_cores} {};
 
         /*! \brief Construct an instance
@@ -57,7 +61,7 @@ namespace wassail {
         core_count(uint16_t num_cores, std::string brief,
                    std::string detail_yes, std::string detail_maybe,
                    std::string detail_no)
-            : compare(brief, detail_yes, detail_maybe, detail_no),
+            : rules_engine(brief, detail_yes, detail_maybe, detail_no),
               config{num_cores} {};
 
         /*! Check number of cpu cores

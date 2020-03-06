@@ -44,14 +44,18 @@ TEST_CASE("environment basic JSON input (environment)") {
   auto c1 = wassail::check::misc::environment("USER", "ncognito");
   auto r1 = c1.check(j);
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
+  REQUIRE(r1->brief == "Checking environment variable 'USER'");
+  REQUIRE(r1->detail == "Value 'ncognito' matches 'ncognito'");
 
   auto c2 = wassail::check::misc::environment("SHELL", "/bin/tcsh");
   auto r2 = c2.check(j);
   REQUIRE(r2->issue == wassail::result::issue_t::YES);
+  REQUIRE(r2->detail == "Value '/bin/bash' does not match '/bin/tcsh'");
 
   auto c3 = wassail::check::misc::environment("FOO", "bar");
   auto r3 = c3.check(j);
   REQUIRE(r3->issue == wassail::result::issue_t::YES);
+  REQUIRE(r3->detail == "Value '' does not match 'bar'");
 
   auto c4 = wassail::check::misc::environment("HOME", "^/home", true);
   auto r4 = c4.check(j);

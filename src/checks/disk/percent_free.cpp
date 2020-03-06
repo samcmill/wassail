@@ -10,6 +10,7 @@
 #include <exception>
 #include <string>
 #include <wassail/checks/disk/percent_free.hpp>
+#include <wassail/common.hpp>
 
 namespace wassail {
   namespace check {
@@ -49,20 +50,23 @@ namespace wassail {
         }
 
         auto r = make_result(j);
-        r->format_brief(fmt_str.brief, config.filesystem);
+        r->brief = wassail::format(fmt_str.brief, config.filesystem, percent,
+                                   config.percent);
         r->priority = result::priority_t::WARNING;
 
         if (not found) {
           r->issue = result::issue_t::MAYBE;
-          r->format_detail(fmt_str.detail_maybe, config.filesystem);
+          r->detail = wassail::format(fmt_str.detail_maybe, config.filesystem);
         }
         else if (percent < config.percent) {
           r->issue = result::issue_t::YES;
-          r->format_detail(fmt_str.detail_yes, percent, config.percent);
+          r->detail = wassail::format(fmt_str.detail_yes, config.filesystem,
+                                      percent, config.percent);
         }
         else {
           r->issue = result::issue_t::NO;
-          r->format_detail(fmt_str.detail_no, percent, config.percent);
+          r->detail = wassail::format(fmt_str.detail_no, config.filesystem,
+                                      percent, config.percent);
         }
 
         return r;

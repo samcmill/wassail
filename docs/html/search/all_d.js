@@ -12,5 +12,6 @@ var searchData=
   ['port',['port',['../classwassail_1_1data_1_1remote__shell__command.html#a9f7d024e52a9da6d98dddeb2ab400dde',1,'wassail::data::remote_shell_command']]],
   ['priority',['priority',['../classwassail_1_1result.html#a6a51fc51104f83a5301b3bcc652025f2',1,'wassail::result']]],
   ['priority_5ft',['priority_t',['../classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97',1,'wassail::result']]],
+  ['propagate',['propagate',['../classwassail_1_1result.html#a33a42de173e68dc0e05c134645d9052d',1,'wassail::result']]],
   ['ps',['ps',['../classwassail_1_1data_1_1ps.html',1,'wassail::data']]]
 ];

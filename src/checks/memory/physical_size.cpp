@@ -18,45 +18,33 @@ namespace wassail {
       std::shared_ptr<wassail::result> physical_size::check(const json &j) {
         uint64_t physical = 0;
 
-        try {
-          if (j.at("name").get<std::string>() == "sysconf") {
-            physical = j.at("data").at("phys_pages").get<uint64_t>() *
-                       j.at("data").at("page_size").get<uint64_t>();
-          }
-          else if (j.at("name").get<std::string>() == "sysctl") {
-            physical = j.at("data").at("hw").at("memsize").get<uint64_t>();
-          }
-          else if (j.at("name").get<std::string>() == "sysinfo") {
-            physical = j.at("data").at("totalram").get<uint64_t>() *
-                       j.at("data").at("mem_unit").get<uint64_t>();
-          }
-          else {
-            throw std::runtime_error("Unrecognized JSON object");
-          }
+        if (j.value("name", "") == "sysconf") {
+          physical =
+              j.value(json::json_pointer("/data/phys_pages"),
+                      std::uint64_t(0)) *
+              j.value(json::json_pointer("/data/page_size"), std::uint64_t(0));
         }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
+        else if (j.value("name", "") == "sysctl") {
+          physical =
+              j.value(json::json_pointer("/data/hw/memsize"), std::uint64_t(0));
         }
-
-        auto r = make_result(j);
-        r->format_brief(fmt_str.brief);
-        r->priority = result::priority_t::WARNING;
-
-        if (std::max(physical, config.mem_size) -
-                std::min(physical, config.mem_size) >
-            config.tolerance) {
-          r->issue = result::issue_t::YES;
-          r->format_detail(fmt_str.detail_yes, physical, config.mem_size,
-                           config.tolerance, "bytes");
+        else if (j.value("name", "") == "sysinfo") {
+          physical =
+              j.value(json::json_pointer("/data/totalram"), std::uint64_t(0)) *
+              j.value(json::json_pointer("/data/mem_unit"), std::uint64_t(0));
         }
         else {
-          r->issue = result::issue_t::NO;
-          r->format_detail(fmt_str.detail_no, physical, config.mem_size,
-                           config.tolerance, "bytes");
+          throw std::runtime_error("Unrecognized JSON object");
         }
 
-        return r;
+        add_rule([&](json j) {
+          return std::max(physical, config.mem_size) -
+                     std::min(physical, config.mem_size) <=
+                 config.tolerance;
+        });
+
+        return rules_engine::check(j, physical, config.mem_size,
+                                   config.tolerance, "bytes");
       }
 
       std::shared_ptr<wassail::result>

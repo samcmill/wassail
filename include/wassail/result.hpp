@@ -14,7 +14,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <wassail/fmt/format.h>
 #include <wassail/json/json.hpp>
 
 using json = nlohmann::json;
@@ -31,9 +30,6 @@ namespace wassail {
      *  \return List of children
      */
     std::vector<std::shared_ptr<result>> flat_children();
-
-    /*! \brief Return a formatted string */
-    std::string format(const std::string fmt, fmt::format_args args);
 
   public:
     std::string action; /*!< Action to take in response to an issue */
@@ -88,42 +84,6 @@ namespace wassail {
      */
     void add_child(std::shared_ptr<result> child);
 
-    /*! \brief Set the action string based on a format template and an
-     *   argument list.  The format template syntax description can be
-     *   found at http://fmtlib.net/latest/syntax.html.
-     *
-     * \param[in] fmt format template
-     * \param[in] args argument list
-     */
-    template <typename... T>
-    void format_action(const std::string fmt, const T &... args) {
-      action = format(fmt, fmt::make_format_args(args...));
-    }
-
-    /*! \brief Set the brief string based on a format template and an
-     *   argument list.  The format template syntax description can be
-     *   found at http://fmtlib.net/latest/syntax.html.
-     *
-     * \param[in] fmt format template
-     * \param[in] args argument list
-     */
-    template <typename... T>
-    void format_brief(const std::string fmt, const T &... args) {
-      brief = format(fmt, fmt::make_format_args(args...));
-    }
-
-    /*! \brief Set the detail string based on a format template and an
-     *   argument list.  The format template syntax description can be
-     *   found at http://fmtlib.net/latest/syntax.html.
-     *
-     * \param[in] fmt format template
-     * \param[in] args argument list
-     */
-    template <typename... T>
-    void format_detail(const std::string fmt, const T &... args) {
-      detail = format(fmt, fmt::make_format_args(args...));
-    }
-
     /*! \brief Return the maximum (i.e., most serious) issue state
      *  among all children, grandchildren, etc.
      * \return issue
@@ -149,6 +109,13 @@ namespace wassail {
      *  \return True if matched, false otherwise
      */
     bool match_priority(enum priority_t _priority);
+
+    /*! \brief Propagate child result values to parent
+     *
+     *  Update the result values based on children.  The issue and priority
+     *  values are set to the maximum child value, respectively.
+     */
+    void propagate();
 
     /*! Output stream operator overload */
     friend std::ostream &operator<<(std::ostream &,

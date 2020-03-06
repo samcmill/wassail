@@ -93,28 +93,28 @@ namespace wassail {
       check(const json &j, const json::json_pointer &key, Tcompare cmp,
             const T &reference_value, Ttransform transform) {
         std::shared_ptr<wassail::result> r = make_result(j);
-        r->format_brief(fmt_str.brief, static_cast<std::string>(key),
-                        value(reference_value));
+        r->brief = wassail::format(fmt_str.brief, static_cast<std::string>(key),
+                                   value(reference_value));
 
         try {
           T val = transform(j.at(key).get<T>());
           if (cmp(val, reference_value)) {
             r->issue = result::issue_t::NO;
             r->priority = result::priority_t::INFO;
-            r->format_detail(fmt_str.detail_no, value(val),
-                             value(reference_value));
+            r->detail = wassail::format(fmt_str.detail_no, value(val),
+                                        value(reference_value));
           }
           else {
             r->issue = result::issue_t::YES;
             r->priority = result::priority_t::WARNING;
-            r->format_detail(fmt_str.detail_yes, value(val),
-                             value(reference_value));
+            r->detail = wassail::format(fmt_str.detail_yes, value(val),
+                                        value(reference_value));
           }
         }
         catch (std::exception &e) {
           logger(log_level::warn, e.what() + std::string(": ") + j.dump());
           r->issue = result::issue_t::MAYBE;
-          r->format_detail(fmt_str.detail_maybe, e.what(), j.dump());
+          r->detail = wassail::format(fmt_str.detail_maybe, e.what(), j.dump());
         }
 
         return r;
@@ -200,7 +200,7 @@ namespace wassail {
 
         /* TODO: make this format string configurable */
         auto count = std::distance(begin, end);
-        r->format_brief(
+        r->brief = wassail::format(
             "Comparing {1} values at '{0}' to reference value of '{2}'",
             static_cast<std::string>(key), count, value(reference_value));
 

@@ -16,7 +16,7 @@ class Test(unittest.TestCase):
         r2 = c2.check(j)
         self.assertEqual(r2.issue, wassail.issue_t.YES)
 
-        c3 = wassail.check.misc.environment('HOME', '^/home$', True, "Brief {0}", "{0} !~ {1}", ":shrug:", "{0} =~ {1}")
+        c3 = wassail.check.misc.environment('HOME', '^/home$', True, "Brief {0}", "{1} !~ {2}", ":shrug:", "{1} =~ {2}")
         r3 = c3.check(j)
         self.assertEqual(r3.issue, wassail.issue_t.YES)
         self.assertEqual(r3.brief, "Brief HOME")

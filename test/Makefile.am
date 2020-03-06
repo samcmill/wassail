@@ -19,6 +19,10 @@ noinst_HEADERS += $(top_srcdir)/include/wassail/wassail.hpp
 
 # Test cases
 
+check_PROGRAMS += format.test
+format_test_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/wassail -I$(top_srcdir)/src -I$(top_srcdir)/src/3rdparty
+format_test_SOURCES = tostring.h test_format.cpp
+
 check_PROGRAMS += internal.test
 internal_test_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/wassail -I$(top_srcdir)/src -I$(top_srcdir)/src/3rdparty
 internal_test_SOURCES = tostring.h test_internal.cpp

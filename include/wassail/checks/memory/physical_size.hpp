@@ -11,7 +11,7 @@
 
 #include <memory>
 #include <string>
-#include <wassail/checks/check.hpp>
+#include <wassail/checks/rules_engine.hpp>
 #include <wassail/data/sysconf.hpp>
 #include <wassail/data/sysctl.hpp>
 #include <wassail/data/sysinfo.hpp>
@@ -22,7 +22,7 @@ namespace wassail {
   namespace check {
     namespace memory {
       /*! \brief Check building block class for the amount of physical memory */
-      class physical_size : public wassail::check::common {
+      class physical_size : public wassail::check::rules_engine {
       public:
         struct {
           uint64_t mem_size = 0;  /*!< Physical memory size in bytes */
@@ -40,9 +40,14 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] mem_size Reference physical memory size in bytes
          *  \param[in] tolerance Tolerance in bytes
+         *
+         * Template field 0 is the observed amount of memory. In the case of
+         * error, field 0 contains the error message. Template field 1 is
+         * expected amount of memory. Template field 2 is the tolerance.
+         * Template field 3 is units of memory.
          */
         physical_size(uint64_t mem_size, uint64_t tolerance)
-            : common(
+            : rules_engine(
                   "Checking physical memory size",
                   "Observed memory size of {0} {3:s} not within {1} +/- {2} "
                   "{3:s}",
@@ -64,7 +69,7 @@ namespace wassail {
         physical_size(uint64_t mem_size, uint64_t tolerance, std::string brief,
                       std::string detail_yes, std::string detail_maybe,
                       std::string detail_no)
-            : common(brief, detail_yes, detail_maybe, detail_no),
+            : rules_engine(brief, detail_yes, detail_maybe, detail_no),
               config{mem_size, tolerance} {};
 
         /*! Check physical memory size

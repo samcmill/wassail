@@ -188,16 +188,16 @@ int main(int argc, char **argv) {
                                           "Value '{0}' does not match 'bar'",
                                           "Unable to perform comparison: '{0}'",
                                           "Value '{0}' matches 'bar'");
-    c.add_rule([](json j) {
-      return j.at(json::json_pointer("/data/FOO")).get<std::string>() == "bar";
-    });
+    c.add_rule(
+        [](json j) { return j.contains(json::json_pointer("/data/FOO")); });
+    c.add_rule([](json j) { return j["data"]["FOO"] == "bar"; });
     auto r = c.check(j);
 
     /* apply actual value to the detail format strings */
     if (r->issue == wassail::result::issue_t::YES or
         r->issue == wassail::result::issue_t::NO) {
-      r->format_detail(
-          r->detail, j.at(json::json_pointer("/data/FOO")).get<std::string>());
+      r->detail = wassail::format(r->detail,
+                                  j.value(json::json_pointer("/data/FOO"), ""));
     }
 
     std::cout << r << std::endl;

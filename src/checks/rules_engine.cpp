@@ -8,6 +8,7 @@
 #include <functional>
 #include <vector>
 #include <wassail/checks/rules_engine.hpp>
+#include <wassail/common.hpp>
 #include <wassail/json/json.hpp>
 #include <wassail/result.hpp>
 
@@ -38,7 +39,7 @@ namespace wassail {
       catch (std::exception &e) {
         logger(log_level::warn, e.what() + std::string(": ") + j.dump());
         r->issue = result::issue_t::MAYBE;
-        r->format_detail(fmt_str.detail_maybe, e.what(), j.dump());
+        r->detail = wassail::format(fmt_str.detail_maybe, e.what());
       }
 
       return r;

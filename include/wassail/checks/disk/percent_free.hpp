@@ -37,14 +37,19 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] fs Mount point to check
          *  \param[in] percent Reference percent free
+         *
+         * Template field 0 is the name of the filesystem. Template field 1 is
+         * the observed free disk percentage. Template field 2 is the expected
+         * or reference free disk percentage.
          */
         percent_free(std::string fs, float percent)
-            : common("Checking percent free disk space of filesystem '{0}'",
-                     "Observed percent free disk space {0}% is less than "
-                     "reference threshold value {1}%",
-                     "Unable to check percent free disk space: '{0}'",
-                     "Observed percent free disk space {0}% is greater than or "
-                     "equal to the reference threshold value {1}%"),
+            : common(
+                  "Checking percent free disk space of filesystem '{0}'",
+                  "Observed percent free disk space {1}% is less than "
+                  "reference threshold value {2}%",
+                  "Unable to check percent free disk space of filesystem '{0}'",
+                  "Observed percent free disk space {1}% is greater than or "
+                  "equal to the reference threshold value {2}%"),
               config{fs, percent} {};
 
         /*! \brief Construct an instance

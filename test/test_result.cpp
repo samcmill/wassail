@@ -105,7 +105,7 @@ TEST_CASE("match_issue") {
   REQUIRE(r->match_issue(wassail::result::issue_t::NO) == false);
 }
 
-TEST_CASE("second level match_issue and max_issue") {
+TEST_CASE("second level match_issue, max_issue, and propagate") {
   auto a = wassail::make_result();
 
   REQUIRE(a->max_issue() == wassail::result::issue_t::MAYBE);
@@ -127,6 +127,10 @@ TEST_CASE("second level match_issue and max_issue") {
   REQUIRE(a->match_issue(wassail::result::issue_t::NO) == false);
 
   REQUIRE(a->max_issue() == wassail::result::issue_t::YES);
+
+  a->propagate();
+
+  REQUIRE(a->issue == wassail::result::issue_t::YES);
 }
 
 TEST_CASE("match_priority") {
@@ -143,7 +147,7 @@ TEST_CASE("match_priority") {
   REQUIRE(r->match_priority(wassail::result::priority_t::DEBUG) == false);
 }
 
-TEST_CASE("second level match_priority and max_priority") {
+TEST_CASE("second level match_priority, max_priority, and propagate") {
   auto a = wassail::make_result();
 
   REQUIRE(a->max_priority() == wassail::result::priority_t::NOTICE);
@@ -169,6 +173,10 @@ TEST_CASE("second level match_priority and max_priority") {
   REQUIRE(a->match_priority(wassail::result::priority_t::DEBUG) == false);
 
   REQUIRE(a->max_priority() == wassail::result::priority_t::ERROR);
+
+  a->propagate();
+
+  REQUIRE(a->priority == wassail::result::priority_t::ERROR);
 }
 
 TEST_CASE("result JSON conversion") {

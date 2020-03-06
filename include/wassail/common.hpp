@@ -11,6 +11,10 @@
 
 #include <memory>
 #include <string>
+#include <wassail/fmt/format.h>
+
+/* Generate Doxygen documentation */
+/*! \file */
 
 namespace wassail {
   /* duplicate of spdlog::level::level_enum */
@@ -32,6 +36,21 @@ namespace wassail {
    * \param[in] log_level log level (default: warning)
    */
   void initialize(log_level log_level = log_level::warn);
+
+  /*! \brief Format args according to the format string fmt and return the
+   * result as a string.
+   *
+   * Implementation of C++20 std::format using fmtlib.  The format template
+   * syntax description can be found at http://fmtlib.net/latest/syntax.html.
+   *
+   * \param[in] fmt format template
+   * \param[in] args argument list
+   * \return formatted string
+   */
+  template <typename... T>
+  std::string format(const std::string &fmt, const T &... args) {
+    return fmt::vformat(fmt, {fmt::make_format_args(args...)});
+  }
 
   /*! \brief Basic interface to the internal logger
    *

@@ -12,6 +12,7 @@
 #include <functional>
 #include <vector>
 #include <wassail/checks/check.hpp>
+#include <wassail/common.hpp>
 #include <wassail/json/json.hpp>
 #include <wassail/result.hpp>
 
@@ -83,6 +84,29 @@ namespace wassail {
        *  \return result object
        */
       std::shared_ptr<wassail::result> check(const json &j);
+
+      /*! \brief Apply all rules
+       *  Also set the result brief and detail strings based on the arguments.
+       *
+       *  \param[in] j JSON object
+       *  \param[in] args argument list
+       *  \return result object
+       */
+      template <typename... T>
+      std::shared_ptr<wassail::result> check(const json &j, const T &... args) {
+        auto r = rules_engine::check(j);
+
+        r->brief = wassail::format(fmt_str.brief, args...);
+
+        if (r->issue == wassail::result::issue_t::YES) {
+          r->detail = wassail::format(fmt_str.detail_yes, args...);
+        }
+        else if (r->issue == wassail::result::issue_t::NO) {
+          r->detail = wassail::format(fmt_str.detail_no, args...);
+        }
+
+        return r;
+      }
     };
   } // namespace check
 } // namespace wassail

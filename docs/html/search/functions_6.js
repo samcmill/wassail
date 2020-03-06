@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['match_5fissue',['match_issue',['../classwassail_1_1result.html#ab0606aeeaa04347d88356e1b7653a36b',1,'wassail::result']]],
-  ['match_5fpriority',['match_priority',['../classwassail_1_1result.html#aba6a773e1352e2befc23a0b6fbacca47',1,'wassail::result']]],
-  ['max_5fissue',['max_issue',['../classwassail_1_1result.html#aa51fdfa234c32629b024ce16b9150bc4',1,'wassail::result']]],
-  ['max_5fpriority',['max_priority',['../classwassail_1_1result.html#a75771e2a5dd85e91fa8ebfed0f7be7f0',1,'wassail::result']]]
+  ['load_5faverage',['load_average',['../classwassail_1_1check_1_1misc_1_1load__average.html#a651c541420532798e57f770c7d494ed8',1,'wassail::check::misc::load_average::load_average(float load)'],['../classwassail_1_1check_1_1misc_1_1load__average.html#a76312858a68b25994006da8d41ca9690',1,'wassail::check::misc::load_average::load_average(float load, minute_t minute)'],['../classwassail_1_1check_1_1misc_1_1load__average.html#a3f55064c563b0126698bae7b0309c197',1,'wassail::check::misc::load_average::load_average(float load, minute_t minute, std::string brief, std::string detail_yes, std::string detail_maybe, std::string detail_no)']]],
+  ['logger',['logger',['../common_8hpp.html#ac641bf15a0455f7f1d17cede9f7e0ff3',1,'wassail']]]
 ];

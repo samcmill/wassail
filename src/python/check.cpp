@@ -33,7 +33,10 @@ void py_check(py::module &m) {
       .def(py::init<>())
       .def(py::init<std::string, std::string, std::string, std::string>())
       .def("add_rule", &wassail::check::rules_engine::add_rule)
-      .def("check", &wassail::check::rules_engine::check);
+      /* https://github.com/pybind/pybind11/issues/1153 */
+      .def("check",
+           (std::shared_ptr<wassail::result>(wassail::check::rules_engine::*)(
+               const json &))(&wassail::check::rules_engine::check));
 
   py::module check_cpu =
       check.def_submodule("cpu", "CPU check building blocks");
@@ -121,48 +124,24 @@ void py_check(py::module &m) {
       .def("check", py::overload_cast<wassail::data::environment &>(
                         &wassail::check::misc::environment::check));
 
-  py::class_<wassail::check::misc::load_average_1min>(check_misc,
-                                                      "load_average_1min")
-      .def(py::init<>())
-      .def(py::init<float>())
-      .def(
-          py::init<float, std::string, std::string, std::string, std::string>())
-      .def("check", py::overload_cast<const json &>(
-                        &wassail::check::misc::load_average_1min::check))
-      .def("check", py::overload_cast<wassail::data::getloadavg &>(
-                        &wassail::check::misc::load_average_1min::check))
-      .def("check", py::overload_cast<wassail::data::sysctl &>(
-                        &wassail::check::misc::load_average_1min::check))
-      .def("check", py::overload_cast<wassail::data::sysinfo &>(
-                        &wassail::check::misc::load_average_1min::check));
+  auto load_average =
+      py::class_<wassail::check::misc::load_average>(check_misc, "load_average")
+          .def(py::init<float>())
+          .def(py::init<float, wassail::check::misc::load_average::minute_t>())
+          .def(py::init<float, wassail::check::misc::load_average::minute_t,
+                        std::string, std::string, std::string, std::string>())
+          .def("check", py::overload_cast<const json &>(
+                            &wassail::check::misc::load_average::check))
+          .def("check", py::overload_cast<wassail::data::getloadavg &>(
+                            &wassail::check::misc::load_average::check))
+          .def("check", py::overload_cast<wassail::data::sysctl &>(
+                            &wassail::check::misc::load_average::check))
+          .def("check", py::overload_cast<wassail::data::sysinfo &>(
+                            &wassail::check::misc::load_average::check));
 
-  py::class_<wassail::check::misc::load_average_5min>(check_misc,
-                                                      "load_average_5min")
-      .def(py::init<>())
-      .def(py::init<float>())
-      .def(
-          py::init<float, std::string, std::string, std::string, std::string>())
-      .def("check", py::overload_cast<const json &>(
-                        &wassail::check::misc::load_average_5min::check))
-      .def("check", py::overload_cast<wassail::data::getloadavg &>(
-                        &wassail::check::misc::load_average_5min::check))
-      .def("check", py::overload_cast<wassail::data::sysctl &>(
-                        &wassail::check::misc::load_average_5min::check))
-      .def("check", py::overload_cast<wassail::data::sysinfo &>(
-                        &wassail::check::misc::load_average_5min::check));
-
-  py::class_<wassail::check::misc::load_average_15min>(check_misc,
-                                                       "load_average_15min")
-      .def(py::init<>())
-      .def(py::init<float>())
-      .def(
-          py::init<float, std::string, std::string, std::string, std::string>())
-      .def("check", py::overload_cast<const json &>(
-                        &wassail::check::misc::load_average_15min::check))
-      .def("check", py::overload_cast<wassail::data::getloadavg &>(
-                        &wassail::check::misc::load_average_15min::check))
-      .def("check", py::overload_cast<wassail::data::sysctl &>(
-                        &wassail::check::misc::load_average_15min::check))
-      .def("check", py::overload_cast<wassail::data::sysinfo &>(
-                        &wassail::check::misc::load_average_15min::check));
+  py::enum_<wassail::check::misc::load_average::minute_t>(load_average,
+                                                          "minute_t")
+      .value("ONE", wassail::check::misc::load_average::minute_t::ONE)
+      .value("FIVE", wassail::check::misc::load_average::minute_t::FIVE)
+      .value("FIFTEEN", wassail::check::misc::load_average::minute_t::FIFTEEN);
 }

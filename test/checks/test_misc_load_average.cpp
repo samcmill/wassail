@@ -19,7 +19,7 @@ TEST_CASE("load_average unknown JSON") {
   json j = {
       {"name", "unknown"}, {"data", {{"load_average", 4}}}, {"timestamp", 0}};
 
-  auto c = wassail::check::misc::load_average_1min(4);
+  auto c = wassail::check::misc::load_average(4);
 
   REQUIRE_THROWS(c.check(j));
 }
@@ -27,7 +27,7 @@ TEST_CASE("load_average unknown JSON") {
 TEST_CASE("load_average invalid JSON") {
   json j = {{"foo", "bar"}};
 
-  auto c = wassail::check::misc::load_average_1min(4);
+  auto c = wassail::check::misc::load_average(4);
 
   REQUIRE_THROWS(c.check(j));
 }
@@ -37,21 +37,22 @@ TEST_CASE("load_average basic JSON input (getloadavg)") {
             {"data", {{"load1", 2.0}, {"load5", 2.1}, {"load15", 2.2}}},
             {"timestamp", 0}};
 
-  auto c1 = wassail::check::misc::load_average_1min();
-  c1.config.load = 2.0;
+  auto c1 = wassail::check::misc::load_average(2.0);
   auto r1 = c1.check(j);
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
 
-  auto c5 = wassail::check::misc::load_average_5min(2.0);
+  auto c5 = wassail::check::misc::load_average(
+      2.0, wassail::check::misc::load_average::minute_t::FIVE);
   auto r5 = c5.check(j);
   REQUIRE(r5->issue == wassail::result::issue_t::YES);
 
-  auto c15 = wassail::check::misc::load_average_15min(
-      2.1234, "Brief {0}", "{0} > {1}", ":shrug:", "{0} <= {1}");
+  auto c15 = wassail::check::misc::load_average(
+      2.1234, wassail::check::misc::load_average::minute_t::FIFTEEN,
+      "Brief {0}", "{1:.2f} > {2:.2f}", ":shrug:", "{1:.2f} <= {2:.2f}");
   auto r15 = c15.check(j);
   REQUIRE(r15->issue == wassail::result::issue_t::YES);
   REQUIRE(r15->brief == "Brief 15");
-  REQUIRE(r15->detail == "2.2 > 2.1234");
+  REQUIRE(r15->detail == "2.20 > 2.12");
 }
 
 TEST_CASE("load_average basic JSON input (sysinfo)") {
@@ -62,21 +63,22 @@ TEST_CASE("load_average basic JSON input (sysinfo)") {
               {"load15", 101664},
               {"loads_scale", 65536}}}};
 
-  auto c1 = wassail::check::misc::load_average_1min();
-  c1.config.load = 1.0;
+  auto c1 = wassail::check::misc::load_average(1.0);
   auto r1 = c1.check(j);
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
 
-  auto c5 = wassail::check::misc::load_average_5min(2.0);
+  auto c5 = wassail::check::misc::load_average(
+      2.0, wassail::check::misc::load_average::minute_t::FIVE);
   auto r5 = c5.check(j);
   REQUIRE(r5->issue == wassail::result::issue_t::NO);
 
-  auto c15 = wassail::check::misc::load_average_15min(
-      1.5678, "Brief {0}", "{0} > {1}", ":shrug:", "{0} <= {1}");
+  auto c15 = wassail::check::misc::load_average(
+      1.5678, wassail::check::misc::load_average::minute_t::FIFTEEN,
+      "Brief {0}", "{1:.2f} > {2:.2f}", ":shrug:", "{1:.2f} <= {2:.2f}");
   auto r15 = c15.check(j);
   REQUIRE(r15->issue == wassail::result::issue_t::NO);
   REQUIRE(r15->brief == "Brief 15");
-  REQUIRE(r15->detail == "1.55127 <= 1.5678");
+  REQUIRE(r15->detail == "1.55 <= 1.57");
 }
 
 TEST_CASE("load_average basic JSON input (sysctl)") {
@@ -90,21 +92,22 @@ TEST_CASE("load_average basic JSON input (sysctl)") {
                   {"load15", 3063}}}}}}},
             {"timestamp", 0}};
 
-  auto c1 = wassail::check::misc::load_average_1min();
-  c1.config.load = 1.0;
+  auto c1 = wassail::check::misc::load_average(1.0);
   auto r1 = c1.check(j);
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
 
-  auto c5 = wassail::check::misc::load_average_5min(2.0);
+  auto c5 = wassail::check::misc::load_average(
+      2.0, wassail::check::misc::load_average::minute_t::FIVE);
   auto r5 = c5.check(j);
   REQUIRE(r5->issue == wassail::result::issue_t::NO);
 
-  auto c15 = wassail::check::misc::load_average_15min(
-      1.1234, "Brief {0}", "{0} > {1}", ":shrug:", "{0} <= {1}");
+  auto c15 = wassail::check::misc::load_average(
+      1.1234, wassail::check::misc::load_average::minute_t::FIFTEEN,
+      "Brief {0}", "{1:.2f} > {2:.2f}", ":shrug:", "{1:.2f} <= {2:.2f}");
   auto r15 = c15.check(j);
   REQUIRE(r15->issue == wassail::result::issue_t::YES);
   REQUIRE(r15->brief == "Brief 15");
-  REQUIRE(r15->detail == "1.49561 > 1.1234");
+  REQUIRE(r15->detail == "1.50 > 1.12");
 }
 
 TEST_CASE("load_average getloadavg input") {
@@ -125,7 +128,8 @@ TEST_CASE("load_average getloadavg input") {
 
   wassail::data::getloadavg d = j;
 
-  auto c1 = wassail::check::misc::load_average_1min(1.0);
+  auto c1 = wassail::check::misc::load_average(
+      1.0, wassail::check::misc::load_average::minute_t::ONE);
   auto r1 = c1.check(d);
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
   REQUIRE(r1->system_id.size() == 1);
@@ -197,7 +201,7 @@ TEST_CASE("load_average sysctl input") {
 
   wassail::data::sysctl d = j;
 
-  auto c1 = wassail::check::misc::load_average_1min(1.0);
+  auto c1 = wassail::check::misc::load_average(1.0);
   auto r1 = c1.check(d);
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
 }
@@ -232,7 +236,7 @@ TEST_CASE("load_average sysinfo input") {
 
   wassail::data::sysinfo d = j;
 
-  auto c1 = wassail::check::misc::load_average_1min(1.0);
+  auto c1 = wassail::check::misc::load_average(1.0);
   auto r1 = c1.check(d);
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
 }

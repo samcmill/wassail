@@ -16,7 +16,7 @@ LDFLAGS := @LDFLAGS@
 LIBS := $(libdir)/lib@PACKAGE@.a @LIBS@
 endif
 
-all: wassail-check wassail-compare wassail-compare-all wassail-dump wassail-dump-async wassail-environment wassail-standalone
+all: wassail-check wassail-core-count wassail-dump wassail-dump-async wassail-environment wassail-standalone wassail-stream
 
 clean:
 	$(RM) wassail-*
@@ -24,10 +24,7 @@ clean:
 wassail-check: check.cpp print.cpp
 	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
-wassail-compare: compare.cpp
-	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
-
-wassail-compare-all: compare-all.cpp
+wassail-core-count: core-count.cpp
 	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 wassail-dump: dump.cpp
@@ -40,4 +37,7 @@ wassail-environment: environment.cpp print.cpp
 	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 wassail-standalone: standalone.cpp print.cpp
+	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+wassail-stream: stream.cpp
 	$(CXX) $(CXXFLAGS) $(DEFS) $(LDFLAGS) -o $@ $^ $(LIBS)

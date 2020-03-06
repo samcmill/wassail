@@ -57,14 +57,14 @@ TEST_CASE("permissions basic JSON (stat)") {
   REQUIRE(r1->system_id[0] == "localhost.local");
   REQUIRE(r1->timestamp == std::chrono::system_clock::from_time_t(1530420039));
 
-  auto c2 = wassail::check::file::permissions(0777, "Brief {0}", "{0} != {1}",
-                                              "Error {0}", "{0} == {1}");
+  auto c2 = wassail::check::file::permissions(0777, "Brief {0}", "{1} != {2}",
+                                              "Error {0}", "{1} == {2}");
 
   auto r2 = c2.check(jin);
 
   REQUIRE(r2->issue == wassail::result::issue_t::YES);
   REQUIRE(r2->brief == "Brief /tmp");
-  REQUIRE(r2->detail == "0777 != 1777");
+  REQUIRE(r2->detail == "1777 != 0777");
 }
 
 TEST_CASE("permissions stat input") {

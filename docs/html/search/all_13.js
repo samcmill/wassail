@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['yes',['YES',['../classwassail_1_1result.html#aabb2777af60c292a24ecd96955a70e30a7469a286259799e5b37e5db9296f00b3',1,'wassail::result']]]
+  ['wassail',['wassail',['../index.html',1,'']]],
+  ['warning',['WARNING',['../classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97a059e9861e0400dfbe05c98a841f3f96b',1,'wassail::result']]]
 ];

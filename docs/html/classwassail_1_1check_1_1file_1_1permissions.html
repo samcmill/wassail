@@ -116,6 +116,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2d03612c3a2623dee280ddebc20b980e inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classwassail_1_1result.html">wassail::result</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1rules__engine.html#a2d03612c3a2623dee280ddebc20b980e">check</a> (const json &amp;j)</td></tr>
 <tr class="memdesc:a2d03612c3a2623dee280ddebc20b980e inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply all rules.  <a href="classwassail_1_1check_1_1rules__engine.html#a2d03612c3a2623dee280ddebc20b980e">More...</a><br /></td></tr>
 <tr class="separator:a2d03612c3a2623dee280ddebc20b980e inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9198338cde276358a03b8c980beabed3 inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="memTemplParams" colspan="2">template&lt;typename... T&gt; </td></tr>
+<tr class="memitem:a9198338cde276358a03b8c980beabed3 inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classwassail_1_1result.html">wassail::result</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1rules__engine.html#a9198338cde276358a03b8c980beabed3">check</a> (const json &amp;j, const T &amp;... args)</td></tr>
+<tr class="memdesc:a9198338cde276358a03b8c980beabed3 inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply all rules Also set the result brief and detail strings based on the arguments.  <a href="classwassail_1_1check_1_1rules__engine.html#a9198338cde276358a03b8c980beabed3">More...</a><br /></td></tr>
+<tr class="separator:a9198338cde276358a03b8c980beabed3 inherit pub_methods_classwassail_1_1check_1_1rules__engine"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classwassail_1_1check_1_1common"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classwassail_1_1check_1_1common')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classwassail_1_1check_1_1common.html">wassail::check::common</a></td></tr>
 <tr class="memitem:a219c530a5dc4002ac3caa8b4e0d95c74 inherit pub_methods_classwassail_1_1check_1_1common"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1check_1_1common.html#a219c530a5dc4002ac3caa8b4e0d95c74">common</a> ()</td></tr>
 <tr class="separator:a219c530a5dc4002ac3caa8b4e0d95c74 inherit pub_methods_classwassail_1_1check_1_1common"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,10 +175,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Construct an instance </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>octal protection mode to check </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>octal protection mode to check</td></tr>
   </table>
   </dd>
 </dl>
+<p>Template field 0 is the name of the file. In the case of error, field 0 contains the error message. Template field 1 is the observed octal permissions. Template field 2 is the expected or reference octal permissions. </p>
 
 </div>
 </div>

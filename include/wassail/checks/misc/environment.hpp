@@ -11,7 +11,7 @@
 
 #include <memory>
 #include <string>
-#include <wassail/checks/check.hpp>
+#include <wassail/checks/rules_engine.hpp>
 #include <wassail/data/environment.hpp>
 #include <wassail/json/json.hpp>
 #include <wassail/result.hpp>
@@ -20,7 +20,7 @@ namespace wassail {
   namespace check {
     namespace misc {
       /*! \brief Check building block class for environment variables */
-      class environment : public wassail::check::common {
+      class environment : public wassail::check::rules_engine {
       public:
         /*! \brief Configuration and thresholds */
         struct {
@@ -35,12 +35,17 @@ namespace wassail {
          *  \param[in] value Reference environment variable value
          *  \param[in] regex Consider the reference value to be a regular
          *                   expression
+         *
+         * Template field 0 is the name of the environment variable. In the case
+         * of error, field 0 contains the error message. Template field 1 is the
+         * observed value of the environment variable. Template field 2 is the
+         * expected or reference value of the environment variable.
          */
         environment(std::string variable, std::string value, bool regex = false)
-            : common("Checking environment variable '{0}'",
-                     "Value '{0}' does not match '{1}'",
-                     "Unable to check value '{0}'",
-                     "Value '{0}' matches '{1}'"),
+            : rules_engine("Checking environment variable '{0}'",
+                           "Value '{1}' does not match '{2}'",
+                           "Unable to check value '{0}'",
+                           "Value '{1}' matches '{2}'"),
               config{regex, value, variable} {}
 
         /*! Construct an instance
@@ -59,7 +64,7 @@ namespace wassail {
         environment(std::string variable, std::string value, bool regex,
                     std::string brief, std::string detail_yes,
                     std::string detail_maybe, std::string detail_no)
-            : common(brief, detail_yes, detail_maybe, detail_no),
+            : rules_engine(brief, detail_yes, detail_maybe, detail_no),
               config{regex, value, variable} {}
 
         /*! Check data (JSON)
@@ -79,7 +84,7 @@ namespace wassail {
 
       private:
         /*! Unique name for this building block */
-        std::string name() const { return "environment"; };
+        std::string name() const { return "misc/environment"; };
       };
     } // namespace misc
   }   // namespace check

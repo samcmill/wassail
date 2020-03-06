@@ -11,8 +11,7 @@
 
 #include <memory>
 #include <string>
-#include <wassail/checks/check.hpp>
-#include <wassail/checks/compare.hpp>
+#include <wassail/checks/rules_engine.hpp>
 #include <wassail/data/getloadavg.hpp>
 #include <wassail/data/sysctl.hpp>
 #include <wassail/data/sysinfo.hpp>
@@ -23,29 +22,46 @@ namespace wassail {
   namespace check {
     namespace misc {
       /*! \brief Check building block class for the system load average */
-      class load_average_generic : public wassail::check::compare {
+      class load_average : public wassail::check::rules_engine {
       public:
-        struct {
-          float load = 0; /*!< Reference load average */
-        } config;         /*!< Check building block configuration */
+        enum minute_t {
+          ONE = 1,     /*!< 1 minute load average */
+          FIVE = 5,    /*!< 5 minute load average */
+          FIFTEEN = 15 /*!< 15 minute load average */
+        };
 
-        /*! Construct an instance */
-        load_average_generic() : load_average_generic(0.0){};
+        struct {
+          float load = 0; /*!< Reference threshold load average */
+          minute_t minute = minute_t::ONE; /*!< Load average to check */
+        } config; /*!< Check building block configuration */
 
         /*! Construct an instance
          *  \param[in] load Reference load average
          */
-        load_average_generic(float load)
-            : compare("Checking {0} minute load average",
-                      "Observed load average {0:.2f} greater than reference "
-                      "threshold {1:.2f}",
-                      "Unable to check load average: '{0}'",
-                      "Observed load average {0:.2f} less than or equal to "
-                      "reference threshold {1:.2f}"),
-              config{load} {};
+        load_average(float load) : load_average(load, minute_t::ONE){};
 
         /*! Construct an instance
          *  \param[in] load Reference load average
+         *  \param[in] minute Load average value to check (1, 5, or 15 minute)
+         *
+         * Template field 0 is the time period of the load average (1, 5, or 15
+         * minutes). In the case of error, field 0 contains the error message.
+         * Template field 1 is the observed load average. Template field 2 is
+         * the expected or reference load average threshold.
+         */
+        load_average(float load, minute_t minute)
+            : rules_engine(
+                  "Checking {0} minute load average",
+                  "Observed load average {1:.2f} greater than reference "
+                  "threshold {2:.2f}",
+                  "Unable to check load average: '{0}'",
+                  "Observed load average {1:.2f} less than or equal to "
+                  "reference threshold {2:.2f}"),
+              config{load, minute} {};
+
+        /*! Construct an instance
+         *  \param[in] load Reference load average
+         *  \param[in] minute Load average value to check (1, 5, or 15 minute)
          *  \param[in] brief result brief format template
          *  \param[in] detail_yes result detail format template for the case
          *             when issue::YES
@@ -54,11 +70,11 @@ namespace wassail {
          *  \param[in] detail_no result detail format template for the case
          *             when issue::NO
          */
-        load_average_generic(float load, std::string brief,
-                             std::string detail_yes, std::string detail_maybe,
-                             std::string detail_no)
-            : compare(brief, detail_yes, detail_maybe, detail_no), config{
-                                                                       load} {};
+        load_average(float load, minute_t minute, std::string brief,
+                     std::string detail_yes, std::string detail_maybe,
+                     std::string detail_no)
+            : rules_engine(brief, detail_yes, detail_maybe, detail_no),
+              config{load, minute} {};
 
         /*! Check load average
          * \param[in] data JSON object
@@ -86,46 +102,8 @@ namespace wassail {
         std::shared_ptr<wassail::result> check(wassail::data::sysinfo &data);
 
       private:
-        virtual uint16_t get_minute() = 0;
-
         /*! Unique name for this building block */
         std::string name() const { return "misc/load_average"; };
-      };
-
-      /*! \brief Check building block class for the system 1 minute load
-       * average */
-      class load_average_1min : public load_average_generic {
-        using load_average_generic::load_average_generic;
-
-      private:
-        uint16_t get_minute() { return 1; }
-
-        /*! Unique name for this building block */
-        std::string name() const { return "misc/load_average_1min"; };
-      };
-
-      /*! \brief Check building block class for the system 5 minute load
-       * average */
-      class load_average_5min : public load_average_generic {
-        using load_average_generic::load_average_generic;
-
-      private:
-        uint16_t get_minute() { return 5; }
-
-        /*! Unique name for this building block */
-        std::string name() const { return "misc/load_average_5min"; };
-      };
-
-      /*! \brief Check building block class for the system 15 minute load
-       * average */
-      class load_average_15min : public load_average_generic {
-        using load_average_generic::load_average_generic;
-
-      private:
-        uint16_t get_minute() { return 15; }
-
-        /*! Unique name for this building block */
-        std::string name() const { return "misc/load_average_15min"; };
       };
     } // namespace misc
   }   // namespace check

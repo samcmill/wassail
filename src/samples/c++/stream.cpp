@@ -5,9 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/* This sample is a standalone program to demonstrate the "compare all"
- * check.  The goal is a simple demonstration of the "compare all" check,
- * not to be a statistically sound method.
+/* This sample is a standalone program to demonstrate some of the possible
+ * ways to perform a check, including use of the rules engine.
  *
  * The sample demonstrates comparing a value in a list of data to
  * a reference value.
@@ -82,30 +81,55 @@ int main(int argc, char **argv) {
   }
 
   /* Check that all STREAM triad bandwidth values are greater than 10000 MB/s */
-  auto c1 = wassail::check::compare();
-  auto r1 = c1.check(streamvec.cbegin(), streamvec.cend(),
-                     json::json_pointer("/data/triad"), std::greater<float>{},
-                     static_cast<float>(10000.0));
+  auto r1 = wassail::make_result();
+  r1->brief = "Checking STREAM Triad bandwidth";
+
+  auto c1 = wassail::check::rules_engine(
+      "Checking STREAM Triad bandwidth is greater than 10000 MB/s",
+      "Measured STREAM Triad bandwidth of {0} MB/s is less than bandwidth "
+      "threshold of 10000 MB/s",
+      "Error performing check: {0}",
+      "Measured STREAM Triad bandwidth of {0} MB/s is greater than or equal to "
+      "bandwidth threshold of 10000 MB/s");
+  c1.add_rule([](json j) {
+    return j.value(json::json_pointer("/data/triad"), 0.0) >= 10000.0;
+  });
+
+  for (auto &s : streamvec) {
+    auto r1i = c1.check(s, s.value(json::json_pointer("/data/triad"), 0.0));
+    r1->add_child(r1i);
+  }
+
+  r1->propagate();
   std::cout << r1;
 
-  /* Check that each STREAM triad bandwidth value in the range 12000 +/- 500
+  /* Check that each STREAM triad bandwidth value is in the range 12000 +/- 500
    * MB/s */
   float tolerance = 500;
-  auto outlier = [&](auto a, auto b) {
-    return a <= b + tolerance && a >= b - tolerance;
+  auto outlier = [&](json j) {
+    return j.value(json::json_pointer("/data/triad"), 0.0) <=
+               12000.0 + tolerance &&
+           j.value(json::json_pointer("/data/triad"), 0.0) >=
+               12000.0 - tolerance;
   };
 
-  auto c2 = wassail::check::compare(
+  auto r2 = wassail::make_result();
+  r2->brief = "Checking STREAM Triad bandwidth";
+
+  auto c2 = wassail::check::rules_engine(
       "Checking STREAM Triad bandwidth is in the range 12000 +/- 500 MB/s",
       "STREAM Triad bandwidth of {0} MB/s is outside the acceptable range",
       "Error during comparison: {0}",
       "STREAM Triad bandwidth of {0} MB/s is in the acceptable range");
-  auto r2 = c2.check(streamvec.cbegin(), streamvec.cend(),
-                     json::json_pointer("/data/triad"), outlier,
-                     static_cast<float>(12000));
-  r2->format_brief(
-      "Checking STREAM Triad bandwidth is in the range {0} +/- {1} MB/s", 12000,
-      tolerance);
+  c2.add_rule(outlier);
+
+  for (auto &s : streamvec) {
+    auto r2i =
+        c2.check(s, s.value(json::json_pointer("/data/triad"), 0.0), tolerance);
+    r2->add_child(r2i);
+  }
+
+  r2->propagate();
   std::cout << r2;
 
   return 0;

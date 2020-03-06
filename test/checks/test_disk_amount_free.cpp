@@ -111,7 +111,7 @@ TEST_CASE("amount_free basic getfsstat input") {
   /* amount = 5771575 * 4096 = 23640371200 bytes */
   auto c1 = wassail::check::disk::amount_free("/");
   c1.fmt_str.brief = "Brief {0}";
-  c1.fmt_str.detail_no = "{0} {2} >= {1} {2}";
+  c1.fmt_str.detail_no = "{1} {3} >= {2} {3}";
   auto r1 = c1.check(d);
 
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
@@ -119,8 +119,8 @@ TEST_CASE("amount_free basic getfsstat input") {
   REQUIRE(r1->detail == "23640371200 bytes >= 0 bytes");
 
   auto c2 = wassail::check::disk::amount_free("/", 1e14, "Something brief {0}",
-                                              "{0} {2} < {1} {2}", "{0}",
-                                              "{0} {2} >= {1} {2}");
+                                              "{1} {3} < {2} {3}", "{0}",
+                                              "{1} {3} >= {2} {3}");
   auto r2 = c2.check(d);
 
   REQUIRE(r2->issue == wassail::result::issue_t::YES);
@@ -207,7 +207,7 @@ TEST_CASE("amount_free basic getmntent input") {
   /* amount = 76420 * 4096 = 313016320 bytes */
   auto c1 = wassail::check::disk::amount_free("/");
   c1.fmt_str.brief = "Brief {0}";
-  c1.fmt_str.detail_no = "{0} {2} >= {1} {2}";
+  c1.fmt_str.detail_no = "{1} {3} >= {2} {3}";
   auto r1 = c1.check(d);
 
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
@@ -215,8 +215,8 @@ TEST_CASE("amount_free basic getmntent input") {
   REQUIRE(r1->detail == "313016320 bytes >= 0 bytes");
 
   auto c2 = wassail::check::disk::amount_free("/", 1e14, "Something brief {0}",
-                                              "{0} {2} < {1} {2}", "{0}",
-                                              "{0} {2} >= {1} {2}");
+                                              "{1} {3} < {2} {3}", "{0}",
+                                              "{1} {3} >= {2} {3}");
   auto r2 = c2.check(d);
 
   REQUIRE(r2->issue == wassail::result::issue_t::YES);

@@ -12,74 +12,105 @@
 namespace wassail {
   namespace check {
     namespace misc {
-      std::shared_ptr<wassail::result>
-      load_average_generic::check(const json &j) {
-        try {
-          uint16_t minute = get_minute();
+      std::shared_ptr<wassail::result> load_average::check(const json &j) {
+        float load = 99.9;
 
-          if (j.at("name").get<std::string>() == "getloadavg") {
-            std::string json_ptr = "/data/load" + std::to_string(minute);
-            auto r = compare::check(j, json::json_pointer(json_ptr),
-                                    std::less_equal<float>{}, config.load);
-            r->format_brief(fmt_str.brief, minute);
-            return r;
+        if (j.value("name", "") == "getloadavg") {
+          if (config.minute == minute_t::ONE) {
+            /* 1 minute load average */
+            add_rule([](json j) {
+              return j.contains(json::json_pointer("/data/load1"));
+            });
+            load = j.value(json::json_pointer("/data/load1"), 99.9);
           }
-          else if (j.at("name").get<std::string>() == "sysctl") {
-            /* Load averages from sysctl are stored as unsigned long and must
-             * be converted using the scale factor. */
-
-            std::string json_ptr =
-                "/data/vm/loadavg/load" + std::to_string(minute);
-            float scale =
-                j.at("data").at("vm").at("loadavg").at("fscale").get<float>();
-
-            auto r = compare::check(j, json::json_pointer(json_ptr),
-                                    std::less_equal<float>{}, config.load,
-                                    [&](const auto &val) -> float {
-                                      return static_cast<float>(val) / scale;
-                                    });
-            r->format_brief(fmt_str.brief, minute);
-            return r;
+          else if (config.minute == minute_t::FIVE) {
+            /* 5 minute load average */
+            add_rule([](json j) {
+              return j.contains(json::json_pointer("/data/load5"));
+            });
+            load = j.value(json::json_pointer("/data/load5"), 99.9);
           }
-          else if (j.at("name").get<std::string>() == "sysinfo") {
-            /* Load averages from sysinfo are stored as unsigned long and must
-             * be converted using the scale factor. */
-
-            std::string json_ptr = "/data/load" + std::to_string(minute);
-            float scale = j.at("data").at("loads_scale").get<float>();
-
-            auto r = compare::check(j, json::json_pointer(json_ptr),
-                                    std::less_equal<float>{}, config.load,
-                                    [&](const auto &val) -> float {
-                                      return static_cast<float>(val) / scale;
-                                    });
-            r->format_brief(fmt_str.brief, minute);
-            return r;
-          }
-          else {
-            throw std::runtime_error("Unrecognized JSON object");
+          else if (config.minute == minute_t::FIFTEEN) {
+            /* 15 minute load average */
+            add_rule([](json j) {
+              return j.contains(json::json_pointer("/data/load15"));
+            });
+            load = j.value(json::json_pointer("/data/load15"), 99.9);
           }
         }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
+        else if (j.value("name", "") == "sysctl") {
+          /* Load averages from sysctl are stored as unsigned long and must
+           * be converted using the scale factor. */
+
+          add_rule([](json j) {
+            return j.contains(json::json_pointer("/data/vm/loadavg/fscale"));
+          });
+          float scale =
+              j.value(json::json_pointer("/data/vm/loadavg/fscale"), 1.0);
+
+          if (config.minute == minute_t::ONE) {
+            /* 1 minute load average */
+            load = j.value(json::json_pointer("/data/vm/loadavg/load1"), 99.9) /
+                   scale;
+          }
+          else if (config.minute == minute_t::FIVE) {
+            /* 5 minute load average */
+            load = j.value(json::json_pointer("/data/vm/loadavg/load5"), 99.9) /
+                   scale;
+          }
+          else if (config.minute == minute_t::FIFTEEN) {
+            /* 15 minute load average */
+            load =
+                j.value(json::json_pointer("/data/vm/loadavg/load15"), 99.9) /
+                scale;
+          }
         }
+        else if (j.value("name", "") == "sysinfo") {
+          /* Load averages from sysinfo are stored as unsigned long and must
+           * be converted using the scale factor. */
+
+          add_rule([](json j) {
+            return j.contains(json::json_pointer("/data/loads_scale"));
+          });
+          float scale = j.value(json::json_pointer("/data/loads_scale"), 0.0);
+
+          if (config.minute == minute_t::ONE) {
+            /* 1 minute load average */
+            load = j.value(json::json_pointer("/data/load1"), 99.9) / scale;
+          }
+          else if (config.minute == minute_t::FIVE) {
+            /* 5 minute load average */
+            load = j.value(json::json_pointer("/data/load5"), 99.9) / scale;
+          }
+          else if (config.minute == minute_t::FIFTEEN) {
+            /* 15 minute load average */
+            load = j.value(json::json_pointer("/data/load15"), 99.9) / scale;
+          }
+        }
+        else {
+          throw std::runtime_error("Unrecognized JSON object");
+        }
+
+        add_rule([&](json j) { return load <= config.load; });
+
+        return rules_engine::check(j, static_cast<int>(config.minute), load,
+                                   config.load);
       }
 
       std::shared_ptr<wassail::result>
-      load_average_generic::check(wassail::data::getloadavg &d) {
+      load_average::check(wassail::data::getloadavg &d) {
         d.evaluate();
         return check(static_cast<json>(d));
       }
 
       std::shared_ptr<wassail::result>
-      load_average_generic::check(wassail::data::sysctl &d) {
+      load_average::check(wassail::data::sysctl &d) {
         d.evaluate();
         return check(static_cast<json>(d));
       }
 
       std::shared_ptr<wassail::result>
-      load_average_generic::check(wassail::data::sysinfo &d) {
+      load_average::check(wassail::data::sysinfo &d) {
         d.evaluate();
         return check(static_cast<json>(d));
       }

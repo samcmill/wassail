@@ -163,12 +163,13 @@ if __name__ == '__main__':
                                        'Value "{0}" does not match "bar"',
                                        'Unable to perform comparison: "{0}"',
                                        'Value "{0}" matches "bar"')
+        c.add_rule(lambda x: 'FOO' in x['data'])
         c.add_rule(lambda x: x['data']['FOO'] == 'bar')
         r = c.check(j)
 
         # apply actual value to the detail format strings
         if r.issue == wassail.issue_t.YES or r.issue == wassail.issue_t.NO:
-          r.detail = r.detail.format(j['data']['FOO'])
+          r.detail = r.detail.format(j['data'].get('FOO', ''))
 
         print_result(r)
     else:

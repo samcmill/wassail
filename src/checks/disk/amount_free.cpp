@@ -11,6 +11,7 @@
 #include <exception>
 #include <string>
 #include <wassail/checks/disk/amount_free.hpp>
+#include <wassail/common.hpp>
 
 namespace wassail {
   namespace check {
@@ -50,20 +51,23 @@ namespace wassail {
         }
 
         auto r = make_result(j);
-        r->format_brief(fmt_str.brief, config.filesystem);
+        r->brief = wassail::format(fmt_str.brief, config.filesystem, amount,
+                                   config.amount, "bytes");
         r->priority = result::priority_t::WARNING;
 
         if (not found) {
           r->issue = result::issue_t::MAYBE;
-          r->format_detail(fmt_str.detail_maybe, config.filesystem);
+          r->detail = wassail::format(fmt_str.detail_maybe, config.filesystem);
         }
         else if (amount < config.amount) {
           r->issue = result::issue_t::YES;
-          r->format_detail(fmt_str.detail_yes, amount, config.amount, "bytes");
+          r->detail = wassail::format(fmt_str.detail_yes, config.filesystem,
+                                      amount, config.amount, "bytes");
         }
         else {
           r->issue = result::issue_t::NO;
-          r->format_detail(fmt_str.detail_no, amount, config.amount, "bytes");
+          r->detail = wassail::format(fmt_str.detail_no, config.filesystem,
+                                      amount, config.amount, "bytes");
         }
 
         return r;

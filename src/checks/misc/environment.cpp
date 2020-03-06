@@ -16,48 +16,36 @@ namespace wassail {
   namespace check {
     namespace misc {
       std::shared_ptr<wassail::result> environment::check(const json &j) {
-        bool found = false;
-        std::string value;
+        if (j.value("name", "") == "environment") {
+          /* check environment variable key exists */
+          add_rule([&](json j) {
+            return j.contains(json::json_pointer("/data/" + config.variable));
+          });
 
-        try {
-          if (j.at("name").get<std::string>() == "environment") {
-            auto jdata = j.at("data");
-
-            if (jdata.contains(config.variable)) {
-              value = j.at("data").at(config.variable).get<std::string>();
-              found = true;
-            }
-            else {
-              value = "";
-              found = false;
-            }
+          if (config.regex) {
+            /* check environment variable matches the reference regex */
+            add_rule([&](json j) {
+              return std::regex_search(
+                  j.at(json::json_pointer("/data/" + config.variable))
+                      .get<std::string>(),
+                  std::regex(config.value));
+            });
           }
           else {
-            throw std::runtime_error("Unrecognized JSON object");
+            /* check environment variable is equal to the reference value */
+            add_rule([&](json j) {
+              return j["data"].value(config.variable, "") == config.value;
+            });
           }
-        }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
-        }
 
-        auto r = make_result(j);
-        r->format_brief(fmt_str.brief, config.variable);
-        r->priority = result::priority_t::WARNING;
-
-        if (not found or
-            (config.regex and
-             not regex_search(value, std::regex(config.value))) or
-            (not config.regex and value != config.value)) {
-          r->issue = result::issue_t::YES;
-          r->format_detail(fmt_str.detail_yes, value, config.value);
+          return rules_engine::check(
+              j, config.variable,
+              j.value(json::json_pointer("/data/" + config.variable), ""),
+              config.value);
         }
         else {
-          r->issue = result::issue_t::NO;
-          r->format_detail(fmt_str.detail_no, value, config.value);
+          throw std::runtime_error("Unrecognized JSON object");
         }
-
-        return r;
       }
 
       std::shared_ptr<wassail::result>

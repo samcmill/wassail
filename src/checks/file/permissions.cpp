@@ -29,35 +29,24 @@ namespace wassail {
   namespace check {
     namespace file {
       std::shared_ptr<wassail::result> permissions::check(const json &j) {
-        try {
-          if (j.at("name").get<std::string>() == "stat") {
-            const uint16_t ref =
-                j.at(json::json_pointer("/data/mode")).get<uint16_t>() & mask;
-            const uint16_t val = config.mode;
+        if (j.value("name", "") == "stat") {
+          const uint16_t val =
+              j.value(json::json_pointer("/data/mode"), 0) & mask;
 
-            add_rule([&](json j) { return ref == val; });
-            auto r = wassail::check::rules_engine::check(j);
+          /* check mode key exists */
+          add_rule([](json j) {
+            return j.contains(json::json_pointer("/data/mode"));
+          });
 
-            r->format_brief(
-                fmt_str.brief,
-                j.at(json::json_pointer("/data/path")).get<std::string>());
+          /* check observed value is equal to the reference value */
+          add_rule([&](json j) { return val == config.mode; });
 
-            if (r->issue == wassail::result::issue_t::YES) {
-              r->format_detail(fmt_str.detail_yes, to_oct(val), to_oct(ref));
-            }
-            else if (r->issue == wassail::result::issue_t::NO) {
-              r->format_detail(fmt_str.detail_no, to_oct(val), to_oct(ref));
-            }
-
-            return r;
-          }
-          else {
-            throw std::runtime_error("Unrecognized JSON object");
-          }
+          return rules_engine::check(
+              j, j.value(json::json_pointer("/data/path"), ""), to_oct(val),
+              to_oct(config.mode));
         }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
+        else {
+          throw std::runtime_error("Unrecognized JSON object");
         }
       }
 
