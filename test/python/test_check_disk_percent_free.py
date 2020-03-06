@@ -16,7 +16,7 @@ class Test(unittest.TestCase):
         r2 = c2.check(j)
         self.assertEqual(r2.issue, wassail.issue_t.YES)
 
-        c3 = wassail.check.disk.percent_free('/', 100, "Brief", "{0:.1f} < {1:.1f}", ":shrug:", "{0} >= {1}")
+        c3 = wassail.check.disk.percent_free('/', 100, "Brief", "{1:.1f} < {2:.1f}", ":shrug:", "{1} >= {2}")
         r3 = c3.check(j)
         self.assertEqual(r3.issue, wassail.issue_t.YES)
         self.assertEqual(r3.brief, "Brief")
