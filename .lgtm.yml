@@ -14,7 +14,7 @@ extraction:
       - libibumad-dev
       - libpciaccess-dev
       - libssh-dev
-      - pciutils-dev
+      - libpci-dev
     configure:
       command:
       - autoreconf -fiv
