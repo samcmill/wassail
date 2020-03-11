@@ -6,8 +6,8 @@
  */
 
 #pragma once
-#ifndef _WASSAIL_CHECK_SKELETON_H
-#define _WASSAIL_CHECK_SKELETON_H
+#ifndef _WASSAIL_CHECK_SKELETON_HPP
+#define _WASSAIL_CHECK_SKELETON_HPP
 
 #include <memory>
 #include <string>
