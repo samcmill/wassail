@@ -144,4 +144,14 @@ void py_check(py::module &m) {
       .value("ONE", wassail::check::misc::load_average::minute_t::ONE)
       .value("FIVE", wassail::check::misc::load_average::minute_t::FIVE)
       .value("FIFTEEN", wassail::check::misc::load_average::minute_t::FIFTEEN);
+
+  py::class_<wassail::check::misc::shell_output>(check_misc, "shell_output")
+      .def(py::init<std::string>())
+      .def(py::init<std::string, bool>())
+      .def(py::init<std::string, bool, std::string, std::string, std::string,
+                    std::string>())
+      .def("check", py::overload_cast<const json &>(
+                        &wassail::check::misc::shell_output::check))
+      .def("check", py::overload_cast<wassail::data::shell_command &>(
+                        &wassail::check::misc::shell_output::check));
 }

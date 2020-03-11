@@ -51,6 +51,7 @@ using json = nlohmann::json;
 #include <wassail/checks/memory/physical_size.hpp>
 #include <wassail/checks/misc/environment.hpp>
 #include <wassail/checks/misc/load_average.hpp>
+#include <wassail/checks/misc/shell_output.hpp>
 #include <wassail/checks/rules_engine.hpp>
 
 #endif

@@ -53,5 +53,9 @@ check_PROGRAMS += misc_load_average.test
 misc_load_average_test_SOURCES = $(top_srcdir)/test/tostring.h \
                                     test_misc_load_average.cpp
 
+check_PROGRAMS += misc_shell_output.test
+misc_shell_output_test_SOURCES = $(top_srcdir)/test/tostring.h \
+                                 test_misc_shell_output.cpp
+
 # Declare tests
 TESTS = $(check_PROGRAMS)

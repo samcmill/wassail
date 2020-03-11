@@ -14,6 +14,7 @@ nobase_pkginclude_HEADERS += checks/file/permissions.hpp
 nobase_pkginclude_HEADERS += checks/memory/physical_size.hpp
 nobase_pkginclude_HEADERS += checks/misc/environment.hpp
 nobase_pkginclude_HEADERS += checks/misc/load_average.hpp
+nobase_pkginclude_HEADERS += checks/misc/shell_output.hpp
 
 # Data sources
 nobase_pkginclude_HEADERS += data/data.hpp

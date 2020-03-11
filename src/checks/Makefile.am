@@ -55,3 +55,7 @@ libwassail_checks_la_SOURCES += misc/environment.cpp \
 libwassail_checks_la_SOURCES += misc/load_average.cpp \
     $(top_srcdir)/include/wassail/checks/misc/load_average.hpp \
     $(top_srcdir)/include/wassail/data/getloadavg.hpp
+
+libwassail_checks_la_SOURCES += misc/shell_output.cpp \
+    $(top_srcdir)/include/wassail/checks/misc/shell_output.hpp \
+    $(top_srcdir)/include/wassail/data/shell_command.hpp
