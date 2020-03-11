@@ -6,8 +6,8 @@
  */
 
 #pragma once
-#ifndef _WASSAIL_CHECK_FILE_PERMISSIONS_H
-#define _WASSAIL_CHECK_FILE_PERMISSIONS_H
+#ifndef _WASSAIL_CHECK_FILE_PERMISSIONS_HPP
+#define _WASSAIL_CHECK_FILE_PERMISSIONS_HPP
 
 #include <memory>
 #include <string>

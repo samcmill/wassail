@@ -6,8 +6,8 @@
  */
 
 #pragma once
-#ifndef _WASSAIL_CHECK_ENVIRONMENT_H
-#define _WASSAIL_CHECK_ENVIRONMENT_H
+#ifndef _WASSAIL_CHECK_MISC_ENVIRONMENT_HPP
+#define _WASSAIL_CHECK_MISC_ENVIRONMENT_HPP
 
 #include <memory>
 #include <string>
