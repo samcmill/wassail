@@ -23,7 +23,7 @@ void usage() {
       << std::endl;
   std::cout << "  -h, --help          Show this help message and exit"
             << std::endl;
-  std::cout << "  -m N, --method N    Use method N (0-9)" << std::endl;
+  std::cout << "  -m N, --method N    Use method N (0-10)" << std::endl;
 }
 
 int parse_args(int argc, char **argv) {
@@ -199,6 +199,15 @@ int main(int argc, char **argv) {
       r->detail = wassail::format(r->detail,
                                   j.value(json::json_pointer("/data/FOO"), ""));
     }
+
+    std::cout << r << std::endl;
+  }
+  else if (method == 10) {
+    /* Check that environment variable FOO equals "bar" */
+    auto d = wassail::data::shell_command("printenv FOO");
+
+    auto c = wassail::check::misc::shell_output("bar\n");
+    auto r = c.check(d);
 
     std::cout << r << std::endl;
   }
