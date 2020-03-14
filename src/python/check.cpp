@@ -152,6 +152,8 @@ void py_check(py::module &m) {
                     std::string>())
       .def("check", py::overload_cast<const json &>(
                         &wassail::check::misc::shell_output::check))
+      .def("check", py::overload_cast<wassail::data::remote_shell_command &>(
+                        &wassail::check::misc::shell_output::check))
       .def("check", py::overload_cast<wassail::data::shell_command &>(
                         &wassail::check::misc::shell_output::check));
 }

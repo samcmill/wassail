@@ -16,7 +16,8 @@ namespace wassail {
   namespace check {
     namespace misc {
       std::shared_ptr<wassail::result> shell_output::check(const json &j) {
-        if (j.value("name", "") == "shell_command") {
+        /* set rules to check shell output */
+        auto set_rules = [&]() {
           /* check shell command stdout key exists */
           add_rule([](json j) {
             return j.contains(json::json_pointer("/data/stdout"));
@@ -33,9 +34,31 @@ namespace wassail {
           else {
             /* check output is equal to the reference output */
             add_rule([&](json j) {
-              return j["data"].value("stdout", "") == config.output;
+              return j.value(json::json_pointer("/data/stdout"), "") ==
+                     config.output;
             });
           }
+        };
+
+        if (j.value("name", "") == "remote_shell_command") {
+          set_rules();
+
+          auto r = wassail::make_result(j);
+          r->brief = fmt_str.brief;
+
+          wassail::internal::for_each(
+              j["data"].begin(), j["data"].end(), [&](json j) {
+                auto child = rules_engine::check(
+                    j, j.value(json::json_pointer("/data/stdout"), ""),
+                    config.output);
+                r->add_child(child);
+              });
+
+          r->propagate();
+          return r;
+        }
+        else if (j.value("name", "") == "shell_command") {
+          set_rules();
 
           return rules_engine::check(
               j, j.value(json::json_pointer("/data/stdout"), ""),
@@ -44,6 +67,12 @@ namespace wassail {
         else {
           throw std::runtime_error("Unrecognized JSON object");
         }
+      }
+
+      std::shared_ptr<wassail::result>
+      shell_output::check(wassail::data::remote_shell_command &d) {
+        d.evaluate();
+        return check(static_cast<json>(d));
       }
 
       std::shared_ptr<wassail::result>

@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <wassail/checks/rules_engine.hpp>
+#include <wassail/data/remote_shell_command.hpp>
 #include <wassail/data/shell_command.hpp>
 #include <wassail/json/json.hpp>
 #include <wassail/result.hpp>
@@ -71,6 +72,14 @@ namespace wassail {
          * \return result object
          */
         std::shared_ptr<wassail::result> check(const json &data);
+
+        /*! Check data (building block)
+         * \param[in] data remote_shell_command data object
+         * \throws std::runtime_error() if input is invalid or unrecognized
+         * \return result object
+         */
+        std::shared_ptr<wassail::result>
+        check(wassail::data::remote_shell_command &data);
 
         /*! Check data (building block)
          * \param[in] data shell_command data object
