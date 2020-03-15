@@ -69,7 +69,7 @@ def print_result(result, level=0):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sample program demonstrating several approaches for using wassail')
-    parser.add_argument('--method', type=int, help='Use method N (0-10)')
+    parser.add_argument('--method', type=int, help='Use method N (0-8)')
     args = parser.parse_args()
 
     if args.method == 0:
@@ -150,10 +150,6 @@ if __name__ == '__main__':
 
         print_result(r)
     elif args.method == 7:
-        print('No corresponding Python method for C++ method 7')
-    elif args.method == 8:
-        print('No corresponding Python method for C++ method 8')
-    elif args.method == 9:
         # Check that the environment variable FOO equals "bar"
         d = wassail.data.environment()
         d.evaluate()
@@ -172,7 +168,7 @@ if __name__ == '__main__':
           r.detail = r.detail.format(j['data'].get('FOO', ''))
 
         print_result(r)
-    elif args.method == 10:
+    elif args.method == 8:
       # Check that the environment variable FOO equals "bar"
       d = wassail.data.shell_command("printenv FOO")
 

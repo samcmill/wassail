@@ -25,8 +25,6 @@ using json = nlohmann::json;
 namespace py = pybind11;
 
 void py_check(py::module &m) {
-  /* wassail.check.compare() is templated, so no Python binding */
-
   py::module check = m.def_submodule("check", "Check building blocks");
 
   py::class_<wassail::check::rules_engine>(check, "rules_engine")

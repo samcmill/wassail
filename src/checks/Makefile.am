@@ -12,13 +12,11 @@ libwassail_checks_la_CPPFLAGS = -I$(top_srcdir)/include \
                                 -I$(top_srcdir)/src/3rdparty
 
 libwassail_checks_la_SOURCES = $(top_srcdir)/include/wassail/checks/check.hpp \
-    $(top_srcdir)/include/wassail/checks/compare.hpp \
     $(top_srcdir)/include/wassail/common.hpp \
     $(top_srcdir)/include/wassail/result.hpp \
     $(top_srcdir)/src/internal.hpp
 
 noinst_HEADERS = $(top_srcdir)/include/wassail/checks/check.hpp \
-                 $(top_srcdir)/include/wassail/checks/compare.hpp \
                  $(top_srcdir)/include/wassail/checks/rules_engine.hpp \
                  $(top_srcdir)/include/wassail/result.hpp
 nobase_dist_pkgdata_DATA = skeleton_check/skeleton.hpp \

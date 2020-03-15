@@ -19,9 +19,6 @@ noinst_HEADERS += $(top_srcdir)/include/wassail/wassail.hpp
 
 # Test cases
 
-check_PROGRAMS += compare.test
-compare_test_SOURCES = $(top_srcdir)/test/tostring.h test_compare.cpp
-
 check_PROGRAMS += rules_engine.test
 rules_engine_test_SOURCES = $(top_srcdir)/test/tostring.h test_rules_engine.cpp
 

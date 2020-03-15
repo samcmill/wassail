@@ -43,7 +43,6 @@ using json = nlohmann::json;
 #include <wassail/data/uname.hpp>
 
 /* Checks */
-#include <wassail/checks/compare.hpp>
 #include <wassail/checks/cpu/core_count.hpp>
 #include <wassail/checks/disk/amount_free.hpp>
 #include <wassail/checks/disk/percent_free.hpp>
