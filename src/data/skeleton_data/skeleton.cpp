@@ -36,8 +36,8 @@ namespace wassail {
 
     skeleton::skeleton() : pimpl{std::make_unique<impl>()} {}
     skeleton::~skeleton() = default;
-    skeleton::skeleton(skeleton &&) = default;
-    skeleton &skeleton::operator=(skeleton &&) = default;
+    skeleton::skeleton(skeleton &&) = default;            // LCOV_EXCL_LINE
+    skeleton &skeleton::operator=(skeleton &&) = default; // LCOV_EXCL_LINE
 
     bool skeleton::enabled() const {
 #ifdef WITH_DATA_SKELETON
