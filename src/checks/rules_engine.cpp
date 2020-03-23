@@ -5,6 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include "internal.hpp"
+
 #include <functional>
 #include <vector>
 #include <wassail/checks/rules_engine.hpp>
@@ -37,7 +39,8 @@ namespace wassail {
         }
       }
       catch (std::exception &e) {
-        logger(log_level::warn, e.what() + std::string(": ") + j.dump());
+        wassail::internal::logger()->warn(e.what() + std::string(": ") +
+                                          j.dump());
         r->issue = result::issue_t::MAYBE;
         r->detail = wassail::format(fmt_str.detail_maybe, e.what());
       }

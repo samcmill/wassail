@@ -52,18 +52,6 @@ namespace wassail {
     return fmt::vformat(fmt, {fmt::make_format_args(args...)});
   }
 
-  /*! \brief Basic interface to the internal logger
-   *
-   * This function is provided so that templated code and other
-   * public interfaces can use the internal logger without exposing
-   * the details of the internal logger interface.  This should not
-   * be used by user code.
-   *
-   * \param[in] log_level Log level
-   * \param[in] msg Log message
-   */
-  void logger(const log_level log_level, const std::string msg);
-
   /*! \brief Return the wassail library version */
   std::string version();
 
