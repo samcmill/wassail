@@ -37,6 +37,9 @@ getmntent_test_SOURCES = test_getmntent.cpp
 check_PROGRAMS += getrlimit.test
 getrlimit_test_SOURCES = test_getrlimit.cpp
 
+check_PROGRAMS += nvml.test
+nvml_test_SOURCES = test_nvml.cpp
+
 check_PROGRAMS += pciaccess.test
 pciaccess_test_SOURCES = test_pciaccess.cpp
 

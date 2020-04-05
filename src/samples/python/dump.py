@@ -41,6 +41,7 @@ if __name__ == '__main__':
     dump(wassail.data.getloadavg())
     dump(wassail.data.getmntent())
     dump(wassail.data.getrlimit())
+    dump(wassail.data.nvml())
     dump(wassail.data.pciaccess())
     dump(wassail.data.pciutils())
     dump(wassail.data.ps())

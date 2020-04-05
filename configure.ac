@@ -160,6 +160,7 @@ AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <regex>]],
 
 dnl Check optional features (if missing, some functionality will be disabled)
 AC_CHECK_HEADERS([infiniband/umad.h])
+AC_CHECK_HEADERS([nvml.h])
 AC_CHECK_HEADERS([pci/pci.h])
 AC_CHECK_HEADERS([pciaccess.h])
 AC_CHECK_HEADERS([libssh/libsshpp.hpp])
@@ -313,6 +314,14 @@ AS_IF([test "x$ac_cv_header_sys_resource_h" = "xyes" &&
        AC_DEFINE(WITH_DATA_GETRLIMIT,,[getrlimit data source])],
       [AM_CONDITIONAL(WITH_DATA_GETRLIMIT, false)
        AC_MSG_WARN([disabling getrlimit data source])])
+
+dnl nvml data source
+AS_IF([test "x$ac_cv_header_nvml_h" = "xyes" &&
+       test "x$wassail_cv_func_dlopen" = "xyes"],
+      [AM_CONDITIONAL(WITH_DATA_NVML, true)
+       AC_DEFINE(WITH_DATA_NVML,,[nvml data source])],
+      [AM_CONDITIONAL(WITH_DATA_NVML, false)
+       AC_MSG_WARN([disabling nvml data source])])
 
 dnl pciaccess data source
 AS_IF([test "x$ac_cv_header_pciaccess_h" = "xyes" &&
