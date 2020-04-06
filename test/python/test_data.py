@@ -93,6 +93,18 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
+    def test_nvml(self):
+        """nvml data source"""
+        d = wassail.data.nvml()
+        if d.enabled():
+            d.evaluate()
+            s = str(d)
+            j = json.loads(s)
+            self.assertEqual(j['name'], 'nvml')
+        else:
+            with self.assertRaises(RuntimeError):
+                d.evaluate()
+
     def test_pciaccess(self):
         """pciaccess data source"""
         d = wassail.data.pciaccess()

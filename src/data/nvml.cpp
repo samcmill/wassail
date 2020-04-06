@@ -153,7 +153,7 @@ namespace wassail {
 
     private:
 #ifdef WITH_DATA_NVML
-      void *handle; /*!< Library handle */
+      void *handle = nullptr; /*!< Library handle */
 
       void device_query(nvmlDevice_t device);
       nvml::impl::nvlink nvlink_query(nvmlDevice_t device, unsigned int link);
