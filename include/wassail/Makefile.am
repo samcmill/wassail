@@ -23,6 +23,7 @@ nobase_pkginclude_HEADERS += data/getfsstat.hpp
 nobase_pkginclude_HEADERS += data/getloadavg.hpp
 nobase_pkginclude_HEADERS += data/getmntent.hpp
 nobase_pkginclude_HEADERS += data/getrlimit.hpp
+nobase_pkginclude_HEADERS += data/nvml.hpp
 nobase_pkginclude_HEADERS += data/pciaccess.hpp
 nobase_pkginclude_HEADERS += data/pciutils.hpp
 nobase_pkginclude_HEADERS += data/ps.hpp

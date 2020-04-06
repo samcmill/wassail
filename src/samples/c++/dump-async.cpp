@@ -51,6 +51,8 @@ int main(int argc, char **argv) {
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::getrlimit()));
   futures.emplace_back(
+      std::async(std::launch::async, dump, wassail::data::nvml()));
+  futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::pciaccess()));
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::pciutils()));

@@ -29,6 +29,7 @@ using json = nlohmann::json;
 #include <wassail/data/getloadavg.hpp>
 #include <wassail/data/getmntent.hpp>
 #include <wassail/data/getrlimit.hpp>
+#include <wassail/data/nvml.hpp>
 #include <wassail/data/pciaccess.hpp>
 #include <wassail/data/pciutils.hpp>
 #include <wassail/data/ps.hpp>

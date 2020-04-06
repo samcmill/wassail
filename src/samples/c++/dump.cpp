@@ -37,6 +37,7 @@ int main(int argc, char **argv) {
   dump(wassail::data::getloadavg());
   dump(wassail::data::getmntent());
   dump(wassail::data::getrlimit());
+  dump(wassail::data::nvml());
   dump(wassail::data::pciaccess());
   dump(wassail::data::pciutils());
   dump(wassail::data::ps());

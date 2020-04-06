@@ -43,6 +43,10 @@ libwassail_data_la_SOURCES += getrlimit.cpp \
     $(top_srcdir)/include/wassail/data/getrlimit.hpp
 dist_schema_DATA += getrlimit.json
 
+libwassail_data_la_SOURCES += nvml.cpp \
+    $(top_srcdir)/include/wassail/data/nvml.hpp
+dist_schema_DATA += nvml.json
+
 libwassail_data_la_SOURCES += pciaccess.cpp \
     $(top_srcdir)/include/wassail/data/pciaccess.hpp
 dist_schema_DATA += pciaccess.json

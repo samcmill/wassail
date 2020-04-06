@@ -1,0 +1,315 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/nvml.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail nvml data source building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "cuda_driver_version": {
+          "description": "CUDA driver version",
+          "type": "string"
+        },
+        "devices": {
+          "type": "object",
+          "properties": {
+            "bar1": {
+              "type": "object",
+              "properties": {
+                "free": {
+                  "description": "Unallocated BAR1 memory, bytes",
+                  "type": "number"
+                },
+                "total": {
+                  "description": "Total BAR1 memory, bytes",
+                  "type": "number"
+                },
+                "used": {
+                  "description": "Allocated BAR1 memory, bytes",
+                  "type": "number"
+                }
+              }
+            },
+            "board_part_number": {
+              "description": "Board part number",
+              "type": "string"
+            },
+            "brand": {
+              "description": "Brand of the device",
+              "type": "number"
+            },
+            "clock": {
+              "type": "object",
+              "properties": {
+                "current": {
+                  "type": "object",
+                  "properties": {
+                    "graphics": {
+                      "description": "Current graphics clock, MHz",
+                      "type": "number"
+                    },
+                    "memory": {
+                      "description": "Current memory clock, MHz",
+                      "type": "number"
+                    },
+                    "sm": {
+                      "description": "Current SM clock, MHz",
+                      "type": "number"
+                    }
+                  }
+                },
+                "default": {
+                  "type": "object",
+                  "properties": {
+                    "graphics": {
+                      "description": "Default application graphics clock, MHz",
+                      "type": "number"
+                    },
+                    "memory": {
+                      "description": "Default application memory clock, MHz",
+                      "type": "number"
+                    },
+                    "sm": {
+                      "description": "Default application SM clock, MHz",
+                      "type": "number"
+                    }
+                  }
+                },
+                "target": {
+                  "type": "object",
+                  "properties": {
+                    "graphics": {
+                      "description": "Target application graphics clock, MHz",
+                      "type": "number"
+                    },
+                    "memory": {
+                      "description": "Target application memory clock, MHz",
+                      "type": "number"
+                    },
+                    "sm": {
+                      "description": "Target application SM clock, MHz",
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            },
+            "compute_mode": {
+              "description": "Current compute mode",
+              "type": "number"
+            },
+            "cuda_compute_capability": {
+              "type": "object",
+              "properties": {
+                "major": {
+                  "description": "CUDA compute capability, major version",
+                  "type": "number"
+                },
+                "minor": {
+                  "description": "CUDA compute capability, minor version",
+                  "type": "number"
+                }
+              }
+            },
+            "ecc": {
+              "current": {
+                "description": "Current ECC mode",
+                "type": "boolean"
+              },
+              "errors": {
+                "aggregate": {
+                  "type": "object",
+                  "properties": {
+                    "corrected": {
+                      "description": "Aggregate corrected ECC errors",
+                      "type": "number"
+                    },
+                    "uncorrected": {
+                      "description": "Aggregate uncorrected ECC errors",
+                      "type": "number"
+                    }
+                  }
+                },
+                "volatile": {
+                  "type": "object",
+                  "properties": {
+                    "corrected": {
+                      "description": "Volatile corrected ECC errors",
+                      "type": "number"
+                    },
+                    "uncorrected": {
+                      "description": "Volatile uncorrected ECC errors",
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "pending": {
+                "description": "Pending ECC mode",
+                "type": "boolean"
+              } 
+            },
+            "index": {
+              "description": "GPU index",
+              "type": "number"
+            },
+            "inforom": {
+              "type": "object",
+              "properties": {
+                "checksum": {
+                  "description": "InfoROM configuration checksum",
+                  "type": "number"
+                },
+                "ecc_version": {
+                  "description": "ECC InfoROM version",
+                  "type": "string"
+                },
+                "image_version": {
+                  "description": "InfoROM image version",
+                  "type": "string"
+                },
+                "oem_version": {
+                  "description": "OEM InfoRom version",
+                  "type": "string"
+                },
+                "power_version": {
+                  "description": "Power InfoROM version",
+                  "type": "string"
+                }
+              }
+            },
+            "memory": {
+              "type": "object",
+              "properties": {
+                "free": {
+                  "description": "Unallocated FB memory, bytes",
+                  "type": "number"
+                },
+                "total": {
+                  "description": "Total FB memory, bytes",
+                  "type": "number"
+                },
+                "used": {
+                  "description": "Allocated FB memory, bytes",
+                  "type": "number"
+                }
+              }
+            },
+            "minor_number": {
+              "description": "Minor number for the device",
+              "type": "number"
+            },
+            "name": {
+              "description": "GPU product name",
+              "type": "string"
+            },
+            "pcie": {
+              "type": "object",
+              "properties": {
+                "bus": {
+                  "description": "Bus on which the device resides",
+                  "type": "number"
+                },
+                "bus_id": {
+                  "description": "domain:bus:device.function tuple",
+                  "type": "string"
+                },
+                "device": {
+                  "description": "Device's ID on the bus",
+                  "type": "number"
+                },
+                "device_id": {
+                  "description": "combined device and vendor IDs",
+                  "type": "number"
+                },
+                "domain": {
+                  "description": "PCI domain on which the device's bus resides",
+                  "type": "number"
+                },
+                "generation": {
+                  "description": "PCIE link generation",
+                  "type": "number"
+                },
+                "subsystem_id": {
+                  "description": "sub-system device ID",
+                  "type": "number"
+                },
+                "width": {
+                  "description": "PCIE link width",
+                  "type": "number"
+                }
+              }
+            },
+            "pstate": {
+              "description": "Power state",
+              "type": "number"
+            },
+            "retired_pages": {
+              "type": "object",
+              "properties": {
+                "double_bit": {
+                  "description": "Number of retired pages due to a double bit error",
+                  "type": "number"
+                },
+                "pending": {
+                  "description": "Pages pending retirements?",
+                  "type": "boolean"
+                },
+                "single_bit": {
+                  "description": "Number of retired pages due to multiple single bit errors",
+                  "type": "number"
+                }
+              }
+            },
+            "serial": {
+              "description": "GPU serial number",
+              "type": "string"
+            },
+            "temperature": {
+              "description": "Temperature, Celsius",
+              "type": "number"
+            },
+            "uuid": {
+              "description": "GPU UUID",
+              "type": "string"
+            },
+            "vbios": {
+              "description": "VBIOS version",
+              "type": "string"
+            }
+          }
+        },
+        "driver_version": {
+          "description": "Driver version",
+          "type": "string"
+        },
+        "nvml_version": {
+          "description": "NVML library version",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}
