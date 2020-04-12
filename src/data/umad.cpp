@@ -70,6 +70,22 @@ namespace wassail {
 
       /*! Private implementation of wassail::data::umad::evaluate() */
       void evaluate(umad &d, bool force);
+
+    private:
+#ifdef WITH_DATA_UMAD
+      void *handle = nullptr; /*!< Library handle */
+
+      template <class T>
+      std::function<T> load_symbol(std::string const &name) {
+        void *const symbol = dlsym(handle, name.c_str());
+
+        if (not symbol) {
+          throw std::runtime_error(dlerror());
+        }
+
+        return reinterpret_cast<T *>(symbol);
+      }
+#endif
     };
 
     umad::umad() : pimpl{std::make_unique<impl>()} {}
@@ -96,26 +112,28 @@ namespace wassail {
 
         int rv;
 
-        void *umad_handle = dlopen("libibumad.so", RTLD_LAZY);
-        if (not umad_handle) {
-          throw std::runtime_error(dlerror());
+        handle = dlopen("libibumad.so", RTLD_LAZY);
+        if (not handle) {
+          wassail::internal::logger()->error(
+              "unable to load libibumad library: {}", dlerror());
+          return;
         }
 
         /* Load symbols */
-        int (*_umad_init)() = (int (*)())dlsym(umad_handle, "umad_init");
-        int (*_umad_get_cas_names)(char(*)[UMAD_CA_NAME_LEN], int) =
-            (int (*)(char(*)[UMAD_CA_NAME_LEN], int))dlsym(
-                umad_handle, "umad_get_cas_names");
-        int (*_umad_get_ca)(char *, umad_ca_t *) =
-            (int (*)(char *, umad_ca_t *))dlsym(umad_handle, "umad_get_ca");
-        int (*_umad_release_ca)(umad_ca_t *) =
-            (int (*)(umad_ca_t *))dlsym(umad_handle, "umad_release_ca");
+        auto const _umad_init = load_symbol<int()>("umad_init");
+        auto const _umad_get_cas_names =
+            load_symbol<int(char(*)[UMAD_CA_NAME_LEN], int)>(
+                "umad_get_cas_names");
+        auto const _umad_get_ca =
+            load_symbol<int(char *, umad_ca_t *)>("umad_get_ca");
+        auto const _umad_release_ca =
+            load_symbol<int(umad_ca_t *)>("umad_release_ca");
 
         rv = _umad_init();
         if (rv != 0) {
           wassail::internal::logger()->error(
               "unable to initialize umad library");
-          dlclose(umad_handle);
+          dlclose(handle);
           return;
         }
 
@@ -180,14 +198,14 @@ namespace wassail {
         else {
           wassail::internal::logger()->error(
               "unable to list InfiniBand device names");
-          dlclose(umad_handle);
+          dlclose(handle);
           return;
         }
 
         d.timestamp = std::chrono::system_clock::now();
         collected = true;
 
-        dlclose(umad_handle);
+        dlclose(handle);
 #else
         throw std::runtime_error("umad data source is not available");
 #endif
@@ -251,6 +269,8 @@ namespace wassail {
 
       j = dynamic_cast<const wassail::data::common &>(d);
 
+      j["data"]["devices"] = json::array();
+
       for (auto i : d.pimpl->data.devices) {
         json device;
 
@@ -262,6 +282,8 @@ namespace wassail {
         device["hw_ver"] = i.hw_ver;
         device["node_guid"] = i.node_guid;
         device["system_guid"] = i.system_guid;
+
+        device["ports"] = json::array();
 
         for (auto p : i.ports) {
           json port;

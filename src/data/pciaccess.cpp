@@ -61,6 +61,22 @@ namespace wassail {
 
       /*! Private implementation of wassail::data::pciaccess::evaluate() */
       void evaluate(pciaccess &d, bool force);
+
+    private:
+#ifdef WITH_DATA_PCIACCESS
+      void *handle = nullptr; /*!< Library handle */
+
+      template <class T>
+      std::function<T> load_symbol(std::string const &name) {
+        void *const symbol = dlsym(handle, name.c_str());
+
+        if (not symbol) {
+          throw std::runtime_error(dlerror());
+        }
+
+        return reinterpret_cast<T *>(symbol);
+      }
+#endif
     };
 
     pciaccess::pciaccess() : pimpl{std::make_unique<impl>()} {}
@@ -89,36 +105,35 @@ namespace wassail {
         struct pci_device_iterator *i;
         struct pci_device *dev;
 
-        void *handle = dlopen("libpciaccess.so", RTLD_LAZY);
+        handle = dlopen("libpciaccess.so", RTLD_LAZY);
         if (not handle) {
-          throw std::runtime_error(dlerror());
+          wassail::internal::logger()->error(
+              "unable to load libpciaccess library: {}", dlerror());
         }
 
         /* Load symbols */
-        struct pci_device *(*_pci_device_next)(struct pci_device_iterator *) =
-            (struct pci_device * (*)(struct pci_device_iterator *))
-                dlsym(handle, "pci_device_next");
-        const char *(*_pci_device_get_device_name)(const struct pci_device *) =
-            (const char *(*)(const struct pci_device *))dlsym(
-                handle, "pci_device_get_device_name");
-        const char *(*_pci_device_get_subdevice_name)(
-            const struct pci_device *) =
-            (const char *(*)(const struct pci_device *))dlsym(
-                handle, "pci_device_get_subdevice_name");
-        const char *(*_pci_device_get_subvendor_name)(
-            const struct pci_device *) =
-            (const char *(*)(const struct pci_device *))dlsym(
-                handle, "pci_device_get_subvendor_name");
-        const char *(*_pci_device_get_vendor_name)(const struct pci_device *) =
-            (const char *(*)(const struct pci_device *))dlsym(
-                handle, "pci_device_get_vendor_name");
-        struct pci_device_iterator *(*_pci_slot_match_iterator_create)(
-            const struct pci_slot_match *) =
-            (struct pci_device_iterator * (*)(const struct pci_slot_match *))
-                dlsym(handle, "pci_slot_match_iterator_create");
-        void (*_pci_system_cleanup)() =
-            (void (*)())dlsym(handle, "pci_system_cleanup");
-        int (*_pci_system_init)() = (int (*)())dlsym(handle, "pci_system_init");
+        auto const _pci_device_next =
+            load_symbol<struct pci_device *(struct pci_device_iterator *)>(
+                "pci_device_next");
+        auto const _pci_device_get_device_name =
+            load_symbol<const char *(const struct pci_device *)>(
+                "pci_device_get_device_name");
+        auto const _pci_device_get_subdevice_name =
+            load_symbol<const char *(const struct pci_device *)>(
+                "pci_device_get_subdevice_name");
+        auto const _pci_device_get_subvendor_name =
+            load_symbol<const char *(const struct pci_device *)>(
+                "pci_device_get_subdevice_name");
+        auto const _pci_device_get_vendor_name =
+            load_symbol<const char *(const struct pci_device *)>(
+                "pci_device_get_vendor_name");
+        auto const _pci_slot_match_iterator_create =
+            load_symbol<struct pci_device_iterator *(
+                const struct pci_slot_match *)>(
+                "pci_slot_match_iterator_create");
+        auto const _pci_system_cleanup =
+            load_symbol<void()>("pci_system_cleanup");
+        auto const _pci_system_init = load_symbol<int()>("pci_system_init");
 
         rv = _pci_system_init();
         if (rv != 0) {
@@ -230,6 +245,8 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["data"]["devices"] = json::array();
 
       for (auto i : d.pimpl->data.devices) {
         json device;

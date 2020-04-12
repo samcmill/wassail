@@ -27,7 +27,7 @@ TEST_CASE("umad basic usage") {
       REQUIRE(j["data"]["devices"].size() > 0);
     }
     else {
-      REQUIRE_THROWS(j.at("data").at("devices"));
+      REQUIRE(j["data"]["devices"].size() == 0);
     }
   }
   else {

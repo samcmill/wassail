@@ -56,6 +56,22 @@ namespace wassail {
 
       /*! Private implementation of wassail::data::pciutils::evaluate() */
       void evaluate(pciutils &d, bool force);
+
+    private:
+#ifdef WITH_DATA_PCIUTILS
+      void *handle = nullptr; /*!< Library handle */
+
+      template <class T>
+      std::function<T> load_symbol(std::string const &name) {
+        void *const symbol = dlsym(handle, name.c_str());
+
+        if (not symbol) {
+          throw std::runtime_error(dlerror());
+        }
+
+        return reinterpret_cast<T *>(symbol);
+      }
+#endif
     };
 
     pciutils::pciutils() : pimpl{std::make_unique<impl>()} {}
@@ -80,25 +96,27 @@ namespace wassail {
 
         struct pci_access *p;
 
-        void *handle = dlopen("libpci.so", RTLD_LAZY);
+        handle = dlopen("libpci.so", RTLD_LAZY);
         if (not handle) {
-          throw std::runtime_error(dlerror());
+          wassail::internal::logger()->error(
+              "unable to load libpci library: {}", dlerror());
+          return;
         }
 
         /* Load symbols */
-        struct pci_access *(*_pci_alloc)() =
-            (struct pci_access * (*)()) dlsym(handle, "pci_alloc");
-        void (*_pci_cleanup)(struct pci_access *) =
-            (void (*)(struct pci_access *))dlsym(handle, "pci_cleanup");
-        int (*_pci_fill_info)(struct pci_dev *, int) =
-            (int (*)(struct pci_dev *, int))dlsym(handle, "pci_fill_info");
-        void (*_pci_init)(struct pci_access *) =
-            (void (*)(struct pci_access *))dlsym(handle, "pci_init");
+        auto const _pci_alloc = load_symbol<struct pci_access *()>("pci_alloc");
+        auto const _pci_cleanup =
+            load_symbol<void(struct pci_access *)>("pci_cleanup");
+        auto const _pci_fill_info =
+            load_symbol<int(struct pci_dev *, int)>("pci_fill_info");
+        auto const _pci_init =
+            load_symbol<void(struct pci_access *)>("pci_init");
+        auto const _pci_scan_bus =
+            load_symbol<void(struct pci_access *)>("pci_scan_bus");
+        /* special handling for symbol with variadic arguments */
         char *(*_pci_lookup_name)(struct pci_access *, char *, int, int, ...) =
             (char *(*)(struct pci_access *, char *, int, int, ...))dlsym(
                 handle, "pci_lookup_name");
-        void (*_pci_scan_bus)(struct pci_access *) =
-            (void (*)(struct pci_access *))dlsym(handle, "pci_scan_bus");
 
         p = _pci_alloc();
         if (p == NULL) {
@@ -192,6 +210,8 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["data"]["devices"] = json::array();
 
       for (auto i : d.pimpl->data.devices) {
         json device;
