@@ -109,6 +109,7 @@ namespace wassail {
         if (not handle) {
           wassail::internal::logger()->error(
               "unable to load libpciaccess library: {}", dlerror());
+          return;
         }
 
         /* Load symbols */
