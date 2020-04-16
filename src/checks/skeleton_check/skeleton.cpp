@@ -14,19 +14,13 @@
 namespace wassail {
   namespace check {
     std::shared_ptr<wassail::result> skeleton::check(const json &j) {
-      try {
-        if (j.at("name").get<std::string>() == "skeleton") {
-          auto r = wassail::make_result(j);
-          /* check something */
-          return r;
-        }
-        else {
-          throw std::runtime_error("Unrecognized JSON object");
-        }
+      if (j.value("name", "") == "skeleton") {
+        auto r = wassail::make_result(j);
+        /* check something */
+        return r;
       }
-      catch (std::exception &e) {
-        throw std::runtime_error(std::string("Unable to perform check: ") +
-                                 std::string(e.what()));
+      else {
+        throw std::runtime_error("Unrecognized JSON object");
       }
     }
 

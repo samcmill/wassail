@@ -107,6 +107,12 @@ TEST_CASE("umad invalid version JSON conversion") {
 
 TEST_CASE("umad incomplete JSON conversion") {
   auto jin = R"({ "name": "umad", "timestamp": 0, "version": 100})"_json;
-  wassail::data::umad d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::umad d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "umad");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("devices") == 1);
+  REQUIRE(jout["data"]["devices"].size() == 0);
 }

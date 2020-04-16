@@ -216,51 +216,47 @@ namespace wassail {
     void from_json(const json &j, umad &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        for (auto i : j.at("data").at("devices")) {
-          umad::impl::ca_item ca;
-          ca.name = i.at("name").get<std::string>();
-          ca.node_type = i.at("node_type").get<uint>();
-          ca.numports = i.at("numports").get<int>();
-          ca.fw_ver = i.at("fw_ver").get<std::string>();
-          ca.ca_type = i.at("ca_type").get<std::string>();
-          ca.hw_ver = i.at("hw_ver").get<std::string>();
-          ca.node_guid = i.at("node_guid").get<uint64_t>();
-          ca.system_guid = i.at("system_guid").get<uint64_t>();
+      for (auto i :
+           j.value(json::json_pointer("/data/devices"), json::array())) {
+        umad::impl::ca_item ca;
 
-          for (auto p : i.at("ports")) {
-            umad::impl::port_item port;
-            port.ca_name = p.at("ca_name").get<std::string>();
-            port.portnum = p.at("portnum").get<int>();
-            port.base_lid = p.at("base_lid").get<uint>();
-            port.lmc = p.at("lmc").get<uint>();
-            port.sm_lid = p.at("sm_lid").get<uint>();
-            port.sm_sl = p.at("sm_sl").get<uint>();
-            port.state = p.at("state").get<uint>();
-            port.phys_state = p.at("phys_state").get<uint>();
-            port.rate = p.at("rate").get<uint>();
-            port.capmask = p.at("capmask").get<uint64_t>();
-            port.gid_prefix = p.at("gid_prefix").get<uint64_t>();
-            port.port_guid = p.at("port_guid").get<uint64_t>();
-            port.link_layer = p.at("link_layer").get<std::string>();
+        ca.name = i.value("name", "");
+        ca.node_type = i.value("node_type", 0U);
+        ca.numports = i.value("numports", 0);
+        ca.fw_ver = i.value("fw_ver", "");
+        ca.ca_type = i.value("ca_type", "");
+        ca.hw_ver = i.value("hw_ver", "");
+        ca.node_guid = i.value("node_guid", 0ULL);
+        ca.system_guid = i.value("system_guid", 0ULL);
 
-            ca.ports.push_back(port);
-          }
+        for (auto p : i.value("ports", json::array())) {
+          umad::impl::port_item port;
 
-          d.pimpl->data.devices.push_back(ca);
+          port.ca_name = p.value("ca_name", "");
+          port.portnum = p.value("portnum", 0);
+          port.base_lid = p.value("base_lid", 0U);
+          port.lmc = p.value("lmc", 0U);
+          port.sm_lid = p.value("sm_lid", 0U);
+          port.sm_sl = p.value("sm_sl", 0U);
+          port.state = p.value("state", 0U);
+          port.phys_state = p.value("phys_state", 0U);
+          port.rate = p.value("rate", 0U);
+          port.capmask = p.value("capmask", 0ULL);
+          port.gid_prefix = p.value("gid_prefix", 0ULL);
+          port.port_guid = p.value("port_guid", 0ULL);
+          port.link_layer = p.value("link_layer", "");
+
+          ca.ports.push_back(port);
         }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
+
+        d.pimpl->data.devices.push_back(ca);
       }
     }
 

@@ -37,10 +37,10 @@ namespace wassail {
      *
      *  auto c = wassail::check::rules_engine();
      *  c.add_rule([](json j) {
-     *    return j.at(json::json_pointer("/data/v_int")).get<int>() == 4096;
+     *    return j.value(json::json_pointer("/data/v_int"), 0) == 4096;
      *  });
      *  c.add_rule([](json j) {
-     *    return j.at(json::json_pointer("/data/v_float")).get<float>() >= 3;
+     *    return j.value(json::json_pointer("/data/v_float"), 0.0) >= 3;
      *  });
      *  auto r = c.check(jin);
      *  \endcode

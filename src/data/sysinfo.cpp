@@ -105,37 +105,37 @@ namespace wassail {
     void from_json(const json &j, sysinfo &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.pimpl->data.uptime = jdata.at("uptime").get<long>();
-        d.pimpl->data.loads[0] = jdata.at("load1").get<unsigned long>();
-        d.pimpl->data.loads[1] = jdata.at("load5").get<unsigned long>();
-        d.pimpl->data.loads[2] = jdata.at("load15").get<unsigned long>();
-        d.pimpl->data.totalram = jdata.at("totalram").get<unsigned long>();
-        d.pimpl->data.freeram = jdata.at("freeram").get<unsigned long>();
-        d.pimpl->data.sharedram = jdata.at("sharedram").get<unsigned long>();
-        d.pimpl->data.bufferram = jdata.at("bufferram").get<unsigned long>();
-        d.pimpl->data.totalswap = jdata.at("totalswap").get<unsigned long>();
-        d.pimpl->data.freeswap = jdata.at("freeswap").get<unsigned long>();
-        d.pimpl->data.procs = jdata.at("procs").get<unsigned short>();
-        d.pimpl->data.totalhigh = jdata.at("totalhigh").get<unsigned long>();
-        d.pimpl->data.freehigh = jdata.at("freehigh").get<unsigned long>();
-        d.pimpl->data.mem_unit = jdata.at("mem_unit").get<unsigned int>();
-        d.pimpl->data.loads_scale =
-            jdata.at("loads_scale").get<unsigned long>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.uptime = j.value(json::json_pointer("/data/uptime"), 0L);
+      d.pimpl->data.loads[0] = j.value(json::json_pointer("/data/load1"), 0UL);
+      d.pimpl->data.loads[1] = j.value(json::json_pointer("/data/load5"), 0UL);
+      d.pimpl->data.loads[2] = j.value(json::json_pointer("/data/load15"), 0UL);
+      d.pimpl->data.totalram =
+          j.value(json::json_pointer("/data/totalram"), 0UL);
+      d.pimpl->data.freeram = j.value(json::json_pointer("/data/freeram"), 0UL);
+      d.pimpl->data.sharedram =
+          j.value(json::json_pointer("/data/sharedram"), 0UL);
+      d.pimpl->data.bufferram =
+          j.value(json::json_pointer("/data/bufferram"), 0UL);
+      d.pimpl->data.totalswap =
+          j.value(json::json_pointer("/data/totalswap"), 0UL);
+      d.pimpl->data.freeswap =
+          j.value(json::json_pointer("/data/freeswap"), 0UL);
+      d.pimpl->data.procs = j.value(json::json_pointer("/data/procs"), 0U);
+      d.pimpl->data.totalhigh =
+          j.value(json::json_pointer("/data/totalhigh"), 0UL);
+      d.pimpl->data.freehigh =
+          j.value(json::json_pointer("/data/freehigh"), 0UL);
+      d.pimpl->data.mem_unit =
+          j.value(json::json_pointer("/data/mem_unit"), 0U);
+      d.pimpl->data.loads_scale =
+          j.value(json::json_pointer("/data/loads_scale"), 0UL);
     }
 
     void to_json(json &j, const sysinfo &d) {

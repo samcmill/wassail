@@ -77,27 +77,21 @@ namespace wassail {
     void from_json(const json &j, sysconf &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.pimpl->data.nprocessors_conf =
-            jdata.at("nprocessors_conf").get<long>();
-        d.pimpl->data.nprocessors_onln =
-            jdata.at("nprocessors_onln").get<long>();
-        d.pimpl->data.page_size = jdata.at("page_size").get<long>();
-        d.pimpl->data.phys_pages = jdata.at("phys_pages").get<long>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.nprocessors_conf =
+          j.value(json::json_pointer("/data/nprocessors_conf"), 0L);
+      d.pimpl->data.nprocessors_onln =
+          j.value(json::json_pointer("/data/nprocessors_onln"), 0L);
+      d.pimpl->data.page_size =
+          j.value(json::json_pointer("/data/page_size"), 0L);
+      d.pimpl->data.phys_pages =
+          j.value(json::json_pointer("/data/phys_pages"), 0L);
     }
 
     void to_json(json &j, const sysconf &d) {

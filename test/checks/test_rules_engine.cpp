@@ -32,7 +32,8 @@ TEST_CASE("rules_engine basic JSON input") {
   auto r1 = c.check(j);
   REQUIRE(r1->issue == wassail::result::issue_t::NO);
   REQUIRE(r1->priority == wassail::result::priority_t::INFO);
-  REQUIRE(r1->system_id.size() == 0);
+  REQUIRE(r1->system_id.size() == 1);
+  REQUIRE(r1->system_id[0] == "");
   REQUIRE(r1->timestamp == std::chrono::system_clock::from_time_t(1234));
 
   /* modify json to add hostname entry */

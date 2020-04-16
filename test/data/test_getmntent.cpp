@@ -69,6 +69,12 @@ TEST_CASE("getmntent invalid version JSON conversion") {
 
 TEST_CASE("getmntent incomplete JSON conversion") {
   auto jin = R"({ "name": "getmntent", "timestamp": 0, "version": 100})"_json;
-  wassail::data::getmntent d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::getmntent d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "getmntent");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("file_systems") == 1);
+  REQUIRE(jout["data"]["file_systems"].size() == 0);
 }

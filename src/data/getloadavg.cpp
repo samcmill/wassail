@@ -78,24 +78,16 @@ namespace wassail {
     void from_json(const json &j, getloadavg &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.pimpl->data.load1 = jdata.at("load1").get<double>();
-        d.pimpl->data.load5 = jdata.at("load5").get<double>();
-        d.pimpl->data.load15 = jdata.at("load15").get<double>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.load1 = j.value(json::json_pointer("/data/load1"), 0.0);
+      d.pimpl->data.load5 = j.value(json::json_pointer("/data/load5"), 0.0);
+      d.pimpl->data.load15 = j.value(json::json_pointer("/data/load15"), 0.0);
     }
 
     void to_json(json &j, const getloadavg &d) {

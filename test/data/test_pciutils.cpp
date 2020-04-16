@@ -84,6 +84,12 @@ TEST_CASE("pciutils invalid version JSON conversion") {
 
 TEST_CASE("pciutils incomplete JSON conversion") {
   auto jin = R"({ "name": "pciutils", "timestamp": 0, "version": 100})"_json;
-  wassail::data::pciutils d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::pciutils d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "pciutils");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("devices") == 1);
+  REQUIRE(jout["data"]["devices"].size() == 0);
 }

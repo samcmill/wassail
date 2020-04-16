@@ -112,6 +112,13 @@ TEST_CASE("sysctl invalid version JSON conversion") {
 
 TEST_CASE("sysctl incomplete JSON conversion") {
   auto jin = R"({ "name": "sysctl", "timestamp": 0, "version": 100})"_json;
-  wassail::data::sysctl d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::sysctl d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "sysctl");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("hw") == 1);
+  REQUIRE(jout["data"]["hw"].count("cpufamily") == 1);
+  REQUIRE(jout["data"]["hw"]["cpufamily"] == 0);
 }

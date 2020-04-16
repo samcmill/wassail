@@ -62,6 +62,12 @@ TEST_CASE("sysconf invalid version JSON conversion") {
 
 TEST_CASE("sysconf incomplete JSON conversion") {
   auto jin = R"({ "name": "sysconf", "timestamp": 0, "version": 100})"_json;
-  wassail::data::sysconf d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::sysconf d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "sysconf");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("nprocessors_conf") == 1);
+  REQUIRE(jout["data"]["nprocessors_conf"] == 0);
 }

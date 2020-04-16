@@ -205,40 +205,35 @@ namespace wassail {
     void from_json(const json &j, pciaccess &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        for (auto i : j.at("data").at("devices")) {
-          pciaccess::impl::pci_item p;
+      for (auto i :
+           j.value(json::json_pointer("/data/devices"), json::array())) {
+        pciaccess::impl::pci_item p;
 
-          p.bus = i.at("bus").get<uint8_t>();
-          p.class_id = i.at("class_id").get<uint16_t>();
-          p.dev = i.at("dev").get<uint8_t>();
-          p.device_id = i.at("device_id").get<uint16_t>();
-          p.device_name = i.at("device_name").get<std::string>();
-          p.domain = i.at("domain").get<uint32_t>();
-          p.func = i.at("func").get<uint8_t>();
-          p.irq = i.at("irq").get<int>();
-          p.revision = i.at("revision").get<uint8_t>();
-          p.slot = i.at("slot").get<std::string>();
-          p.subdevice_id = i.at("subdevice_id").get<uint16_t>();
-          p.subdevice_name = i.at("subdevice_name").get<std::string>();
-          p.subvendor_id = i.at("subvendor_id").get<uint16_t>();
-          p.subvendor_name = i.at("subvendor_name").get<std::string>();
-          p.vendor_id = i.at("vendor_id").get<uint16_t>();
-          p.vendor_name = i.at("vendor_name").get<std::string>();
+        p.bus = i.value("bus", 0U);
+        p.class_id = i.value("class_id", 0U);
+        p.dev = i.value("dev", 0U);
+        p.device_id = i.value("device_id", 0U);
+        p.device_name = i.value("device_name", "");
+        p.domain = i.value("domain", 0UL);
+        p.func = i.value("func", 0U);
+        p.irq = i.value("irq", 0);
+        p.revision = i.value("revision", 0U);
+        p.slot = i.value("slot", "");
+        p.subdevice_id = i.value("subdevice_id", 0U);
+        p.subdevice_name = i.value("subdevice_name", "");
+        p.subvendor_id = i.value("subvendor_id", 0U);
+        p.subvendor_name = i.value("subvendor_name", "");
+        p.vendor_id = i.value("vendor_id", 0U);
+        p.vendor_name = i.value("vendor_name", "");
 
-          d.pimpl->data.devices.push_back(p);
-        }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error("Unable to convert JSON string '" + j.dump() +
-                                 "' to object: " + e.what());
+        d.pimpl->data.devices.push_back(p);
       }
     }
 

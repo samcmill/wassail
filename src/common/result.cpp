@@ -99,21 +99,11 @@ namespace wassail {
     auto r = std::make_shared<wassail::result>();
 
     /* set the result system id if the json contains a hostname entry */
-    try {
-      r->system_id = {j.at("hostname").get<std::string>()};
-    }
-    catch (std::exception &e) {
-      wassail::internal::logger()->warn("Unable to set system id");
-    }
+    r->system_id = {j.value("hostname", "")};
 
     /* set the result timestamp if the json contains a timestamp entry */
-    try {
-      r->timestamp = std::chrono::system_clock::from_time_t(
-          j.at("timestamp").get<time_t>());
-    }
-    catch (std::exception &e) {
-      wassail::internal::logger()->warn("Unable to set timestamp");
-    }
+    r->timestamp = std::chrono::system_clock::from_time_t(
+        j.value("timestamp", static_cast<time_t>(0)));
 
     return r;
   }

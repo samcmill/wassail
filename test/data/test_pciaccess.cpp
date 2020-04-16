@@ -94,6 +94,12 @@ TEST_CASE("pciaccess invalid version JSON conversion") {
 
 TEST_CASE("pciaccess incomplete JSON conversion") {
   auto jin = R"({ "name": "pciaccess", "timestamp": 0, "version": 100})"_json;
-  wassail::data::pciaccess d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::pciaccess d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "pciaccess");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("devices") == 1);
+  REQUIRE(jout["data"]["devices"].size() == 0);
 }

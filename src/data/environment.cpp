@@ -97,22 +97,16 @@ namespace wassail {
     void from_json(const json &j, environment &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        for (auto &e : jdata.items()) {
-          d.pimpl->data.envvar[e.key()] = e.value();
-        }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error("Unable to convert JSON string '" + j.dump() +
-                                 "' to object: " + e.what());
+      auto jdata = j.value("data", json::object());
+      for (auto &e : jdata.items()) {
+        d.pimpl->data.envvar[e.key()] = e.value();
       }
     }
 
@@ -120,6 +114,8 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["data"] = json::object();
 
       for (auto &e : d.pimpl->data.envvar) {
         j["data"][e.first] = e.second;

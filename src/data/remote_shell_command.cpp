@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
+#include <limits>
 #include <list>
 #include <memory>
 #include <mutex>
@@ -256,36 +257,30 @@ namespace wassail {
     void from_json(const json &j, remote_shell_command &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        for (auto i : j.at("data")) {
-          remote_shell_command::impl::item tmp;
+      for (auto i : j.value("data", json::array())) {
+        remote_shell_command::impl::item tmp;
 
-          json jdata = i.at("data");
+        tmp.shell.command = i.value(json::json_pointer("/data/command"), "");
+        tmp.shell.elapsed = i.value(json::json_pointer("/data/elapsed"), 0.0);
+        tmp.shell.returncode =
+            i.value(json::json_pointer("/data/returncode"), 0);
+        tmp.shell.stderr = i.value(json::json_pointer("/data/stderr"), "");
+        tmp.shell.stdout = i.value(json::json_pointer("/data/stdout"), "");
 
-          tmp.shell.command = jdata.at("command").get<std::string>();
-          tmp.shell.elapsed = jdata.at("elapsed").get<double>();
-          tmp.shell.returncode = jdata.at("returncode").get<int>();
-          tmp.shell.stderr = jdata.at("stderr").get<std::string>();
-          tmp.shell.stdout = jdata.at("stdout").get<std::string>();
+        tmp.hostname = i.value("hostname", "");
+        tmp.timestamp = std::chrono::system_clock::from_time_t(
+            i.value("timestamp", static_cast<time_t>(0)));
+        tmp.uid = i.value(
+            "uid", static_cast<uid_t>(std::numeric_limits<uid_t>::max()));
 
-          tmp.hostname = i.at("hostname").get<std::string>();
-          tmp.timestamp = std::chrono::system_clock::from_time_t(
-              i.at("timestamp").get<time_t>());
-          tmp.uid = i.at("uid").get<uid_t>();
-
-          d.pimpl->data.push_back(tmp);
-        }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error("Unable to convert JSON string '" + j.dump() +
-                                 "' to object: " + e.what());
+        d.pimpl->data.push_back(tmp);
       }
     }
 
@@ -293,6 +288,8 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["data"] = json::array();
 
       for (auto i : d.pimpl->data) {
         json item;

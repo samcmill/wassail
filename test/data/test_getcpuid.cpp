@@ -67,6 +67,12 @@ TEST_CASE("getcpuid invalid version JSON conversion") {
 
 TEST_CASE("getcpuid incomplete JSON conversion") {
   auto jin = R"({ "name": "getcpuid", "timestamp": 0, "version": 100})"_json;
-  wassail::data::getcpuid d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::getcpuid d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "getcpuid");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("vendor") == 1);
+  REQUIRE(jout["data"]["vendor"] == "");
 }

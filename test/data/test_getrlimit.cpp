@@ -102,6 +102,12 @@ TEST_CASE("getrlimit invalid version JSON conversion") {
 
 TEST_CASE("getrlimit incomplete JSON conversion") {
   auto jin = R"({ "name": "getrlimit", "timestamp": 0, "version": 100})"_json;
-  wassail::data::getrlimit d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::getrlimit d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "getrlimit");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("hard") == 1);
+  REQUIRE(jout["data"].count("soft") == 1);
 }

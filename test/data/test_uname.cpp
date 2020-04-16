@@ -64,6 +64,11 @@ TEST_CASE("uname invalid version JSON conversion") {
 
 TEST_CASE("uname incomplete JSON conversion") {
   auto jin = R"({ "name": "uname", "timestamp": 0, "version": 100})"_json;
-  wassail::data::uname d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::uname d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "uname");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"]["machine"] == "");
 }

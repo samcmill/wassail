@@ -72,14 +72,7 @@ namespace wassail {
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        /* d.pimpl->data.foo = jdata.at("foo").get<type>(); */
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error("Unable to convert JSON string '" + j.dump() +
-                                 "' to object: " + e.what());
-      }
+      /* d.pimpl->data.foo = j.value(json::json_pointer("/data/foo"), 0); */
     }
 
     void to_json(json &j, const skeleton &d) {

@@ -198,6 +198,11 @@ TEST_CASE("remote_shell_command invalid version JSON conversion") {
 TEST_CASE("remote_shell_command incomplete JSON conversion") {
   auto jin =
       R"({ "name": "remote_shell_command", "timestamp": 0, "version": 100})"_json;
-  wassail::data::remote_shell_command d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::remote_shell_command d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "remote_shell_command");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].size() == 0);
 }

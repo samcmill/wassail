@@ -74,6 +74,12 @@ TEST_CASE("sysinfo invalid version JSON conversion") {
 
 TEST_CASE("sysinfo incomplete JSON conversion") {
   auto jin = R"({ "name": "sysinfo", "timestamp": 0, "version": 100})"_json;
-  wassail::data::sysinfo d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::sysinfo d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "sysinfo");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("bufferram") == 1);
+  REQUIRE(jout["data"]["bufferram"] == 0);
 }

@@ -176,35 +176,30 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, pciutils &d) {
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        for (auto i : j.at("data").at("devices")) {
-          pciutils::impl::pci_item p;
+      for (auto i :
+           j.value(json::json_pointer("/data/devices"), json::array())) {
+        pciutils::impl::pci_item p;
 
-          p.bus = i.at("bus").get<uint8_t>();
-          p.class_id = i.at("class_id").get<uint16_t>();
-          p.class_name = i.at("class_name").get<std::string>();
-          p.dev = i.at("dev").get<uint8_t>();
-          p.device_id = i.at("device_id").get<uint16_t>();
-          p.device_name = i.at("device_name").get<std::string>();
-          p.domain = i.at("domain").get<uint16_t>();
-          p.func = i.at("func").get<uint8_t>();
-          p.slot = i.at("slot").get<std::string>();
-          p.vendor_id = i.at("vendor_id").get<uint16_t>();
-          p.vendor_name = i.at("vendor_name").get<std::string>();
+        p.bus = i.value("bus", 0);
+        p.class_id = i.value("class_id", 0);
+        p.class_name = i.value("class_name", "");
+        p.dev = i.value("dev", 0);
+        p.device_id = i.value("device_id", 0);
+        p.device_name = i.value("device_name", "");
+        p.domain = i.value("domain", 0);
+        p.func = i.value("func", 0);
+        p.slot = i.value("slot", "");
+        p.vendor_id = i.value("vendor_id", 0);
+        p.vendor_name = i.value("vendor_name", "");
 
-          d.pimpl->data.devices.push_back(p);
-        }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error("Unable to convert JSON string '" + j.dump() +
-                                 "' to object: " + e.what());
+        d.pimpl->data.devices.push_back(p);
       }
     }
 

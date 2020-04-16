@@ -8,6 +8,7 @@
 #include "config.h"
 #include "internal.hpp"
 
+#include <limits>
 #include <list>
 #include <shared_mutex>
 #include <wassail/data/getfsstat.hpp>
@@ -137,34 +138,31 @@ namespace wassail {
     void from_json(const json &j, getfsstat &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        for (auto i : j.at("data").at("file_systems")) {
-          getfsstat::impl::fs_item item;
-          item.bavail = i.at("bavail").get<long>();
-          item.bfree = i.at("bfree").get<long>();
-          item.blocks = i.at("blocks").get<long>();
-          item.bsize = i.at("bsize").get<long>();
-          item.ffree = i.at("ffree").get<long>();
-          item.files = i.at("files").get<long>();
-          item.flags = i.at("flags").get<long>();
-          item.fstypename = i.at("fstypename").get<std::string>();
-          item.mntfromname = i.at("mntfromname").get<std::string>();
-          item.mntonname = i.at("mntonname").get<std::string>();
-          item.owner = i.at("owner").get<uid_t>();
-          d.pimpl->data.file_systems.push_back(item);
-        }
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
+      for (auto i :
+           j.value(json::json_pointer("/data/file_systems"), json::array())) {
+        getfsstat::impl::fs_item item;
+
+        item.bavail = i.value("bavail", 0L);
+        item.bfree = i.value("bfree", 0L);
+        item.blocks = i.value("blocks", 0L);
+        item.bsize = i.value("bsize", 0L);
+        item.ffree = i.value("ffree", 0L);
+        item.files = i.value("files", 0L);
+        item.flags = i.value("flags", 0L);
+        item.fstypename = i.value("fstypename", "");
+        item.mntfromname = i.value("mntfromname", "");
+        item.mntonname = i.value("mntonname", "");
+        item.owner = i.value(
+            "owner", static_cast<uid_t>(std::numeric_limits<uid_t>::max()));
+
+        d.pimpl->data.file_systems.push_back(item);
       }
     }
 
@@ -172,6 +170,8 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["data"]["file_systems"] = json::array();
 
       for (auto i : d.pimpl->data.file_systems) {
         json temp;

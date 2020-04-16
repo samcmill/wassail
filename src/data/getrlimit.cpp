@@ -168,40 +168,49 @@ namespace wassail {
     void from_json(const json &j, getrlimit &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto hard = j.at("data").at("hard");
-        auto soft = j.at("data").at("soft");
-        d.pimpl->data.core_hard = hard.at("core").get<uint64_t>();
-        d.pimpl->data.core_soft = soft.at("core").get<uint64_t>();
-        d.pimpl->data.cpu_hard = hard.at("cpu").get<uint64_t>();
-        d.pimpl->data.cpu_soft = soft.at("cpu").get<uint64_t>();
-        d.pimpl->data.data_hard = hard.at("data").get<uint64_t>();
-        d.pimpl->data.data_soft = soft.at("data").get<uint64_t>();
-        d.pimpl->data.fsize_hard = hard.at("fsize").get<uint64_t>();
-        d.pimpl->data.fsize_soft = soft.at("fsize").get<uint64_t>();
-        d.pimpl->data.memlock_hard = hard.at("memlock").get<uint64_t>();
-        d.pimpl->data.memlock_soft = soft.at("memlock").get<uint64_t>();
-        d.pimpl->data.nofile_hard = hard.at("nofile").get<uint64_t>();
-        d.pimpl->data.nofile_soft = soft.at("nofile").get<uint64_t>();
-        d.pimpl->data.nproc_hard = hard.at("nproc").get<uint64_t>();
-        d.pimpl->data.nproc_soft = soft.at("nproc").get<uint64_t>();
-        d.pimpl->data.rss_hard = hard.at("rss").get<uint64_t>();
-        d.pimpl->data.rss_soft = soft.at("rss").get<uint64_t>();
-        d.pimpl->data.stack_hard = hard.at("stack").get<uint64_t>();
-        d.pimpl->data.stack_soft = soft.at("stack").get<uint64_t>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.core_hard =
+          j.value(json::json_pointer("/data/hard/core"), 0ULL);
+      d.pimpl->data.core_soft =
+          j.value(json::json_pointer("/data/soft/core"), 0ULL);
+      d.pimpl->data.cpu_hard =
+          j.value(json::json_pointer("/data/hard/cpu"), 0ULL);
+      d.pimpl->data.cpu_soft =
+          j.value(json::json_pointer("/data/soft/cpu"), 0ULL);
+      d.pimpl->data.data_hard =
+          j.value(json::json_pointer("/data/hard/data"), 0ULL);
+      d.pimpl->data.data_soft =
+          j.value(json::json_pointer("/data/soft/data"), 0ULL);
+      d.pimpl->data.fsize_hard =
+          j.value(json::json_pointer("/data/hard/fsize"), 0ULL);
+      d.pimpl->data.fsize_soft =
+          j.value(json::json_pointer("/data/soft/fsize"), 0ULL);
+      d.pimpl->data.memlock_hard =
+          j.value(json::json_pointer("/data/hard/memlock"), 0ULL);
+      d.pimpl->data.memlock_soft =
+          j.value(json::json_pointer("/data/soft/memlock"), 0ULL);
+      d.pimpl->data.nofile_hard =
+          j.value(json::json_pointer("/data/hard/nofile"), 0ULL);
+      d.pimpl->data.nofile_soft =
+          j.value(json::json_pointer("/data/soft/nofile"), 0ULL);
+      d.pimpl->data.nproc_hard =
+          j.value(json::json_pointer("/data/hard/nproc"), 0ULL);
+      d.pimpl->data.nproc_soft =
+          j.value(json::json_pointer("/data/soft/nproc"), 0ULL);
+      d.pimpl->data.rss_hard =
+          j.value(json::json_pointer("/data/hard/rss"), 0ULL);
+      d.pimpl->data.rss_soft =
+          j.value(json::json_pointer("/data/soft/rss"), 0ULL);
+      d.pimpl->data.stack_hard =
+          j.value(json::json_pointer("/data/hard/stack"), 0ULL);
+      d.pimpl->data.stack_soft =
+          j.value(json::json_pointer("/data/soft/stack"), 0ULL);
     }
 
     void to_json(json &j, const getrlimit &d) {

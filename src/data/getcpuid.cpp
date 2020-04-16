@@ -152,27 +152,20 @@ namespace wassail {
     void from_json(const json &j, getcpuid &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.pimpl->data.family = jdata.at("family").get<uint32_t>();
-        d.pimpl->data.model = jdata.at("model").get<uint32_t>();
-        d.pimpl->data.name = jdata.at("name").get<std::string>();
-        d.pimpl->data.stepping = jdata.at("stepping").get<uint32_t>();
-        d.pimpl->data.type = jdata.at("type").get<uint32_t>();
-        d.pimpl->data.vendor = jdata.at("vendor").get<std::string>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.family = j.value(json::json_pointer("/data/family"), 0UL);
+      d.pimpl->data.model = j.value(json::json_pointer("/data/model"), 0UL);
+      d.pimpl->data.name = j.value(json::json_pointer("/data/name"), "");
+      d.pimpl->data.stepping =
+          j.value(json::json_pointer("/data/stepping"), 0UL);
+      d.pimpl->data.type = j.value(json::json_pointer("/data/type"), 0UL);
+      d.pimpl->data.vendor = j.value(json::json_pointer("/data/vendor"), "");
     }
 
     void to_json(json &j, const getcpuid &d) {

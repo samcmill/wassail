@@ -9,6 +9,7 @@
 #include "internal.hpp"
 
 #include <chrono>
+#include <limits>
 #include <shared_mutex>
 #include <string>
 #include <unistd.h>
@@ -26,19 +27,11 @@ namespace wassail {
   namespace data {
     /*! JSON type conversion */
     void from_json(const json &j, wassail::data::common &d) {
-      try {
-        d.hostname = j.at("hostname").get<std::string>();
-        d.timestamp = std::chrono::system_clock::from_time_t(
-            j.at("timestamp").get<time_t>());
-        d.uid = j.at("uid").get<uid_t>();
-      }
-      /* LCOV_EXCL_START */
-      catch (std::exception &e) {
-        wassail::internal::logger()->error("Unable to convert JSON string '" +
-                                           j.dump() +
-                                           "' to object: " + e.what());
-      }
-      /* LCOV_EXCL_STOP */
+      d.hostname = j.value("hostname", "");
+      d.timestamp = std::chrono::system_clock::from_time_t(
+          j.value("timestamp", static_cast<time_t>(0)));
+      d.uid =
+          j.value("uid", static_cast<uid_t>(std::numeric_limits<uid_t>::max()));
     }
 
     /*! JSON type conversion */

@@ -19,34 +19,28 @@ namespace wassail {
         bool found = false;
         float percent = 0.0;
 
-        try {
-          if (j.at("name").get<std::string>() == "getfsstat") {
-            for (auto i : j.at("data").at("file_systems")) {
-              if (i.at("mntonname").get<std::string>() == config.filesystem) {
-                percent = 100.0 * i.at("bavail").get<float>() /
-                          i.at("blocks").get<float>();
-                found = true;
-                break;
-              }
+        if (j.value("name", "") == "getfsstat") {
+          for (auto i : j.value(json::json_pointer("/data/file_systems"),
+                                json::array())) {
+            if (i.value("mntonname", "not_real") == config.filesystem) {
+              percent = 100.0 * i.value("bavail", 0.0) / i.value("blocks", 1.0);
+              found = true;
+              break;
             }
-          }
-          else if (j.at("name").get<std::string>() == "getmntent") {
-            for (auto i : j.at("data").at("file_systems")) {
-              if (i.at("dir") == config.filesystem) {
-                percent = 100.0 * i.at("bavail").get<float>() /
-                          i.at("blocks").get<float>();
-                found = true;
-                break;
-              }
-            }
-          }
-          else {
-            throw std::runtime_error("Unrecognized JSON object");
           }
         }
-        catch (std::exception &e) {
-          throw std::runtime_error(std::string("Unable to perform check: ") +
-                                   std::string(e.what()));
+        else if (j.value("name", "") == "getmntent") {
+          for (auto i : j.value(json::json_pointer("/data/file_systems"),
+                                json::array())) {
+            if (i.value("dir", "not_real") == config.filesystem) {
+              percent = 100.0 * i.value("bavail", 0.0) / i.value("blocks", 1.0);
+              found = true;
+              break;
+            }
+          }
+        }
+        else {
+          throw std::runtime_error("Unrecognized JSON object");
         }
 
         auto r = make_result(j);

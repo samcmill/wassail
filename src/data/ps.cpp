@@ -15,7 +15,7 @@
 namespace wassail {
   namespace data {
     void from_json(const json &j, ps &d) {
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 

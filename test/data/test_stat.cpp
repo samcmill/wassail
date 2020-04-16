@@ -71,6 +71,12 @@ TEST_CASE("stat invalid version JSON conversion") {
 
 TEST_CASE("stat incomplete JSON conversion") {
   auto jin = R"({ "name": "stat", "timestamp": 0, "version": 100})"_json;
-  wassail::data::stat d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::stat d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "stat");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].count("path") == 1);
+  REQUIRE(jout["data"]["path"] == "");
 }

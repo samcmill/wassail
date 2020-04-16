@@ -64,6 +64,11 @@ TEST_CASE("environment invalid version JSON conversion") {
 
 TEST_CASE("environment incomplete JSON conversion") {
   auto jin = R"({ "name": "environment", "timestamp": 0, "version": 100})"_json;
-  wassail::data::environment d;
-  REQUIRE_THROWS(d = jin);
+
+  wassail::data::environment d = jin;
+  json jout = d;
+
+  REQUIRE(jout["name"] == "environment");
+  REQUIRE(jout.count("data") == 1);
+  REQUIRE(jout["data"].size() == 0);
 }

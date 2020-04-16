@@ -136,35 +136,37 @@ namespace wassail {
     void from_json(const json &j, stat &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.path = jdata.at("path").get<std::string>();
-        d.pimpl->data.dev = jdata.at("device").get<dev_t>();
-        d.pimpl->data.mode = jdata.at("mode").get<mode_t>();
-        d.pimpl->data.nlink = jdata.at("nlink").get<nlink_t>();
-        d.pimpl->data.ino = jdata.at("inode").get<ino_t>();
-        d.pimpl->data.uid = jdata.at("uid").get<uid_t>();
-        d.pimpl->data.gid = jdata.at("gid").get<gid_t>();
-        d.pimpl->data.rdev = jdata.at("rdev").get<dev_t>();
-        d.pimpl->data.atime = jdata.at("atime").get<double>();
-        d.pimpl->data.mtime = jdata.at("mtime").get<double>();
-        d.pimpl->data.ctime = jdata.at("ctime").get<double>();
-        d.pimpl->data.size = jdata.at("size").get<off_t>();
-        d.pimpl->data.blocks = jdata.at("blocks").get<blkcnt_t>();
-        d.pimpl->data.blksize = jdata.at("blksize").get<blksize_t>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.path = j.value(json::json_pointer("/data/path"), "");
+      d.pimpl->data.dev =
+          j.value(json::json_pointer("/data/device"), static_cast<dev_t>(0));
+      d.pimpl->data.mode =
+          j.value(json::json_pointer("/data/mode"), static_cast<mode_t>(0));
+      d.pimpl->data.nlink =
+          j.value(json::json_pointer("/data/nlink"), static_cast<nlink_t>(0));
+      d.pimpl->data.ino =
+          j.value(json::json_pointer("/data/inode"), static_cast<ino_t>(0));
+      d.pimpl->data.uid =
+          j.value(json::json_pointer("/data/uid"), static_cast<uid_t>(0));
+      d.pimpl->data.gid =
+          j.value(json::json_pointer("/data/gid"), static_cast<gid_t>(0));
+      d.pimpl->data.rdev =
+          j.value(json::json_pointer("/data/rdev"), static_cast<dev_t>(0));
+      d.pimpl->data.atime = j.value(json::json_pointer("/data/atime"), 0.0);
+      d.pimpl->data.mtime = j.value(json::json_pointer("/data/mtime"), 0.0);
+      d.pimpl->data.ctime = j.value(json::json_pointer("/data/ctime"), 0.0);
+      d.pimpl->data.size =
+          j.value(json::json_pointer("/data/size"), static_cast<off_t>(0));
+      d.pimpl->data.blocks =
+          j.value(json::json_pointer("/data/blocks"), static_cast<blkcnt_t>(0));
+      d.pimpl->data.blksize = j.value(json::json_pointer("/data/blksize"),
+                                      static_cast<blksize_t>(0));
     }
 
     void to_json(json &j, const stat &d) {

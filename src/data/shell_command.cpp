@@ -281,26 +281,19 @@ namespace wassail {
     void from_json(const json &j, shell_command &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jdata = j.at("data");
-        d.command = jdata.at("command").get<std::string>();
-        d.pimpl->data.elapsed = jdata.at("elapsed").get<double>();
-        d.pimpl->data.returncode = jdata.at("returncode").get<int>();
-        d.pimpl->data.stderr = jdata.at("stderr").get<std::string>();
-        d.pimpl->data.stdout = jdata.at("stdout").get<std::string>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.command = j.value(json::json_pointer("/data/command"), "");
+      d.pimpl->data.elapsed = j.value(json::json_pointer("/data/elapsed"), 0.0);
+      d.pimpl->data.returncode =
+          j.value(json::json_pointer("/data/returncode"), 0);
+      d.pimpl->data.stderr = j.value(json::json_pointer("/data/stderr"), "");
+      d.pimpl->data.stdout = j.value(json::json_pointer("/data/stdout"), "");
     }
 
     void to_json(json &j, const shell_command &d) {

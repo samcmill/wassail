@@ -255,76 +255,89 @@ namespace wassail {
     void from_json(const json &j, sysctl &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
+      if (j.value("version", 0) != d.version()) {
         throw std::runtime_error("Version mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
       d.pimpl->collected = true;
 
-      try {
-        auto jhw = j.at("data").at("hw");
-        d.pimpl->data.hw.cpufamily = jhw.at("cpufamily").get<int32_t>();
-        d.pimpl->data.hw.cpufrequency = jhw.at("cpufrequency").get<int64_t>();
-        d.pimpl->data.hw.cpufrequency_max =
-            jhw.at("cpufrequency_max").get<int64_t>();
-        d.pimpl->data.hw.cputype = jhw.at("cputype").get<int32_t>();
-        d.pimpl->data.hw.logicalcpu = jhw.at("logicalcpu").get<int32_t>();
-        d.pimpl->data.hw.logicalcpu_max =
-            jhw.at("logicalcpu_max").get<int32_t>();
-        d.pimpl->data.hw.machine = jhw.at("machine").get<std::string>();
-        d.pimpl->data.hw.memsize = jhw.at("memsize").get<int64_t>();
-        d.pimpl->data.hw.model = jhw.at("model").get<std::string>();
-        d.pimpl->data.hw.ncpu = jhw.at("ncpu").get<int32_t>();
-        d.pimpl->data.hw.packages = jhw.at("packages").get<int32_t>();
-        d.pimpl->data.hw.physicalcpu = jhw.at("physicalcpu").get<int32_t>();
-        d.pimpl->data.hw.physicalcpu_max =
-            jhw.at("physicalcpu_max").get<int32_t>();
+      d.pimpl->data.hw.cpufamily =
+          j.value(json::json_pointer("/data/hw/cpufamily"), 0L);
+      d.pimpl->data.hw.cpufrequency =
+          j.value(json::json_pointer("/data/hw/cpufrequency"), 0LL);
+      d.pimpl->data.hw.cpufrequency_max =
+          j.value(json::json_pointer("/data/hw/cpufrequency_max"), 0LL);
+      d.pimpl->data.hw.cputype =
+          j.value(json::json_pointer("/data/hw/cputype"), 0L);
+      d.pimpl->data.hw.logicalcpu =
+          j.value(json::json_pointer("/data/hw/logicalcpu"), 0L);
+      d.pimpl->data.hw.logicalcpu_max =
+          j.value(json::json_pointer("/data/hw/logicalcpu_max"), 0L);
+      d.pimpl->data.hw.machine =
+          j.value(json::json_pointer("/data/hw/machine"), "");
+      d.pimpl->data.hw.memsize =
+          j.value(json::json_pointer("/data/hw/memsize"), 0LL);
+      d.pimpl->data.hw.model =
+          j.value(json::json_pointer("/data/hw/model"), "");
+      d.pimpl->data.hw.ncpu = j.value(json::json_pointer("/data/hw/ncpu"), 0L);
+      d.pimpl->data.hw.packages =
+          j.value(json::json_pointer("/data/hw/packages"), 0L);
+      d.pimpl->data.hw.physicalcpu =
+          j.value(json::json_pointer("/data/hw/physicalcpu"), 0L);
+      d.pimpl->data.hw.physicalcpu_max =
+          j.value(json::json_pointer("/data/hw/physicalcpu_max"), 0L);
 
-        auto jkern = j.at("data").at("kern");
-        d.pimpl->data.kern.hostname = jkern.at("hostname").get<std::string>();
-        d.pimpl->data.kern.osrelease = jkern.at("osrelease").get<std::string>();
-        d.pimpl->data.kern.osrevision = jkern.at("osrevision").get<int32_t>();
-        d.pimpl->data.kern.ostype = jkern.at("ostype").get<std::string>();
-        d.pimpl->data.kern.osversion = jkern.at("osversion").get<std::string>();
-        d.pimpl->data.kern.version = jkern.at("version").get<std::string>();
+      d.pimpl->data.kern.hostname =
+          j.value(json::json_pointer("/data/kern/hostname"), "");
+      d.pimpl->data.kern.osrelease =
+          j.value(json::json_pointer("/data/kern/osrelease"), "");
+      d.pimpl->data.kern.osrevision =
+          j.value(json::json_pointer("/data/kern/osrevision"), 0L);
+      d.pimpl->data.kern.ostype =
+          j.value(json::json_pointer("/data/kern/ostype"), "");
+      d.pimpl->data.kern.osversion =
+          j.value(json::json_pointer("/data/kern/osversion"), "");
+      d.pimpl->data.kern.version =
+          j.value(json::json_pointer("/data/kern/version"), "");
 
-        auto jcpu = j.at("data").at("machdep").at("cpu");
-        d.pimpl->data.machdep.cpu.brand_string =
-            jcpu.at("brand_string").get<std::string>();
-        d.pimpl->data.machdep.cpu.core_count =
-            jcpu.at("core_count").get<int32_t>();
-        d.pimpl->data.machdep.cpu.cores_per_package =
-            jcpu.at("cores_per_package").get<int32_t>();
-        d.pimpl->data.machdep.cpu.family = jcpu.at("family").get<int32_t>();
-        d.pimpl->data.machdep.cpu.logical_per_package =
-            jcpu.at("logical_per_package").get<int32_t>();
-        d.pimpl->data.machdep.cpu.model = jcpu.at("model").get<int32_t>();
-        d.pimpl->data.machdep.cpu.stepping = jcpu.at("stepping").get<int32_t>();
-        d.pimpl->data.machdep.cpu.vendor = jcpu.at("vendor").get<std::string>();
+      d.pimpl->data.machdep.cpu.brand_string =
+          j.value(json::json_pointer("/data/machdep/cpu/brand_string"), "");
+      d.pimpl->data.machdep.cpu.core_count =
+          j.value(json::json_pointer("/data/machdep/cpu/core_count"), 0L);
+      d.pimpl->data.machdep.cpu.cores_per_package = j.value(
+          json::json_pointer("/data/machdep/cpu/cores_per_package"), 0L);
+      d.pimpl->data.machdep.cpu.family =
+          j.value(json::json_pointer("/data/machdep/cpu/family"), 0L);
+      d.pimpl->data.machdep.cpu.logical_per_package = j.value(
+          json::json_pointer("/data/machdep/cpu/logical_per_package"), 0L);
+      d.pimpl->data.machdep.cpu.model =
+          j.value(json::json_pointer("/data/machdep/cpu/model"), 0L);
+      d.pimpl->data.machdep.cpu.stepping =
+          j.value(json::json_pointer("/data/machdep/cpu/stepping"), 0L);
+      d.pimpl->data.machdep.cpu.vendor =
+          j.value(json::json_pointer("/data/machdep/cpu/vendor"), "");
 
-        auto jloadavg = j.at("data").at("vm").at("loadavg");
-        d.pimpl->data.vm.loadavg.fscale = jloadavg.at("fscale").get<long>();
-        d.pimpl->data.vm.loadavg.ldavg[0] = jloadavg.at("load1").get<fixpt_t>();
-        d.pimpl->data.vm.loadavg.ldavg[1] = jloadavg.at("load5").get<fixpt_t>();
-        d.pimpl->data.vm.loadavg.ldavg[2] =
-            jloadavg.at("load15").get<fixpt_t>();
+      d.pimpl->data.vm.loadavg.fscale =
+          j.value(json::json_pointer("/data/vm/loadavg/fscale"), 0L);
+      d.pimpl->data.vm.loadavg.ldavg[0] =
+          j.value(json::json_pointer("/data/vm/loadavg/load1"),
+                  static_cast<fixpt_t>(0));
+      d.pimpl->data.vm.loadavg.ldavg[1] =
+          j.value(json::json_pointer("/data/vm/loadavg/load5"),
+                  static_cast<fixpt_t>(0));
+      d.pimpl->data.vm.loadavg.ldavg[2] =
+          j.value(json::json_pointer("/data/vm/loadavg/load15"),
+                  static_cast<fixpt_t>(0));
 
-        auto jswapusage = j.at("data").at("vm").at("swapusage");
-        d.pimpl->data.vm.swapusage.xsu_total =
-            jswapusage.at("xsu_total").get<u_int64_t>();
-        d.pimpl->data.vm.swapusage.xsu_avail =
-            jswapusage.at("xsu_avail").get<u_int64_t>();
-        d.pimpl->data.vm.swapusage.xsu_used =
-            jswapusage.at("xsu_used").get<u_int64_t>();
-        d.pimpl->data.vm.swapusage.xsu_pagesize =
-            jswapusage.at("xsu_pagesize").get<u_int64_t>();
-      }
-      catch (std::exception &e) {
-        throw std::runtime_error(
-            std::string("Unable to convert JSON string '") + j.dump() +
-            std::string("' to object: ") + e.what());
-      }
+      d.pimpl->data.vm.swapusage.xsu_total =
+          j.value(json::json_pointer("/data/vm/swapusage/xsu_total"), 0ULL);
+      d.pimpl->data.vm.swapusage.xsu_avail =
+          j.value(json::json_pointer("/data/vm/swapusage/xsu_avail"), 0ULL);
+      d.pimpl->data.vm.swapusage.xsu_used =
+          j.value(json::json_pointer("/data/vm/swapusage/xsu_used"), 0ULL);
+      d.pimpl->data.vm.swapusage.xsu_pagesize =
+          j.value(json::json_pointer("/data/vm/swapusage/xsu_pagesize"), 0ULL);
     }
 
     void to_json(json &j, const sysctl &d) {
