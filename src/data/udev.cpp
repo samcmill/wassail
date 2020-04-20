@@ -80,8 +80,6 @@ namespace wassail {
 #ifdef WITH_DATA_UDEV
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
-        int rv;
-
         handle = dlopen("libudev.so.1", RTLD_LAZY);
         if (not handle) {
           wassail::internal::logger()->error(
