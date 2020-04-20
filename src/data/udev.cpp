@@ -30,36 +30,6 @@ namespace wassail {
       bool collected = false; /*!< Flag to denote whether the data
                                    has been collected */
 
-      /*! \brief Port attributes */
-      struct port_item {
-        std::string ca_name;    /*!< Name of the device */
-        int portnum;            /*!< Physical port number */
-        uint base_lid;          /*!< Base port LID */
-        uint lmc;               /*!< LMC of LID */
-        uint sm_lid;            /*!< SM LID */
-        uint sm_sl;             /*!< SM service level */
-        uint state;             /*!< Logical port state */
-        uint phys_state;        /*!< Physical port state */
-        uint rate;              /*!< Port link bit rate */
-        uint64_t capmask;       /*!< Port capabilities */
-        uint64_t gid_prefix;    /*!< Gid prefix of this port */
-        uint64_t port_guid;     /*!< GUID of this port */
-        std::string link_layer; /*!< Link layer */
-      };
-
-      /*! \brief CA attributes */
-      struct ca_item {
-        std::string name;     /*!< Name of the device */
-        uint node_type;       /*!< Type of the device */
-        int numports;         /*!< Number of physical ports */
-        std::string fw_ver;   /*!< FW version */
-        std::string ca_type;  /*!< CA type */
-        std::string hw_ver;   /*!< Hardware version */
-        uint64_t node_guid;   /*!< Node GUID */
-        uint64_t system_guid; /*!< System image GUID */
-        std::list<port_item> ports;
-      };
-
       /*! \brief udev sysfs entries */
       struct {
         json devices = json::object(); /* sysfs devices, i.e., /sys/devices */
