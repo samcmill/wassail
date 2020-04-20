@@ -87,6 +87,10 @@ libwassail_data_la_SOURCES += sysinfo.cpp \
     $(top_srcdir)/include/wassail/data/sysinfo.hpp
 dist_schema_DATA += sysinfo.json
 
+libwassail_data_la_SOURCES += udev.cpp \
+    $(top_srcdir)/include/wassail/data/udev.hpp
+dist_schema_DATA += udev.json
+
 libwassail_data_la_SOURCES += umad.cpp \
     $(top_srcdir)/include/wassail/data/umad.hpp
 dist_schema_DATA += umad.json

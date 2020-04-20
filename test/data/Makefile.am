@@ -71,11 +71,14 @@ sysctl_test_SOURCES = test_sysctl.cpp
 check_PROGRAMS += sysinfo.test
 sysinfo_test_SOURCES = test_sysinfo.cpp
 
-check_PROGRAMS += uname.test
-uname_test_SOURCES = test_uname.cpp
+check_PROGRAMS += udev.test
+udev_test_SOURCES = test_udev.cpp
 
 check_PROGRAMS += umad.test
 umad_test_SOURCES = test_umad.cpp
+
+check_PROGRAMS += uname.test
+uname_test_SOURCES = test_uname.cpp
 
 # Declare tests
 TESTS = $(check_PROGRAMS)

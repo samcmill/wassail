@@ -30,9 +30,9 @@ else:
 Stage0 += compiler
 
 Stage0 += packages(apt=['libdispatch-dev', 'libibumad-dev', 'libpciaccess-dev',
-                        'libssh-dev', 'pciutils-dev'],
+                        'libssh-dev', 'libudev-dev', 'pciutils-dev'],
                    yum=['libpciaccess-devel', 'libssh-devel', 'pciutils-devel',
-                        'rdma-core-devel', 'tbb'])
+                        'rdma-core-devel', 'systemd-devel', 'tbb'])
 
 Stage0 += generic_autotools(branch='master', check=True,
                             preconfigure=['autoreconf -iv'],

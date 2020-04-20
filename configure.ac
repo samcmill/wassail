@@ -160,6 +160,7 @@ AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <regex>]],
 
 dnl Check optional features (if missing, some functionality will be disabled)
 AC_CHECK_HEADERS([infiniband/umad.h])
+AC_CHECK_HEADERS([libudev.h])
 AC_CHECK_HEADERS([nvml.h])
 AC_CHECK_HEADERS([pci/pci.h])
 AC_CHECK_HEADERS([pciaccess.h])
@@ -397,6 +398,14 @@ AS_IF([test "x$ac_cv_header_sys_sysinfo_h" = "xyes" &&
        AC_DEFINE(WITH_DATA_SYSINFO,,[sysinfo data source])],
       [AM_CONDITIONAL(WITH_DATA_SYSINFO, false)
        AC_MSG_WARN([disabling sysinfo data source])])
+
+dnl udev data source
+AS_IF([test "x$ac_cv_header_libudev_h" = "xyes" &&
+       test "x$wassail_cv_func_dlopen" = "xyes"],
+      [AM_CONDITIONAL(WITH_DATA_UDEV, true)
+       AC_DEFINE(WITH_DATA_UDEV,,[udev data source])],
+      [AM_CONDITIONAL(WITH_DATA_UDEV, false)
+       AC_MSG_WARN([disabling udev data source])])
 
 dnl umad data source
 AS_IF([test "x$ac_cv_header_infiniband_umad_h" = "xyes" &&

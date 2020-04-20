@@ -34,6 +34,7 @@ nobase_pkginclude_HEADERS += data/stream.hpp
 nobase_pkginclude_HEADERS += data/sysconf.hpp
 nobase_pkginclude_HEADERS += data/sysctl.hpp
 nobase_pkginclude_HEADERS += data/sysinfo.hpp
+nobase_pkginclude_HEADERS += data/udev.hpp
 nobase_pkginclude_HEADERS += data/umad.hpp
 nobase_pkginclude_HEADERS += data/uname.hpp
 

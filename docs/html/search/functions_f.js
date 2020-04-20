@@ -17,6 +17,7 @@ var searchData=
   ['_7esysconf',['~sysconf',['../classwassail_1_1data_1_1sysconf.html#af029070b24e8e9ffe5e12aa587057b44',1,'wassail::data::sysconf']]],
   ['_7esysctl',['~sysctl',['../classwassail_1_1data_1_1sysctl.html#a3e5a9721c262ba8ea76856f32678e302',1,'wassail::data::sysctl']]],
   ['_7esysinfo',['~sysinfo',['../classwassail_1_1data_1_1sysinfo.html#a03035ccd2dfdbc66540713733be19d0c',1,'wassail::data::sysinfo']]],
+  ['_7eudev',['~udev',['../classwassail_1_1data_1_1udev.html#a4215c3350ec421dfeb643d4e96170801',1,'wassail::data::udev']]],
   ['_7eumad',['~umad',['../classwassail_1_1data_1_1umad.html#aac5a068b03d6900c14803eee094148a9',1,'wassail::data::umad']]],
   ['_7euname',['~uname',['../classwassail_1_1data_1_1uname.html#ac6dc57c8e8c95fb24bec75c4ea862a96',1,'wassail::data::uname']]]
 ];

@@ -35,6 +35,7 @@ RUN apt-get update -y && \
         libibumad-dev \
         libpciaccess-dev \
         libssh-dev \
+        libudev-dev \
         pciutils-dev && \
     rm -rf /var/lib/apt/lists/*
 

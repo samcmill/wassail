@@ -51,5 +51,6 @@ if __name__ == '__main__':
     dump(wassail.data.sysconf())
     dump(wassail.data.sysctl())
     dump(wassail.data.sysinfo())
+    dump(wassail.data.udev())
     dump(wassail.data.umad())
     dump(wassail.data.uname())

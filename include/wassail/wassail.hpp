@@ -40,6 +40,7 @@ using json = nlohmann::json;
 #include <wassail/data/sysconf.hpp>
 #include <wassail/data/sysctl.hpp>
 #include <wassail/data/sysinfo.hpp>
+#include <wassail/data/udev.hpp>
 #include <wassail/data/umad.hpp>
 #include <wassail/data/uname.hpp>
 

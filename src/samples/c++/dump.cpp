@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
   dump(wassail::data::sysconf());
   dump(wassail::data::sysctl());
   dump(wassail::data::sysinfo());
+  dump(wassail::data::udev());
   dump(wassail::data::umad());
   dump(wassail::data::uname());
 

@@ -261,6 +261,18 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
+    def test_udev(self):
+        """udev data source"""
+        d = wassail.data.udev()
+        if d.enabled():
+            d.evaluate()
+            s = str(d)
+            j = json.loads(s)
+            self.assertEqual(j['name'], 'udev')
+        else:
+            with self.assertRaises(RuntimeError):
+                d.evaluate()
+
     def test_umad(self):
         """umad data source"""
         d = wassail.data.umad()

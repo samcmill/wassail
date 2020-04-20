@@ -104,6 +104,11 @@ def sysinfo():
   d = wassail.data.sysinfo()
   return data(d)
 
+@app.route('/data/udev')
+def udev():
+  d = wassail.data.udev()
+  return data(d)
+
 @app.route('/data/umad')
 def umad():
   d = wassail.data.umad()

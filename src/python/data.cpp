@@ -26,7 +26,8 @@ namespace py = pybind11;
       .def(py::init<>())                                                       \
       .def("__str__",                                                          \
            [](const wassail::data::NAME &d) {                                  \
-             return static_cast<json>(d).dump();                               \
+             return static_cast<json>(d).dump(-1, ' ', false,                  \
+                                              json::error_handler_t::replace); \
            })                                                                  \
       .def("enabled", &wassail::data::NAME ::enabled)                          \
       .def("evaluate", &wassail::data::NAME ::evaluate,                        \
@@ -49,6 +50,7 @@ void py_data(py::module &m) {
   MAKE_DATA_CLASS(data, sysconf)
   MAKE_DATA_CLASS(data, sysctl)
   MAKE_DATA_CLASS(data, sysinfo)
+  MAKE_DATA_CLASS(data, udev)
   MAKE_DATA_CLASS(data, umad)
   MAKE_DATA_CLASS(data, uname)
 

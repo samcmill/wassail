@@ -69,6 +69,8 @@ int main(int argc, char **argv) {
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::sysinfo()));
   futures.emplace_back(
+      std::async(std::launch::async, dump, wassail::data::udev()));
+  futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::umad()));
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::uname()));
