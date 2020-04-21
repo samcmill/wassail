@@ -109,6 +109,9 @@ namespace wassail {
         char *(*_pci_lookup_name)(struct pci_access *, char *, int, int, ...) =
             (char *(*)(struct pci_access *, char *, int, int, ...))dlsym(
                 handle, "pci_lookup_name");
+        if (_pci_lookup_name == nullptr) {
+          throw std::runtime_error(dlerror());
+        }
 
         auto const _pci_alloc = load_symbol<struct pci_access *()>("pci_alloc");
         auto const _pci_cleanup =
