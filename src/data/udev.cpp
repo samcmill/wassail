@@ -127,13 +127,14 @@ namespace wassail {
           return;
         }
 
-        struct udev_enumerate *e = _udev_enumerate_new(u);
-        _udev_enumerate_scan_devices(e);
+        struct udev_enumerate *enumerate = _udev_enumerate_new(u);
+        _udev_enumerate_scan_devices(enumerate);
 
         /* loop over devices */
-        for (struct udev_list_entry *d = _udev_enumerate_get_list_entry(e); d;
-             d = _udev_list_entry_get_next(d)) {
-          const char *path = _udev_list_entry_get_name(d);
+        for (struct udev_list_entry *entry =
+                 _udev_enumerate_get_list_entry(enumerate);
+             entry != NULL; entry = _udev_list_entry_get_next(entry)) {
+          const char *path = _udev_list_entry_get_name(entry);
           struct udev_device *device = _udev_device_new_from_syspath(u, path);
 
           /* path is equivalent to a json pointer, e.g.,
@@ -141,10 +142,10 @@ namespace wassail {
           data.devices[json::json_pointer(path)] = json::object();
 
           /* get attributes */
-          for (struct udev_list_entry *a =
+          for (struct udev_list_entry *attr =
                    _udev_device_get_sysattr_list_entry(device);
-               a; a = _udev_list_entry_get_next(a)) {
-            const char *name = _udev_list_entry_get_name(a);
+               attr != NULL; attr = _udev_list_entry_get_next(attr)) {
+            const char *name = _udev_list_entry_get_name(attr);
             const char *value = _udev_device_get_sysattr_value(device, name);
 
             if (value != NULL) {
@@ -158,7 +159,7 @@ namespace wassail {
           }
         }
 
-        _udev_enumerate_unref(e);
+        _udev_enumerate_unref(enumerate);
         _udev_unref(u);
 
         d.timestamp = std::chrono::system_clock::now();
