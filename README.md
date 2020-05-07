@@ -106,6 +106,9 @@ wassail incorporates the following third party software.
 - [json](https://github.com/nlohmann/json)
  Copyright (c) 2013-2019 Niels Lohmann &lt;http://nlohmann.me&gt;
 
+- [OSU Micro-Benchmarks](http://mvapich.cse.ohio-state.edu/benchmarks)
+ Copyright (c) 2001-2019, The Ohio State University.
+
 - [pybind11](https://github.com/pybind/pybind11)
  Copyright (c) 2016 Wenzel Jakob &lt;wenzel.jakob@epfl.ch&gt;
 

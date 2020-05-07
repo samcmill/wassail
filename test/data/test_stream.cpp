@@ -18,6 +18,8 @@
 TEST_CASE("stream basic usage") {
   auto d = wassail::data::stream();
 
+  REQUIRE(d.command == std::string(LIBEXECDIR) + "/stream");
+
   if (d.enabled()) {
     d.evaluate();
     json j = d;

@@ -1,0 +1,16 @@
+This folder is the unpacked tarball from http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.6.2.tar.gz.
+
+No files were modified with a single exception, shown below.
+
+--- a/src/3rdparty/osu-micro-benchmarks-5.6.2/upc/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks-5.6.2/upc/Makefile.am
+@@ -8,7 +8,7 @@ upc_PROGRAMS = osu_upc_memget osu_upc_memput osu_upc_all_barrier \
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../util/osu_util.c ../util/osu_util.h  ../util/osu_util_pgas.c ../util/util_pgas.h
++UTILITIES = ../util/osu_util.c ../util/osu_util.h  ../util/osu_util_pgas.c ../util/osu_util_pgas.h
+ 
+ if EMBEDDED_BUILD
+      AM_CPPFLAGS = -I$(top_builddir)/../src/include \
+

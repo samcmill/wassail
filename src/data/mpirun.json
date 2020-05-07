@@ -1,0 +1,89 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/mpirun.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail mpirun building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "mpirun command line",
+          "type": "string"
+        },
+        "elapsed": {
+          "description": "Number of seconds the command took to execute",
+          "type": "number"
+        },
+        "hostfile": {
+          "description": "Path to file containing list of hosts",
+          "type": "string"
+        },
+        "hostlist": {
+          "description": "List of hosts",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "mpi_impl": {
+          "description": "MPI implementation",
+          "type": "number"
+        },
+        "mpirun_args": {
+          "description": "Extra mpirun arguments",
+          "type": "string"
+        },
+        "num_procs": {
+          "description": "Number of MPI processes to start",
+          "type": "number"
+        },
+        "per_node": {
+          "description": "Number of MPI processes per node",
+          "type": "number"
+        },
+        "program": {
+          "description": "MPI program to launch",
+          "type": "string"
+        },
+        "program_args": {
+          "description": "Arguments to pass to the MPI program",
+          "type": "string"
+        },
+        "returncode": {
+          "description": "shell exit status",
+          "type": "number"
+        },
+        "stderr": {
+          "description": "standard error",
+          "type": "string"
+        },
+        "stdout": {
+          "description": "standard error",
+          "type": "string"
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

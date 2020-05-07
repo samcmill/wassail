@@ -17,7 +17,7 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt-get update -y
-        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg libtool make pkg-config libdispatch-dev libibumad-dev libpciaccess-dev libssh-dev libudev-dev pciutils-dev software-properties-common wget
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg libtool make pkg-config libdispatch-dev libibumad-dev libopenmpi-dev libpciaccess-dev libssh-dev libudev-dev openmpi-bin openssh-client pciutils-dev software-properties-common wget
         if [ "${{ matrix.os }}" = "ubuntu-16.04" ]; then
           sudo apt-get install -y gnupg-curl
           sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub

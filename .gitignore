@@ -9,7 +9,7 @@ wassail.spec
 
 # http://www.gnu.org/software/autoconf
 
-/autom4te.cache
+autom4te.cache
 /autoscan.log
 /autoscan-*.log
 /aclocal.m4
@@ -18,8 +18,8 @@ wassail.spec
 /config.h
 /config.h.in
 /config.h.in~
-/config.log
-/config.status
+config.log
+config.status
 /config.sub
 /configure
 /configure.scan
@@ -33,7 +33,7 @@ Makefile
 
 # https://www.gnu.org/software/libtool/
 
-/libtool
+libtool
 /ltmain.sh
 .libs/
 

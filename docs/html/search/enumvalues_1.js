@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['critical',['CRITICAL',['../classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97a99cd1c61610c76a57cb8d10d6df6b870',1,'wassail::result']]]
+  ['bw',['BW',['../classwassail_1_1data_1_1osu__micro__benchmarks.html#a9a1a3b07fc39c7a220b67f34598ee3bda81043f8c681575bca3e4eff6afbd9db9',1,'wassail::data::osu_micro_benchmarks']]]
 ];

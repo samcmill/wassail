@@ -50,8 +50,12 @@ int main(int argc, char **argv) {
       std::async(std::launch::async, dump, wassail::data::getmntent()));
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::getrlimit()));
+  futures.emplace_back(std::async(std::launch::async, dump,
+                                  wassail::data::mpirun(2, "hostname")));
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::nvml()));
+  futures.emplace_back(std::async(std::launch::async, dump,
+                                  wassail::data::osu_micro_benchmarks()));
   futures.emplace_back(
       std::async(std::launch::async, dump, wassail::data::pciaccess()));
   futures.emplace_back(
@@ -84,7 +88,8 @@ int main(int argc, char **argv) {
 
       try {
         auto j = future.get();
-        std::cout << j.dump() << std::endl;
+        std::cout << j.dump(-1, ' ', false, json::error_handler_t::replace)
+                  << std::endl;
       }
       catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
