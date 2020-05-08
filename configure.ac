@@ -433,18 +433,11 @@ AS_IF([test "x$ac_cv_header_sys_utsname_h" = "xyes" &&
 AC_CONFIG_HEADERS([config.h])
 
 dnl external benchmarks
-AS_IF([test -n "$ac_cv_prog_MPICC" && test -n "$ac_cv_prog_MPICXX"],
-      [AM_CONDITIONAL(WITH_DATA_OSU_MICRO_BENCHMARKS, true)
-       AC_DEFINE(WITH_DATA_OSU_MICRO_BENCHMARKS,,
-                 [osu_micro_benchmarks data source])
-       osudir='${libexecdir}/wassail'
-       AC_SUBST(osudir)
-       AX_SUBDIRS_CONFIGURE([src/3rdparty/osu-micro-benchmarks],
-                            [[--libexecdir=$osudir], [--enable-silent-rules]],
-                            [[CC=$ac_cv_prog_MPICC],
-                             [CXX=$ac_cv_prog_MPICXX]])],
-      [AM_CONDITIONAL(WITH_DATA_OSU_MICRO_BENCHMARKS, false)
-       AC_MSG_WARN([skipping OSU Micro-Benchmarks setup])])
+osudir='${libexecdir}/wassail'
+AC_SUBST(osudir)
+AX_SUBDIRS_CONFIGURE([src/3rdparty/osu-micro-benchmarks],
+                     [[--libexecdir=$osudir], [--enable-silent-rules]], [],
+                     [[CC=$ac_cv_prog_MPICC], [CXX=$ac_cv_prog_MPICXX]])
 AC_CONFIG_SUBDIRS([src/3rdparty/stream])
 
 AC_CONFIG_FILES([

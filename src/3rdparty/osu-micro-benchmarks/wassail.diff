@@ -1,0 +1,392 @@
+diff --git a/src/3rdparty/osu-micro-benchmarks/Makefile.am b/src/3rdparty/osu-micro-benchmarks/Makefile.am
+index fc5c447..daa7cfe 100644
+--- a/src/3rdparty/osu-micro-benchmarks/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/Makefile.am
+@@ -1,4 +1,4 @@
+-SUBDIRS =
++SUBDIRS = util
+ 
+ if CUDA
+     dist_pkglibexec_SCRIPTS = get_local_rank
+diff --git a/src/3rdparty/osu-micro-benchmarks/configure.ac b/src/3rdparty/osu-micro-benchmarks/configure.ac
+index 3da6339..fd03bfb 100644
+--- a/src/3rdparty/osu-micro-benchmarks/configure.ac
++++ b/src/3rdparty/osu-micro-benchmarks/configure.ac
+@@ -141,5 +141,5 @@ AC_DEFINE([FLOAT_PRECISION], [2], [Precision of reported numbers])
+ 
+ AC_CONFIG_FILES([Makefile mpi/Makefile mpi/pt2pt/Makefile mpi/startup/Makefile
+                  mpi/one-sided/Makefile mpi/collective/Makefile
+-                 openshmem/Makefile upc/Makefile upcxx/Makefile])
++                 openshmem/Makefile upc/Makefile upcxx/Makefile util/Makefile])
+ AC_OUTPUT
+diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
+index e7bb87c..61f7d6c 100644
+--- a/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
+@@ -11,40 +11,64 @@ collective_PROGRAMS = osu_alltoallv osu_allgatherv osu_scatterv osu_gatherv osu_
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h
+ if CUDA_KERNELS
+-UTILITIES += ../../util/kernel.cu
+ if BUILD_USE_PGI
+ AM_CXXFLAGS = --nvcchost --no_preincludes
+ endif
+ endif
+ 
+-osu_allgatherv_SOURCES = osu_allgatherv.c $(UTILITIES)
+-osu_scatterv_SOURCES = osu_scatterv.c $(UTILITIES)
+-osu_gather_SOURCES = osu_gather.c $(UTILITIES)
+-osu_gatherv_SOURCES = osu_gatherv.c $(UTILITIES)
+-osu_reduce_scatter_SOURCES = osu_reduce_scatter.c $(UTILITIES)
+-osu_barrier_SOURCES = osu_barrier.c $(UTILITIES)
+-osu_reduce_SOURCES = osu_reduce.c $(UTILITIES)
+-osu_allreduce_SOURCES = osu_allreduce.c $(UTILITIES)
+-osu_bcast_SOURCES = osu_bcast.c $(UTILITIES)
+-osu_alltoall_SOURCES = osu_alltoall.c $(UTILITIES)
+-osu_alltoallv_SOURCES = osu_alltoallv.c $(UTILITIES)
+-osu_ialltoall_SOURCES = osu_ialltoall.c $(UTILITIES)
+-osu_ialltoallv_SOURCES = osu_ialltoallv.c $(UTILITIES)
+-osu_ialltoallw_SOURCES = osu_ialltoallw.c $(UTILITIES)
+-osu_ibarrier_SOURCES = osu_ibarrier.c $(UTILITIES)
+-osu_ibcast_SOURCES = osu_ibcast.c $(UTILITIES)
+-osu_igather_SOURCES = osu_igather.c $(UTILITIES)
+-osu_igatherv_SOURCES = osu_igatherv.c $(UTILITIES)
+-osu_allgather_SOURCES = osu_allgather.c $(UTILITIES)
+-osu_iallgather_SOURCES = osu_iallgather.c $(UTILITIES)
+-osu_iallgatherv_SOURCES = osu_iallgatherv.c $(UTILITIES)
+-osu_scatter_SOURCES = osu_scatter.c $(UTILITIES)
+-osu_iscatter_SOURCES = osu_iscatter.c $(UTILITIES)
+-osu_iscatterv_SOURCES = osu_iscatterv.c $(UTILITIES)
+-osu_ireduce_SOURCES = osu_ireduce.c $(UTILITIES)
+-osu_iallreduce_SOURCES = osu_iallreduce.c $(UTILITIES)
++osu_allgatherv_SOURCES = osu_allgatherv.c
++osu_allgatherv_LDADD = $(top_builddir)/util/libutil.la
++osu_scatterv_SOURCES = osu_scatterv.c
++osu_scatterv_LDADD = $(top_builddir)/util/libutil.la
++osu_gather_SOURCES = osu_gather.c
++osu_gather_LDADD = $(top_builddir)/util/libutil.la
++osu_gatherv_SOURCES = osu_gatherv.c
++osu_gatherv_LDADD = $(top_builddir)/util/libutil.la
++osu_reduce_scatter_SOURCES = osu_reduce_scatter.c
++osu_reduce_scatter_LDADD = $(top_builddir)/util/libutil.la
++osu_barrier_SOURCES = osu_barrier.c
++osu_barrier_LDADD = $(top_builddir)/util/libutil.la
++osu_reduce_SOURCES = osu_reduce.c
++osu_reduce_LDADD = $(top_builddir)/util/libutil.la
++osu_allreduce_SOURCES = osu_allreduce.c
++osu_allreduce_LDADD = $(top_builddir)/util/libutil.la
++osu_bcast_SOURCES = osu_bcast.c
++osu_bcast_LDADD = $(top_builddir)/util/libutil.la
++osu_alltoall_SOURCES = osu_alltoall.c
++osu_alltoall_LDADD = $(top_builddir)/util/libutil.la
++osu_alltoallv_SOURCES = osu_alltoallv.c
++osu_alltoallv_LDADD = $(top_builddir)/util/libutil.la
++osu_ialltoall_SOURCES = osu_ialltoall.c
++osu_ialltoall_LDADD = $(top_builddir)/util/libutil.la
++osu_ialltoallv_SOURCES = osu_ialltoallv.c
++osu_ialltoallv_LDADD = $(top_builddir)/util/libutil.la
++osu_ialltoallw_SOURCES = osu_ialltoallw.c
++osu_ialltoallw_LDADD = $(top_builddir)/util/libutil.la
++osu_ibarrier_SOURCES = osu_ibarrier.c
++osu_ibarrier_LDADD = $(top_builddir)/util/libutil.la
++osu_ibcast_SOURCES = osu_ibcast.c
++osu_ibcast_LDADD = $(top_builddir)/util/libutil.la
++osu_igather_SOURCES = osu_igather.c
++osu_igather_LDADD = $(top_builddir)/util/libutil.la
++osu_igatherv_SOURCES = osu_igatherv.c
++osu_igatherv_LDADD = $(top_builddir)/util/libutil.la
++osu_allgather_SOURCES = osu_allgather.c
++osu_allgather_LDADD = $(top_builddir)/util/libutil.la
++osu_iallgather_SOURCES = osu_iallgather.c
++osu_iallgather_LDADD = $(top_builddir)/util/libutil.la
++osu_iallgatherv_SOURCES = osu_iallgatherv.c
++osu_iallgatherv_LDADD = $(top_builddir)/util/libutil.la
++osu_scatter_SOURCES = osu_scatter.c
++osu_scatter_LDADD = $(top_builddir)/util/libutil.la
++osu_iscatter_SOURCES = osu_iscatter.c
++osu_iscatter_LDADD = $(top_builddir)/util/libutil.la
++osu_iscatterv_SOURCES = osu_iscatterv.c
++osu_iscatterv_LDADD = $(top_builddir)/util/libutil.la
++osu_ireduce_SOURCES = osu_ireduce.c
++osu_ireduce_LDADD = $(top_builddir)/util/libutil.la
++osu_iallreduce_SOURCES = osu_iallreduce.c
++osu_iallreduce_LDADD = $(top_builddir)/util/libutil.la
+ 
+ if EMBEDDED_BUILD
+     AM_LDFLAGS =
+diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
+index 19963af..86b3e55 100644
+--- a/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
+@@ -15,23 +15,30 @@ endif
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h
+ if CUDA_KERNELS
+-UTILITIES += ../../util/kernel.cu
+ if BUILD_USE_PGI
+ AM_CXXFLAGS = --nvcchost --no_preincludes
+ endif
+ endif
+ 
+-osu_put_latency_SOURCES = osu_put_latency.c $(UTILITIES)
+-osu_put_bw_SOURCES = osu_put_bw.c $(UTILITIES)
+-osu_put_bibw_SOURCES = osu_put_bibw.c $(UTILITIES)
+-osu_get_latency_SOURCES = osu_get_latency.c $(UTILITIES)
+-osu_get_bw_SOURCES = osu_get_bw.c $(UTILITIES)
+-osu_acc_latency_SOURCES = osu_acc_latency.c $(UTILITIES)
+-osu_fop_latency_SOURCES = osu_fop_latency.c $(UTILITIES)
+-osu_cas_latency_SOURCES = osu_cas_latency.c $(UTILITIES)
+-osu_get_acc_latency_SOURCES = osu_get_acc_latency.c $(UTILITIES)
++osu_put_latency_SOURCES = osu_put_latency.c
++osu_put_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_put_bw_SOURCES = osu_put_bw.c
++osu_put_bw_LDADD = $(top_builddir)/util/libutil.la
++osu_put_bibw_SOURCES = osu_put_bibw.c
++osu_put_bibw_LDADD = $(top_builddir)/util/libutil.la
++osu_get_latency_SOURCES = osu_get_latency.c
++osu_get_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_get_bw_SOURCES = osu_get_bw.c
++osu_get_bw_LDADD = $(top_builddir)/util/libutil.la
++osu_acc_latency_SOURCES = osu_acc_latency.c
++osu_acc_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_fop_latency_SOURCES = osu_fop_latency.c
++osu_fop_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_cas_latency_SOURCES = osu_cas_latency.c
++osu_cas_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_get_acc_latency_SOURCES = osu_get_acc_latency.c
++osu_get_acc_latency_LDADD = $(top_builddir)/util/libutil.la
+ 
+ if EMBEDDED_BUILD
+     AM_LDFLAGS =
+diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
+index 17f85a4..53a54d1 100644
+--- a/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
+@@ -11,21 +11,24 @@ pt2pt_PROGRAMS = osu_bibw osu_bw osu_latency osu_mbw_mr osu_multi_lat
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h
+ if CUDA_KERNELS
+-UTILITIES += ../../util/kernel.cu
+-CLEANFILES = ../../util/kernel.cpp
+ if BUILD_USE_PGI
+ AM_CXXFLAGS = --nvcchost --no_preincludes
+ endif
+ endif
+ 
+-osu_bw_SOURCES = osu_bw.c $(UTILITIES)
+-osu_bibw_SOURCES = osu_bibw.c $(UTILITIES)
+-osu_latency_SOURCES = osu_latency.c $(UTILITIES)
+-osu_mbw_mr_SOURCES = osu_mbw_mr.c $(UTILITIES)
+-osu_multi_lat_SOURCES = osu_multi_lat.c $(UTILITIES)
+-osu_latency_mt_SOURCES = osu_latency_mt.c $(UTILITIES)
++osu_bw_SOURCES = osu_bw.c
++osu_bw_LDADD = $(top_builddir)/util/libutil.la
++osu_bibw_SOURCES = osu_bibw.c
++osu_bibw_LDADD = $(top_builddir)/util/libutil.la
++osu_latency_SOURCES = osu_latency.c
++osu_latency_LDADD = $(top_builddir)/util/libutil.la
++osu_mbw_mr_SOURCES = osu_mbw_mr.c
++osu_mbw_mr_LDADD = $(top_builddir)/util/libutil.la
++osu_multi_lat_SOURCES = osu_multi_lat.c
++osu_multi_lat_LDADD = $(top_builddir)/util/libutil.la
++osu_latency_mt_SOURCES = osu_latency_mt.c
++osu_latency_mt_LDADD = $(top_builddir)/util/libutil.la
+ 
+ if MPI2_LIBRARY
+     pt2pt_PROGRAMS += osu_latency_mt 
+diff --git a/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am b/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am
+index 82529f9..2cf22e9 100644
+--- a/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am
+@@ -10,25 +10,37 @@ openshmem_PROGRAMS = osu_oshm_get osu_oshm_put osu_oshm_put_mr \
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../util/osu_util.c ../util/osu_util.h ../util/osu_util_pgas.c ../util/osu_util_pgas.h
+-
+ if EMBEDDED_BUILD
+      AM_CPPFLAGS = -I$(top_builddir)/../src/include \
+                   -I${top_srcdir}/util \
+                   -I${top_srcdir}/../src/include
+ endif
+ 
+-osu_oshm_get_SOURCES = osu_oshm_get.c $(UTILITIES)
+-osu_oshm_put_SOURCES = osu_oshm_put.c $(UTILITIES)
+-osu_oshm_put_mr_SOURCES = osu_oshm_put_mr.c $(UTILITIES)
+-osu_oshm_atomics_SOURCES = osu_oshm_atomics.c $(UTILITIES)
+-osu_oshm_barrier_SOURCES = osu_oshm_barrier.c $(UTILITIES)
+-osu_oshm_broadcast_SOURCES = osu_oshm_broadcast.c $(UTILITIES)
+-osu_oshm_collect_SOURCES = osu_oshm_collect.c $(UTILITIES)
+-osu_oshm_fcollect_SOURCES = osu_oshm_fcollect.c $(UTILITIES)
+-osu_oshm_reduce_SOURCES = osu_oshm_reduce.c $(UTILITIES)
+-osu_oshm_get_nb_SOURCES = osu_oshm_get_nb.c $(UTILITIES)
+-osu_oshm_put_nb_SOURCES = osu_oshm_put_nb.c $(UTILITIES)
+-osu_oshm_put_overlap_SOURCES = osu_oshm_put_overlap.c $(UTILITIES)
+-osu_oshm_get_mr_nb_SOURCES = osu_oshm_get_mr_nb.c $(UTILITIES)
+-osu_oshm_put_mr_nb_SOURCES = osu_oshm_put_mr_nb.c $(UTILITIES)
++osu_oshm_get_SOURCES = osu_oshm_get.c
++osu_oshm_get_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_put_SOURCES = osu_oshm_put.c
++osu_oshm_put_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_put_mr_SOURCES = osu_oshm_put_mr.c
++osu_oshm_put_mr_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_atomics_SOURCES = osu_oshm_atomics.c
++osu_oshm_atomics_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_barrier_SOURCES = osu_oshm_barrier.c
++osu_oshm_barrier_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_broadcast_SOURCES = osu_oshm_broadcast.c
++osu_oshm_broadcast_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_collect_SOURCES = osu_oshm_collect.c
++osu_oshm_collect_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_fcollect_SOURCES = osu_oshm_fcollect.c
++osu_oshm_fcollect_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_reduce_SOURCES = osu_oshm_reduce.c
++osu_oshm_reduce_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_get_nb_SOURCES = osu_oshm_get_nb.c
++osu_oshm_get_nb_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_put_nb_SOURCES = osu_oshm_put_nb.c
++osu_oshm_put_nb_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_put_overlap_SOURCES = osu_oshm_put_overlap.c
++osu_oshm_put_overlap_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_get_mr_nb_SOURCES = osu_oshm_get_mr_nb.c
++osu_oshm_get_mr_nb_LDADD = $(top_builddir)/util/libutil.la
++osu_oshm_put_mr_nb_SOURCES = osu_oshm_put_mr_nb.c
++osu_oshm_put_mr_nb_LDADD = $(top_builddir)/util/libutil.la
+diff --git a/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am b/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
+index 8dafc4e..bd48440 100644
+--- a/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
+@@ -8,18 +8,23 @@ upc_PROGRAMS = osu_upc_memget osu_upc_memput osu_upc_all_barrier \
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../util/osu_util.c ../util/osu_util.h  ../util/osu_util_pgas.c ../util/osu_util_pgas.h
+-
+ if EMBEDDED_BUILD
+      AM_CPPFLAGS = -I$(top_builddir)/../src/include \
+                   -I${top_srcdir}/util \
+                   -I${top_srcdir}/../src/include
+ endif
+ 
+-osu_upc_all_barrier_SOURCES = osu_upc_all_barrier.c $(UTILITIES)
+-osu_upc_all_broadcast_SOURCES = osu_upc_all_broadcast.c $(UTILITIES)
+-osu_upc_all_exchange_SOURCES = osu_upc_all_exchange.c $(UTILITIES)
+-osu_upc_all_gather_SOURCES = osu_upc_all_gather.c $(UTILITIES)
+-osu_upc_all_gather_all_SOURCES = osu_upc_all_gather_all.c $(UTILITIES)
+-osu_upc_all_reduce_SOURCES = osu_upc_all_reduce.c $(UTILITIES)
+-osu_upc_all_scatter_SOURCES = osu_upc_all_scatter.c $(UTILITIES)
++osu_upc_all_barrier_SOURCES = osu_upc_all_barrier.c
++osu_upc_all_barrier_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_broadcast_SOURCES = osu_upc_all_broadcast.c
++osu_upc_all_broadcast_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_exchange_SOURCES = osu_upc_all_exchange.c
++osu_upc_all_exchange_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_gather_SOURCES = osu_upc_all_gather.c
++osu_upc_all_gather_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_gather_all_SOURCES = osu_upc_all_gather_all.c
++osu_upc_all_gather_all_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_reduce_SOURCES = osu_upc_all_reduce.c
++osu_upc_all_reduce_LDADD = $(top_builddir)/util/libutil.la
++osu_upc_all_scatter_SOURCES = osu_upc_all_scatter.c
++osu_upc_all_scatter_LDADD = $(top_builddir)/util/libutil.la
+diff --git a/src/3rdparty/osu-micro-benchmarks/upcxx/Makefile.am b/src/3rdparty/osu-micro-benchmarks/upcxx/Makefile.am
+index 5794923..d25100e 100644
+--- a/src/3rdparty/osu-micro-benchmarks/upcxx/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/upcxx/Makefile.am
+@@ -7,19 +7,25 @@ upcxx_PROGRAMS = osu_upcxx_allgather osu_upcxx_alltoall osu_upcxx_bcast \
+ 
+ AM_CPPFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES =  ../util/osu_util.c ../util/osu_util.h ../util/osu_util_pgas.c ../util/osu_util_pgas.h
+-
+ if EMBEDDED_BUILD
+      AM_CPPFLAGS += -I$(top_builddir)/../src/include \
+                   -I${top_srcdir}/util \
+                   -I${top_srcdir}/../src/include
+ endif
+ 
+-osu_upcxx_allgather_SOURCES = osu_upcxx_allgather.cpp $(UTILITIES)
+-osu_upcxx_alltoall_SOURCES = osu_upcxx_alltoall.cpp $(UTILITIES)
+-osu_upcxx_bcast_SOURCES = osu_upcxx_bcast.cpp $(UTILITIES)
+-osu_upcxx_gather_SOURCES = osu_upcxx_gather.cpp $(UTILITIES)
+-osu_upcxx_reduce_SOURCES = osu_upcxx_reduce.cpp $(UTILITIES)
+-osu_upcxx_scatter_SOURCES = osu_upcxx_scatter.cpp $(UTILITIES)
+-osu_upcxx_async_copy_get_SOURCES = osu_upcxx_async_copy_get.cpp $(UTILITIES)
+-osu_upcxx_async_copy_put_SOURCES = osu_upcxx_async_copy_put.cpp $(UTILITIES)
++osu_upcxx_allgather_SOURCES = osu_upcxx_allgather.cpp
++osu_upcxx_allgather_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_alltoall_SOURCES = osu_upcxx_alltoall.cpp
++osu_upcxx_alltoall_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_bcast_SOURCES = osu_upcxx_bcast.cpp
++osu_upcxx_bcast_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_gather_SOURCES = osu_upcxx_gather.cpp
++osu_upcxx_gather_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_reduce_SOURCES = osu_upcxx_reduce.cpp
++osu_upcxx_reduce_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_scatter_SOURCES = osu_upcxx_scatter.cpp
++osu_upcxx_scatter_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_async_copy_get_SOURCES = osu_upcxx_async_copy_get.cpp
++osu_upcxx_async_copy_get_LDADD = $(top_builddir)/util/libutil.la
++osu_upcxx_async_copy_put_SOURCES = osu_upcxx_async_copy_put.cpp
++osu_upcxx_async_copy_put_LDADD = $(top_builddir)/util/libutil.la
+diff --git a/src/3rdparty/osu-micro-benchmarks/util/Makefile.am b/src/3rdparty/osu-micro-benchmarks/util/Makefile.am
+new file mode 100644
+index 0000000..5d4579c
+--- /dev/null
++++ b/src/3rdparty/osu-micro-benchmarks/util/Makefile.am
+@@ -0,0 +1,49 @@
++NVCC = nvcc
++NVCFLAGS = -cuda -maxrregcount 32 -ccbin $(CXX)
++SUFFIXES = .cu .cpp
++.cu.cpp:
++	$(NVCC) $(NVCFLAGS) $(INCLUDES) $(CPPFLAGS) --output-file $@ $<
++
++noinst_LTLIBRARIES = libutil.la
++
++libutil_la_SOURCES = osu_util.c osu_util.h
++
++if MPI
++libutil_la_SOURCES += osu_util_mpi.c osu_util_mpi.h
++endif
++
++if OSHM
++libutil_la_SOURCES += osu_util_pgas.c osu_util_pgas.h
++endif
++
++if UPC
++libutil_la_SOURCES += osu_util_pgas.c osu_util_pgas.h
++endif
++
++if UPCXX
++libutil_la_SOURCES += osu_util_pgas.c osu_util_pgas.h
++endif
++
++if CUDA_KERNELS
++libutil_la_SOURCES += kernel.cu
++CLEANFILES = kernel.cpp
++if BUILD_USE_PGI
++AM_CXXFLAGS = --nvcchost --no_preincludes
++endif
++endif
++
++if EMBEDDED_BUILD
++    AM_LDFLAGS =
++    AM_CPPFLAGS = -I$(top_builddir)/../src/include \
++          -I${top_srcdir}/util \
++                  -I${top_srcdir}/../src/include
++if BUILD_PROFILING_LIB
++    AM_LDFLAGS += $(top_builddir)/../lib/lib@PMPILIBNAME@.la
++endif
++    AM_LDFLAGS += $(top_builddir)/../lib/lib@MPILIBNAME@.la
++endif
++
++if OPENACC
++    AM_CFLAGS = -acc -ta=tesla:nordc
++    AM_CXXFLAGS = -acc -ta=tesla:nordc
++endif

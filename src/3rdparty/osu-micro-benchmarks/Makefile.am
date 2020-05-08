@@ -1,4 +1,4 @@
-SUBDIRS =
+SUBDIRS = util
 
 if CUDA
     dist_pkglibexec_SCRIPTS = get_local_rank

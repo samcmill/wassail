@@ -40,8 +40,8 @@ jobs:
           echo "::set-env name=CXX::g++"
         fi
 
-    - name: autoreconf
-      run: autoreconf -fiv
+    - name: autogen
+      run: ./autogen.sh
 
     - name: configure
       run: ./configure

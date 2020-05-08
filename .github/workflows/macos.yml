@@ -13,8 +13,8 @@ jobs:
     - name: install dependencies
       run: brew install autoconf autoconf-archive automake libtool
 
-    - name: autoreconf
-      run: autoreconf -fiv
+    - name: autogen
+      run: ./autogen.sh
 
     - name: configure
       run: ./configure

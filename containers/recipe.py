@@ -35,7 +35,7 @@ Stage0 += packages(apt=['libdispatch-dev', 'libibumad-dev', 'libpciaccess-dev',
                         'rdma-core-devel', 'systemd-devel', 'tbb'])
 
 Stage0 += generic_autotools(branch='master', check=True,
-                            preconfigure=['autoreconf -iv'],
+                            preconfigure=['./autogen.sh'],
                             repository='https://github.com/samcmill/wassail',
                             toolchain=compiler.toolchain)
 Stage0 += environment(variables={'LD_LIBRARY_PATH':

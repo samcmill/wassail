@@ -15,23 +15,30 @@ endif
 
 AM_CFLAGS = -I${top_srcdir}/util
 
-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h
 if CUDA_KERNELS
-UTILITIES += ../../util/kernel.cu
 if BUILD_USE_PGI
 AM_CXXFLAGS = --nvcchost --no_preincludes
 endif
 endif
 
-osu_put_latency_SOURCES = osu_put_latency.c $(UTILITIES)
-osu_put_bw_SOURCES = osu_put_bw.c $(UTILITIES)
-osu_put_bibw_SOURCES = osu_put_bibw.c $(UTILITIES)
-osu_get_latency_SOURCES = osu_get_latency.c $(UTILITIES)
-osu_get_bw_SOURCES = osu_get_bw.c $(UTILITIES)
-osu_acc_latency_SOURCES = osu_acc_latency.c $(UTILITIES)
-osu_fop_latency_SOURCES = osu_fop_latency.c $(UTILITIES)
-osu_cas_latency_SOURCES = osu_cas_latency.c $(UTILITIES)
-osu_get_acc_latency_SOURCES = osu_get_acc_latency.c $(UTILITIES)
+osu_put_latency_SOURCES = osu_put_latency.c
+osu_put_latency_LDADD = $(top_builddir)/util/libutil.la
+osu_put_bw_SOURCES = osu_put_bw.c
+osu_put_bw_LDADD = $(top_builddir)/util/libutil.la
+osu_put_bibw_SOURCES = osu_put_bibw.c
+osu_put_bibw_LDADD = $(top_builddir)/util/libutil.la
+osu_get_latency_SOURCES = osu_get_latency.c
+osu_get_latency_LDADD = $(top_builddir)/util/libutil.la
+osu_get_bw_SOURCES = osu_get_bw.c
+osu_get_bw_LDADD = $(top_builddir)/util/libutil.la
+osu_acc_latency_SOURCES = osu_acc_latency.c
+osu_acc_latency_LDADD = $(top_builddir)/util/libutil.la
+osu_fop_latency_SOURCES = osu_fop_latency.c
+osu_fop_latency_LDADD = $(top_builddir)/util/libutil.la
+osu_cas_latency_SOURCES = osu_cas_latency.c
+osu_cas_latency_LDADD = $(top_builddir)/util/libutil.la
+osu_get_acc_latency_SOURCES = osu_get_acc_latency.c
+osu_get_acc_latency_LDADD = $(top_builddir)/util/libutil.la
 
 if EMBEDDED_BUILD
     AM_LDFLAGS =
