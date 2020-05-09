@@ -19,12 +19,14 @@ TEST_CASE("osu_init basic usage") {
   auto d = wassail::data::osu_micro_benchmarks();
 
   if (getuid() == 0 and d.allow_run_as_root) {
-    REQUIRE(d.command == "mpirun -n 2 --allow-run-as-root --timeout 60 " +
-                             std::string(LIBEXECDIR) +
-                             "/osu-micro-benchmarks/mpi/startup/osu_init");
+    REQUIRE(d.command ==
+            "mpirun -n 2 --allow-run-as-root -x MPIEXEC_TIMEOUT 60 " +
+                std::string(LIBEXECDIR) +
+                "/osu-micro-benchmarks/mpi/startup/osu_init");
   }
   else {
-    REQUIRE(d.command == "mpirun -n 2 --timeout 60 " + std::string(LIBEXECDIR) +
+    REQUIRE(d.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT 60 " +
+                             std::string(LIBEXECDIR) +
                              "/osu-micro-benchmarks/mpi/startup/osu_init");
   }
 

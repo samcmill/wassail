@@ -67,7 +67,11 @@ namespace wassail {
         }
 
         if (_timeout > 0) {
-          command += wassail::format(" --timeout {0}", _timeout);
+          /* OpenMPI 2.x+ has a --timeout command line parameter, but
+           * for compatibility with 1.x, set the environment variable
+           * instead */
+          command += wassail::format(" -x MPIEXEC_TIMEOUT {0}", _timeout);
+
           /* add a cushion to allow the mpirun timeout a chance to work before
            * invoking the shell_command timeout */
           timeout = _timeout + 10;
