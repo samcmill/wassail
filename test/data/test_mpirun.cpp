@@ -21,10 +21,10 @@ TEST_CASE("mpirun basic usage") {
 
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command ==
-            "mpirun -n 2 --allow-run-as-root -x MPIEXEC_TIMEOUT 60 echo 'foo'");
+            "mpirun -n 2 --allow-run-as-root -x MPIEXEC_TIMEOUT=60 echo 'foo'");
   }
   else {
-    REQUIRE(d.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT 60 echo 'foo'");
+    REQUIRE(d.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT=60 echo 'foo'");
   }
 
   if (d.enabled()) {
@@ -49,10 +49,10 @@ TEST_CASE("mpirun hostfile usage") {
 
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command == "mpirun -n 8 -f hostfile --allow-run-as-root -x "
-                         "MPIEXEC_TIMEOUT 60 a.out");
+                         "MPIEXEC_TIMEOUT=60 a.out");
   }
   else {
-    REQUIRE(d.command == "mpirun -n 8 -f hostfile -x MPIEXEC_TIMEOUT 60 a.out");
+    REQUIRE(d.command == "mpirun -n 8 -f hostfile -x MPIEXEC_TIMEOUT=60 a.out");
   }
 }
 
@@ -62,11 +62,11 @@ TEST_CASE("mpirun hostlist usage") {
 
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command == "mpirun -n 2 -H node1,node2 --allow-run-as-root -x "
-                         "MPIEXEC_TIMEOUT 60 a.out");
+                         "MPIEXEC_TIMEOUT=60 a.out");
   }
   else {
     REQUIRE(d.command ==
-            "mpirun -n 2 -H node1,node2 -x MPIEXEC_TIMEOUT 60 a.out");
+            "mpirun -n 2 -H node1,node2 -x MPIEXEC_TIMEOUT=60 a.out");
   }
 }
 
@@ -76,12 +76,12 @@ TEST_CASE("mpirun additional args") {
 
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command ==
-            "mpirun -n 4 --allow-run-as-root -x MPIEXEC_TIMEOUT 10 "
+            "mpirun -n 4 --allow-run-as-root -x MPIEXEC_TIMEOUT=10 "
             "--bind-to core a.out -i foo.in");
   }
   else {
     REQUIRE(d.command ==
-            "mpirun -n 4 -x MPIEXEC_TIMEOUT 10 --bind-to core a.out -i foo.in");
+            "mpirun -n 4 -x MPIEXEC_TIMEOUT=10 --bind-to core a.out -i foo.in");
   }
 }
 
