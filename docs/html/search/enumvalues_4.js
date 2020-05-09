@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fifteen',['FIFTEEN',['../classwassail_1_1check_1_1misc_1_1load__average.html#a36a0b7b837249d547cb5859a345df46aac9b10768e46f970896b0920a59b6d01c',1,'wassail::check::misc::load_average']]],
-  ['five',['FIVE',['../classwassail_1_1check_1_1misc_1_1load__average.html#a36a0b7b837249d547cb5859a345df46aaf4b39598b610f63907cb67b84ba5d261',1,'wassail::check::misc::load_average']]]
+  ['emergency',['EMERGENCY',['../classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97a1d9e8d5522fd3de1bbc21723300efd30',1,'wassail::result']]],
+  ['error',['ERROR',['../classwassail_1_1result.html#a1ba8c5889a3bae98c148625ad8070e97abb1ca97ec761fc37101737ba0aa2e7c5',1,'wassail::result']]]
 ];

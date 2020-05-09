@@ -42,7 +42,7 @@ RUN apt-get update -y && \
 # https://github.com/samcmill/wassail
 RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
     cd /var/tmp/wassail && \
-    autoreconf -iv && \
+    ./autogen.sh && \
     cd /var/tmp/wassail &&  CC=gcc CXX=g++ ./configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make -j$(nproc) check && \

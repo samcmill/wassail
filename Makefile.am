@@ -10,7 +10,7 @@ CODE_COVERAGE_LCOV_SHOPTS = --no-external
 SUBDIRS = include/wassail src test
 
 dist_doc_DATA = README.md
-EXTRA_DIST = .clang-format Doxyfile.in wassail.spec wassail.spec.in
+EXTRA_DIST = .clang-format autogen.sh Doxyfile.in wassail.spec wassail.spec.in
 
 if HAVE_CLANG_FORMAT
 .PHONY: check-format

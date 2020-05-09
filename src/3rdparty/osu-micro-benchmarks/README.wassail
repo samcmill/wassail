@@ -1,0 +1,4 @@
+This folder is the unpacked tarball from http://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-5.6.2.tar.gz.
+
+No source files were modified, although several build files were updated
+for subpackage support.  See wassail.diff for the changes.

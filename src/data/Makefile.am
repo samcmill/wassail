@@ -43,9 +43,17 @@ libwassail_data_la_SOURCES += getrlimit.cpp \
     $(top_srcdir)/include/wassail/data/getrlimit.hpp
 dist_schema_DATA += getrlimit.json
 
+libwassail_data_la_SOURCES += mpirun.cpp \
+    $(top_srcdir)/include/wassail/data/mpirun.hpp
+dist_schema_DATA += mpirun.json
+
 libwassail_data_la_SOURCES += nvml.cpp \
     $(top_srcdir)/include/wassail/data/nvml.hpp
 dist_schema_DATA += nvml.json
+
+libwassail_data_la_SOURCES += osu_micro_benchmarks.cpp \
+    $(top_srcdir)/include/wassail/data/osu_micro_benchmarks.hpp
+dist_schema_DATA += osu_micro_benchmarks.json
 
 libwassail_data_la_SOURCES += pciaccess.cpp \
     $(top_srcdir)/include/wassail/data/pciaccess.hpp

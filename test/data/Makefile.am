@@ -1,5 +1,5 @@
 AM_CPPFLAGS = $(CODE_COVERAGE_CPPFLAGS)
-AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS) -DLIBEXECDIR='"$(abs_top_srcdir)/test/data"'
+AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS)
 
 AM_CPPFLAGS += -I$(top_srcdir)/include
 AM_CPPFLAGS += -I$(top_srcdir)/src
@@ -37,8 +37,15 @@ getmntent_test_SOURCES = test_getmntent.cpp
 check_PROGRAMS += getrlimit.test
 getrlimit_test_SOURCES = test_getrlimit.cpp
 
+check_PROGRAMS += mpirun.test
+mpirun_test_SOURCES = test_mpirun.cpp
+
 check_PROGRAMS += nvml.test
 nvml_test_SOURCES = test_nvml.cpp
+
+check_PROGRAMS += osu_micro_benchmarks.test
+osu_micro_benchmarks_test_SOURCES = test_osu_micro_benchmarks.cpp
+osu_micro_benchmarks_test_CXXFLAGS = -DLIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty"'
 
 check_PROGRAMS += pciaccess.test
 pciaccess_test_SOURCES = test_pciaccess.cpp
@@ -60,7 +67,7 @@ stat_test_SOURCES = test_stat.cpp
 
 check_PROGRAMS += stream.test
 stream_test_SOURCES = test_stream.cpp
-EXTRA_DIST += stream
+stream_test_CXXFLAGS = -DLIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty/stream"'
 
 check_PROGRAMS += sysconf.test
 sysconf_test_SOURCES = test_sysconf.cpp

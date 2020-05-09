@@ -17,7 +17,7 @@ extraction:
       - libpci-dev
     configure:
       command:
-      - autoreconf -fiv
+      - ./autogen.sh
       - ./configure
     index:
       build_command: make -j$(nproc)

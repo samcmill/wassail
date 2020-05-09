@@ -93,6 +93,22 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
+    def test_mpirun(self):
+        """mpirun data source"""
+        d = wassail.data.mpirun(2, 'echo "foo"')
+        if d.enabled():
+            d.evaluate()
+            s = str(d)
+            j = json.loads(s)
+            self.assertEqual(j['name'], 'mpirun')
+            if j['data']['returncode'] == 0:
+                self.assertEqual(j['data']['stdout'], 'foo\nfoo\n')
+            else:
+                self.assertEqual(j['data']['stderr'], '/bin/sh: mpirun: command not found\n')
+        else:
+            with self.assertRaises(RuntimeError):
+                d.evaluate()
+
     def test_nvml(self):
         """nvml data source"""
         d = wassail.data.nvml()
@@ -101,6 +117,22 @@ class Test(unittest.TestCase):
             s = str(d)
             j = json.loads(s)
             self.assertEqual(j['name'], 'nvml')
+        else:
+            with self.assertRaises(RuntimeError):
+                d.evaluate()
+
+    def test_osu_micro_benchmarks(self):
+        """osu_micro_benchmarks data source"""
+        d = wassail.data.osu_micro_benchmarks()
+        if d.enabled():
+            d.evaluate()
+            s = str(d)
+            j = json.loads(s)
+            self.assertEqual(j['name'], 'osu_micro_benchmarks')
+            if j['data']['returncode'] == 0:
+                self.assertGreaterEqual(j['data']['avg'], 0)
+            else:
+                self.assertEqual(j['data']['stderr'], '/bin/sh: mpirun: command not found\n')
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()

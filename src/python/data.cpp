@@ -55,6 +55,66 @@ void py_data(py::module &m) {
   MAKE_DATA_CLASS(data, uname)
 
   /* special case, unique constructor */
+  py::enum_<wassail::data::mpirun::mpi_impl_t>(data, "mpi_impl_t",
+                                               py::arithmetic())
+      .value("OPENMPI", wassail::data::mpirun::mpi_impl_t::OPENMPI);
+
+  py::class_<wassail::data::mpirun>(data, "mpirun")
+      .def(py::init<uint32_t, std::string>())
+      .def(py::init<uint32_t, std::string, std::string>())
+      .def(py::init<uint32_t, std::vector<std::string>, std::string>())
+      .def(py::init<uint32_t, uint32_t, std::string, std::string, std::string,
+                    std::string, uint8_t, wassail::data::mpirun::mpi_impl_t>())
+      .def(py::init<uint32_t, uint32_t, std::vector<std::string>, std::string,
+                    std::string, std::string, uint8_t,
+                    wassail::data::mpirun::mpi_impl_t>())
+      .def("__str__",
+           [](const wassail::data::mpirun &d) {
+             return static_cast<json>(d).dump();
+           })
+      .def("enabled", &wassail::data::mpirun::enabled)
+      .def("evaluate", &wassail::data::mpirun::evaluate,
+           py::arg("force") = false);
+
+  /* special case, unique constructor */
+  py::enum_<wassail::data::osu_micro_benchmarks::osu_benchmark_t>(
+      data, "osu_benchmark_t", py::arithmetic())
+      .value("ALLTOALL",
+             wassail::data::osu_micro_benchmarks::osu_benchmark_t::ALLTOALL)
+      .value("BW", wassail::data::osu_micro_benchmarks::osu_benchmark_t::BW)
+      .value("HELLO",
+             wassail::data::osu_micro_benchmarks::osu_benchmark_t::HELLO)
+      .value("INIT", wassail::data::osu_micro_benchmarks::osu_benchmark_t::INIT)
+      .value("LATENCY",
+             wassail::data::osu_micro_benchmarks::osu_benchmark_t::LATENCY);
+
+  py::class_<wassail::data::osu_micro_benchmarks>(data, "osu_micro_benchmarks")
+      .def(py::init<>())
+      .def(py::init<uint32_t>())
+      .def(py::init<uint32_t,
+                    wassail::data::osu_micro_benchmarks::osu_benchmark_t,
+                    wassail::data::mpirun::mpi_impl_t>())
+      .def(py::init<uint32_t, std::string,
+                    wassail::data::osu_micro_benchmarks::osu_benchmark_t,
+                    wassail::data::mpirun::mpi_impl_t>())
+      .def(py::init<uint32_t, std::vector<std::string>,
+                    wassail::data::osu_micro_benchmarks::osu_benchmark_t,
+                    wassail::data::mpirun::mpi_impl_t>())
+      .def(py::init<uint32_t, uint32_t, std::string, std::string,
+                    wassail::data::osu_micro_benchmarks::osu_benchmark_t,
+                    uint8_t, wassail::data::mpirun::mpi_impl_t>())
+      .def(py::init<uint32_t, uint32_t, std::vector<std::string>, std::string,
+                    wassail::data::osu_micro_benchmarks::osu_benchmark_t,
+                    uint8_t, wassail::data::mpirun::mpi_impl_t>())
+      .def("__str__",
+           [](const wassail::data::osu_micro_benchmarks &d) {
+             return static_cast<json>(d).dump();
+           })
+      .def("enabled", &wassail::data::osu_micro_benchmarks::enabled)
+      .def("evaluate", &wassail::data::osu_micro_benchmarks::evaluate,
+           py::arg("force") = false);
+
+  /* special case, unique constructor */
   py::class_<wassail::data::remote_shell_command>(data, "remote_shell_command")
       .def(py::init<std::string, std::string>())
       .def(py::init<std::list<std::string>, std::string>())

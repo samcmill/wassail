@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['one',['ONE',['../classwassail_1_1check_1_1misc_1_1load__average.html#a36a0b7b837249d547cb5859a345df46aa499551dbb6767f22508814e950ec36a1',1,'wassail::check::misc::load_average']]]
+  ['latency',['LATENCY',['../classwassail_1_1data_1_1osu__micro__benchmarks.html#a9a1a3b07fc39c7a220b67f34598ee3bda501069dd75f76384ba18f133fdce99c2',1,'wassail::data::osu_micro_benchmarks']]]
 ];

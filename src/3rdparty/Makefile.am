@@ -1,4 +1,4 @@
-SUBDIRS = fmt stream
+SUBDIRS = fmt osu-micro-benchmarks stream
 
 EXTRA_DIST = pybind11 pybind11_json spdlog
 

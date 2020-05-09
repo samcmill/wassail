@@ -38,6 +38,7 @@ m4_include([m4/ax_cxx_compile_stdcxx.m4])
 m4_include([m4/ax_cxx_compile_stdcxx_14.m4])
 m4_include([m4/ax_cxx_compile_stdcxx_17.m4])
 m4_include([m4/ax_prog_doxygen.m4])
+m4_include([m4/ax_subdirs_configure.m4])
 m4_include([m4/python.m4])
 
 AM_SILENT_RULES([yes])
@@ -95,6 +96,10 @@ AS_IF([test "x$prog_clang_format" != "xno"],
     [AC_PATH_PROG([CLANG_FORMAT], [$prog_clang_format], [])])
 AM_CONDITIONAL([HAVE_CLANG_FORMAT], [test "x$CLANG_FORMAT" != "x"])
 
+dnl MPI compilers
+AC_CHECK_PROGS([MPICC], [mpicc mpiicc])
+AC_CHECK_PROGS([MPICXX], [mpicxx mpic++ mpiCC mpiicpc])
+
 AC_LANG([C++])
 
 dnl Check necessary types
@@ -139,9 +144,11 @@ AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_FUNC_STRERROR_R
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([clock_gettime getenv gethostname getpagesize localeconv],,
+AC_CHECK_FUNCS([clock_gettime getenv gethostname getpagesize getuid],,
                AC_MSG_ERROR(Missing necessary function))
-AC_CHECK_FUNCS([localtime_r memmove memset strerror strstr strtoul strtoull],,
+AC_CHECK_FUNCS([localeconv localtime_r memmove memset strerror strstr],,
+               AC_MSG_ERROR(Missing necessary function))
+AC_CHECK_FUNCS([strtoul strtoull],,
                AC_MSG_ERROR(Missing necessary function))
 
 dnl Require a working std::regex (gcc prior to 4.9 does not work)
@@ -425,6 +432,12 @@ AS_IF([test "x$ac_cv_header_sys_utsname_h" = "xyes" &&
 
 AC_CONFIG_HEADERS([config.h])
 
+dnl external benchmarks
+osudir='${libexecdir}/wassail'
+AC_SUBST(osudir)
+AX_SUBDIRS_CONFIGURE([src/3rdparty/osu-micro-benchmarks],
+                     [[--libexecdir=$osudir], [--enable-silent-rules]], [],
+                     [[CC=$ac_cv_prog_MPICC], [CXX=$ac_cv_prog_MPICXX]])
 AC_CONFIG_SUBDIRS([src/3rdparty/stream])
 
 AC_CONFIG_FILES([
