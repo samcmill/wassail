@@ -29,7 +29,7 @@
         },
         "mpi_impl": {
           "description": "MPI implementation",
-          "type": "number"
+          "type": "string"
         },
         "mpirun_args": {
           "description": "Extra mpirun arguments",

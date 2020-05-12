@@ -57,10 +57,12 @@ void py_data(py::module &m) {
   /* special case, unique constructor */
   py::enum_<wassail::data::mpirun::mpi_impl_t>(data, "mpi_impl_t",
                                                py::arithmetic())
+      .value("MPICH", wassail::data::mpirun::mpi_impl_t::MPICH)
       .value("OPENMPI", wassail::data::mpirun::mpi_impl_t::OPENMPI);
 
   py::class_<wassail::data::mpirun>(data, "mpirun")
       .def(py::init<uint32_t, std::string>())
+      .def(py::init<uint32_t, std::string, wassail::data::mpirun::mpi_impl_t>())
       .def(py::init<uint32_t, std::string, std::string>())
       .def(py::init<uint32_t, std::vector<std::string>, std::string>())
       .def(py::init<uint32_t, uint32_t, std::string, std::string, std::string,
