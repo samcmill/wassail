@@ -21,6 +21,7 @@ namespace wassail {
       /*! \brief MPI implementation
        */
       enum class mpi_impl_t {
+        MPICH = 1,                      /*!< MPICH */
         OPENMPI = 0                     /*!< OpenMPI */
       } mpi_impl = mpi_impl_t::OPENMPI; /*!< MPI implementation */
 
@@ -52,10 +53,19 @@ namespace wassail {
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
        * \param[in] program MPI program to launch
+       * \param[in] mpi_impl MPI implementation
        */
       mpirun(uint32_t num_procs, std::string program)
           : mpirun(num_procs, 0, "", "", program, "", 60,
                    mpi_impl_t::OPENMPI){};
+
+      /*! Construct an instance.
+       * \param[in] num_procs Number of MPI processes to start
+       * \param[in] program MPI program to launch
+       * \param[in] mpi_impl MPI implementation
+       */
+      mpirun(uint32_t num_procs, std::string program, mpi_impl_t mpi_impl)
+          : mpirun(num_procs, 0, "", "", program, "", 60, mpi_impl){};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start

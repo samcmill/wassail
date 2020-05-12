@@ -103,11 +103,11 @@ namespace wassail {
     int shell_command::impl::popen3(shell_command &d) {
 #ifdef HAVE_SHELL_COMMAND
       int rv = 0; // child process return value
-      int out[2], err[2];
+      int in[2], out[2], err[2];
 
       // initialize the pipes
       /* LCOV_EXCL_START */
-      if (pipe(err) != 0 or pipe(out) != 0) {
+      if (pipe(in) != 0 or pipe(err) != 0 or pipe(out) != 0) {
         wassail::internal::logger()->error("Failed to initialize pipes");
         return -1;
       }
@@ -125,12 +125,13 @@ namespace wassail {
       /* LCOV_EXCL_STOP */
       else if (child == 0) {
         // child will not be producing any input
+        close(in[1]);
         close(out[0]);
         close(err[0]);
 
         // map stdout and stderr to internal pipes
         /* LCOV_EXCL_START */
-        if (dup2(out[1], STDOUT_FILENO) < 0 or
+        if (dup2(in[0], STDIN_FILENO) < 0 or dup2(out[1], STDOUT_FILENO) < 0 or
             dup2(err[1], STDERR_FILENO) < 0) {
           wassail::internal::logger()->error(
               "Failed to redirect stdout and/or stderr");
@@ -150,6 +151,7 @@ namespace wassail {
       }
 
       // no output from the parent
+      close(in[0]);
       close(out[1]);
       close(err[1]);
 

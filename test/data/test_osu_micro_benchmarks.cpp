@@ -29,23 +29,41 @@ TEST_CASE("osu_init basic usage") {
                              std::string(LIBEXECDIR) +
                              "/osu-micro-benchmarks/mpi/startup/osu_init");
   }
+}
 
-  if (d.enabled()) {
-    d.evaluate();
-    json j = d;
+TEST_CASE("osu_hello basic usage") {
+  auto d = wassail::data::osu_micro_benchmarks(
+      4, wassail::data::osu_micro_benchmarks::osu_benchmark_t::HELLO);
 
-    REQUIRE(j.value(json::json_pointer("/data/benchmark"), "") == "osu_init");
-
-    if (j.value(json::json_pointer("/data/returncode"), 0) != 0) {
-      REQUIRE(j.value(json::json_pointer("/data/stderr"), "") ==
-              "/bin/sh: mpirun: command not found\n");
-    }
-    else {
-      REQUIRE(j.value(json::json_pointer("/data/avg"), 0) > 0);
-    }
+  if (getuid() == 0 and d.allow_run_as_root) {
+    REQUIRE(d.command ==
+            "mpirun -n 4 --allow-run-as-root -x MPIEXEC_TIMEOUT=60 " +
+                std::string(LIBEXECDIR) +
+                "/osu-micro-benchmarks/mpi/startup/osu_hello");
   }
   else {
-    REQUIRE_THROWS(d.evaluate());
+    REQUIRE(d.command == "mpirun -n 4 -x MPIEXEC_TIMEOUT=60 " +
+                             std::string(LIBEXECDIR) +
+                             "/osu-micro-benchmarks/mpi/startup/osu_hello");
+  }
+}
+
+TEST_CASE("osu_bw basic usage") {
+  auto d = wassail::data::osu_micro_benchmarks(
+      2, 1, "hostfile", "",
+      wassail::data::osu_micro_benchmarks::osu_benchmark_t::BW, 60);
+
+  if (getuid() == 0 and d.allow_run_as_root) {
+    REQUIRE(d.command == "mpirun -n 2 --npernode 1 -f hostfile "
+                         "--allow-run-as-root -x MPIEXEC_TIMEOUT=60 " +
+                             std::string(LIBEXECDIR) +
+                             "/osu-micro-benchmarks/mpi/pt2pt/osu_bw");
+  }
+  else {
+    REQUIRE(d.command ==
+            "mpirun -n 2 --npernode 1 -f hostfile -x MPIEXEC_TIMEOUT=60 " +
+                std::string(LIBEXECDIR) +
+                "/osu-micro-benchmarks/mpi/pt2pt/osu_bw");
   }
 }
 
@@ -56,7 +74,7 @@ TEST_CASE("osu_allreduce JSON conversion") {
         "benchmark": "osu_allreduce",
         "command": "mpirun -n 2 osu_allreduce",
         "elapsed": 0.982017832,
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 2,
         "per_node": 0,
@@ -98,7 +116,7 @@ TEST_CASE("osu_alltoall JSON conversion") {
         "benchmark": "osu_alltoall",
         "command": "mpirun -n 2 osu_alltoall",
         "elapsed": 0.982017832,
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 2,
         "per_node": 0,
@@ -141,7 +159,7 @@ TEST_CASE("osu_bw JSON conversion") {
         "command": "mpirun -n 2 -npernode 1 -f hostfile osu_bw",
         "elapsed": 0.982017832,
         "hostfile": "hostfile",
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 2,
         "per_node": 1,
@@ -184,7 +202,7 @@ TEST_CASE("osu_hello JSON conversion") {
         "command": "mpirun -n 4 -npernode 1 -f hostfile osu_hello",
         "elapsed": 0.982017832,
         "hostfile": "hostfile",
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 4,
         "per_node": 1,
@@ -223,7 +241,7 @@ TEST_CASE("osu_init JSON conversion") {
         "command": "mpirun -n 2 -H node1,node2 osu_init",
         "elapsed": 0.982017832,
         "hostlist": ["node1", "node2"],
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 2,
         "per_node": 0,
@@ -268,7 +286,7 @@ TEST_CASE("osu_latency JSON conversion") {
         "command": "mpirun -n 2 -npernode 1 -f hostfile osu_latency",
         "elapsed": 0.982017832,
         "hostfile": "hostfile",
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "mpirun_args": "",
         "num_procs": 2,
         "per_node": 1,
@@ -310,7 +328,7 @@ TEST_CASE("osu_educe JSON conversion") {
 	"benchmark": "osu_reduce",
 	"command": "mpirun -n 2 osu_reduce",
 	"elapsed": 0.982017832,
-	"mpi_impl": 0,
+	"mpi_impl": "openmpi",
 	"mpirun_args": "",
 	"num_procs": 2,
 	"per_node": 0,

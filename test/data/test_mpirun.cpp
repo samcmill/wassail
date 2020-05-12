@@ -17,72 +17,80 @@
 /* Some tests may fail if mpi is not setup */
 
 TEST_CASE("mpirun basic usage") {
-  auto d = wassail::data::mpirun(2, "echo 'foo'");
+  auto d1 = wassail::data::mpirun(2, "echo 'foo'");
 
-  if (getuid() == 0 and d.allow_run_as_root) {
-    REQUIRE(d.command ==
+  if (getuid() == 0 and d1.allow_run_as_root) {
+    REQUIRE(d1.command ==
             "mpirun -n 2 --allow-run-as-root -x MPIEXEC_TIMEOUT=60 echo 'foo'");
   }
   else {
-    REQUIRE(d.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT=60 echo 'foo'");
+    REQUIRE(d1.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT=60 echo 'foo'");
   }
 
-  if (d.enabled()) {
-    d.evaluate();
-    json j = d;
-
-    if (j.value(json::json_pointer("/data/returncode"), 0) != 0) {
-      REQUIRE(j.value(json::json_pointer("/data/stderr"), "") ==
-              "/bin/sh: mpirun: command not found\n");
-    }
-    else {
-      REQUIRE(j.value(json::json_pointer("/data/stdout"), "") == "foo\nfoo\n");
-    }
-  }
-  else {
-    REQUIRE_THROWS(d.evaluate());
-  }
+  auto d2 = wassail::data::mpirun(2, "echo 'foo'",
+                                  wassail::data::mpirun::mpi_impl_t::MPICH);
+  REQUIRE(d2.command == "MPIEXEC_TIMEOUT=60 mpirun -n 2 echo 'foo'");
 }
 
 TEST_CASE("mpirun hostfile usage") {
-  auto d = wassail::data::mpirun(8, "hostfile", "a.out");
+  auto d1 = wassail::data::mpirun(8, "hostfile", "a.out");
 
-  if (getuid() == 0 and d.allow_run_as_root) {
-    REQUIRE(d.command == "mpirun -n 8 -f hostfile --allow-run-as-root -x "
-                         "MPIEXEC_TIMEOUT=60 a.out");
+  if (getuid() == 0 and d1.allow_run_as_root) {
+    REQUIRE(d1.command == "mpirun -n 8 -f hostfile --allow-run-as-root -x "
+                          "MPIEXEC_TIMEOUT=60 a.out");
   }
   else {
-    REQUIRE(d.command == "mpirun -n 8 -f hostfile -x MPIEXEC_TIMEOUT=60 a.out");
+    REQUIRE(d1.command ==
+            "mpirun -n 8 -f hostfile -x MPIEXEC_TIMEOUT=60 a.out");
   }
+
+  auto d2 = wassail::data::mpirun(8, "hostfile", "a.out",
+                                  wassail::data::mpirun::mpi_impl_t::MPICH);
+  REQUIRE(d2.command == "MPIEXEC_TIMEOUT=60 mpirun -n 8 -f hostfile a.out");
 }
 
 TEST_CASE("mpirun hostlist usage") {
-  auto d = wassail::data::mpirun(
+  auto d1 = wassail::data::mpirun(
       2, std::vector<std::string>({"node1", "node2"}), "a.out");
 
-  if (getuid() == 0 and d.allow_run_as_root) {
-    REQUIRE(d.command == "mpirun -n 2 -H node1,node2 --allow-run-as-root -x "
-                         "MPIEXEC_TIMEOUT=60 a.out");
+  if (getuid() == 0 and d1.allow_run_as_root) {
+    REQUIRE(d1.command == "mpirun -n 2 -H node1,node2 --allow-run-as-root -x "
+                          "MPIEXEC_TIMEOUT=60 a.out");
   }
   else {
-    REQUIRE(d.command ==
+    REQUIRE(d1.command ==
             "mpirun -n 2 -H node1,node2 -x MPIEXEC_TIMEOUT=60 a.out");
   }
+
+  auto d2 =
+      wassail::data::mpirun(2, std::vector<std::string>({"node1", "node2"}),
+                            "a.out", wassail::data::mpirun::mpi_impl_t::MPICH);
+  REQUIRE(d2.command ==
+          "MPIEXEC_TIMEOUT=60 mpirun -n 2 -hosts node1,node2 a.out");
 }
 
 TEST_CASE("mpirun additional args") {
-  auto d = wassail::data::mpirun(4, 0, "", "--bind-to core", "a.out",
-                                 "-i foo.in", 10);
+  auto d1 = wassail::data::mpirun(4, 2, "", "--bind-to core", "a.out",
+                                  "-i foo.in", 10);
 
-  if (getuid() == 0 and d.allow_run_as_root) {
-    REQUIRE(d.command ==
-            "mpirun -n 4 --allow-run-as-root -x MPIEXEC_TIMEOUT=10 "
-            "--bind-to core a.out -i foo.in");
+  if (getuid() == 0 and d1.allow_run_as_root) {
+    REQUIRE(
+        d1.command ==
+        "mpirun -n 4 --npernode 2 --allow-run-as-root -x MPIEXEC_TIMEOUT=10 "
+        "--bind-to core a.out -i foo.in");
   }
   else {
-    REQUIRE(d.command ==
-            "mpirun -n 4 -x MPIEXEC_TIMEOUT=10 --bind-to core a.out -i foo.in");
+    REQUIRE(d1.command == "mpirun -n 4 --npernode 2 -x MPIEXEC_TIMEOUT=10 "
+                          "--bind-to core a.out -i foo.in");
   }
+
+  auto d2 =
+      wassail::data::mpirun(4, 2, "", "-bind-to core", "a.out", "-i foo.in", 10,
+                            wassail::data::mpirun::mpi_impl_t::MPICH);
+
+  REQUIRE(
+      d2.command ==
+      "MPIEXEC_TIMEOUT=10 mpirun -n 4 -ppn 2 -bind-to core a.out -i foo.in");
 }
 
 TEST_CASE("mpirun JSON conversion") {
@@ -92,7 +100,7 @@ TEST_CASE("mpirun JSON conversion") {
         "command": "mpirun -n 2 osu_hello",
         "elapsed": 0.982017832,
         "mpirun_args": "",
-        "mpi_impl": 0,
+        "mpi_impl": "openmpi",
         "num_procs": 2,
         "per_node": 0,
         "program": "osu_hello",

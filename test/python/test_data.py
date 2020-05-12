@@ -103,8 +103,6 @@ class Test(unittest.TestCase):
             self.assertEqual(j['name'], 'mpirun')
             if j['data']['returncode'] == 0:
                 self.assertEqual(j['data']['stdout'], 'foo\nfoo\n')
-            else:
-                self.assertEqual(j['data']['stderr'], '/bin/sh: mpirun: command not found\n')
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()
@@ -131,8 +129,6 @@ class Test(unittest.TestCase):
             self.assertEqual(j['name'], 'osu_micro_benchmarks')
             if j['data']['returncode'] == 0:
                 self.assertGreaterEqual(j['data']['avg'], 0)
-            else:
-                self.assertEqual(j['data']['stderr'], '/bin/sh: mpirun: command not found\n')
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()
