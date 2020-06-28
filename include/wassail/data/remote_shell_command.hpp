@@ -83,6 +83,9 @@ namespace wassail {
        */
       void evaluate(bool force = false);
 
+      /*! Unique name for this building block */
+      std::string name() const { return "remote_shell_command"; };
+
       /*! JSON type conversion
        * \param[in] j JSON object
        * \param[in,out] d
@@ -99,9 +102,6 @@ namespace wassail {
       friend void to_json(json &j, const remote_shell_command &d);
 
     private:
-      /*! Unique name for this building block */
-      std::string name() const { return "remote_shell_command"; };
-
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
 

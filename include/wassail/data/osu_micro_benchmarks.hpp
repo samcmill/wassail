@@ -114,6 +114,9 @@ namespace wassail {
                    osu_program(osu_benchmark), "", timeout, mpi_impl),
             osu_benchmark(osu_benchmark){};
 
+      /*! Unique name for this building block */
+      std::string name() const { return "osu_micro_benchmarks"; };
+
       /*! JSON type conversion
        * \param[in] j JSON object
        * \param[in,out] d
@@ -130,9 +133,6 @@ namespace wassail {
       friend void to_json(json &j, const osu_micro_benchmarks &d);
 
     private:
-      /*! Unique name for this building block */
-      std::string name() const { return "osu_micro_benchmarks"; };
-
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
 

@@ -42,6 +42,9 @@ namespace wassail {
        */
       void evaluate(bool force = false);
 
+      /*! Unique name for this building block */
+      std::string name() const { return "getmntent"; };
+
       /*! JSON type conversion
        * \param[in] j
        * \param[in,out] d
@@ -58,9 +61,6 @@ namespace wassail {
       friend void to_json(json &j, const getmntent &d);
 
     private:
-      /*! Unique name for this building block */
-      std::string name() const { return "getmntent"; };
-
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
 

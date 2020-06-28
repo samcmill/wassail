@@ -117,6 +117,9 @@ namespace wassail {
              std::string program, std::string program_args, uint8_t timeout,
              mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI);
 
+      /*! Unique name for this building block */
+      std::string name() const { return "mpirun"; };
+
       /*! JSON type conversion
        * \param[in] j JSON object
        * \param[in,out] d
@@ -133,9 +136,6 @@ namespace wassail {
       friend void to_json(json &j, const mpirun &d);
 
     private:
-      /*! Unique name for this building block */
-      std::string name() const { return "mpirun"; };
-
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
 

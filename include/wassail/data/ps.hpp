@@ -27,6 +27,9 @@ namespace wassail {
         exclusive = true;
       };
 
+      /*! Unique name for this building block */
+      std::string name() const { return "ps"; };
+
       /*! JSON type conversion
        * \param[in] j JSON object
        * \param[in,out] d
@@ -43,9 +46,6 @@ namespace wassail {
       friend void to_json(json &j, const ps &d);
 
     private:
-      /*! Unique name for this building block */
-      std::string name() const { return "ps"; };
-
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
     };
