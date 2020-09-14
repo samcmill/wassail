@@ -23,7 +23,8 @@ int main(int argc, char **argv) {
   wassail::initialize();
 
   /* overall result */
-  auto overall_result = wassail::make_result("Standalone wassail sample");
+  auto overall_result = wassail::make_result();
+  overall_result->brief = "Standalone wassail sample";
 
   /* checks */
   auto disk = wassail::check::disk::percent_free("/", 5.0);
