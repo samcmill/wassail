@@ -50,7 +50,7 @@ TEST_CASE("ps JSON conversion") {
   REQUIRE(jout.size() != 0);
 
   /* Verify fields are parsed correctly from stdout */
-  REQUIRE(jout["data"]["processes"] == R"(
+  auto gold = R"(
         [
           {
             "command": "-tcsh",
@@ -79,7 +79,8 @@ TEST_CASE("ps JSON conversion") {
             "vsz": 4269348
           }
         ]
-  )"_json);
+  )"_json;
+  REQUIRE(jout["data"]["processes"] == gold);
 
   /* jout should be equal to jin except for the parsed process list */
   jout["data"].erase("processes");
@@ -110,7 +111,7 @@ TEST_CASE("ps JSON conversion - Linux") {
   REQUIRE(jout.size() != 0);
 
   /* Verify fields are parsed correctly from stdout */
-  REQUIRE(jout["data"]["processes"] == R"(
+  auto gold = R"(
         [
           {
             "command": "/sbin/init",
@@ -139,7 +140,8 @@ TEST_CASE("ps JSON conversion - Linux") {
             "vsz": 0
           }
         ]
-  )"_json);
+  )"_json;
+  REQUIRE(jout["data"]["processes"] == gold);
 
   /* jout should be equal to jin except for the parsed process list */
   jout["data"].erase("processes");
