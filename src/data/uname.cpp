@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <cstdlib>
 #include <memory>
 #include <shared_mutex>
@@ -75,7 +74,7 @@ namespace wassail {
           data.version = name.version;
           data.machine = name.machine;
 
-          d.timestamp = std::chrono::system_clock::now();
+          d.common::evaluate(force);
           collected = true;
         }
 #else
@@ -93,7 +92,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.sysname = j.value(json::json_pointer("/data/sysname"), "");
       d.pimpl->data.nodename =

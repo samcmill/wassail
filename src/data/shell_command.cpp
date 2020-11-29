@@ -95,7 +95,7 @@ namespace wassail {
         d.exclusive ? d.mutex.lock() : d.mutex.lock_shared();
         popen3(d);
         d.exclusive ? d.mutex.unlock() : d.mutex.unlock_shared();
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
         collected = true;
       }
     }
@@ -288,7 +288,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains(json::json_pointer("/data/returncode"))) {
+        d.pimpl->collected = true;
+      }
 
       d.command = j.value(json::json_pointer("/data/command"), "");
       d.pimpl->data.elapsed = j.value(json::json_pointer("/data/elapsed"), 0.0);

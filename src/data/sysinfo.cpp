@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <memory>
 #include <shared_mutex>
 #include <stdexcept>
@@ -92,7 +91,7 @@ namespace wassail {
           data.mem_unit = info.mem_unit;
           data.loads_scale = 1 << SI_LOAD_SHIFT;
 
-          d.timestamp = std::chrono::system_clock::now();
+          d.common::evaluate(force);
           collected = true;
         }
 #else
@@ -110,7 +109,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.uptime = j.value(json::json_pointer("/data/uptime"), 0L);
       d.pimpl->data.loads[0] = j.value(json::json_pointer("/data/load1"), 0UL);

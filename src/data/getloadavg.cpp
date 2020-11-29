@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <cstdlib>
 #include <memory>
 #include <shared_mutex>
@@ -62,12 +61,14 @@ namespace wassail {
         double loadavg[3];
         int rv = ::getloadavg(loadavg, 3);
         if (rv != -1) {
-          d.timestamp = std::chrono::system_clock::now();
-          collected = true;
           data.load1 = loadavg[0];
           data.load5 = loadavg[1];
           data.load15 = loadavg[2];
+
+          d.common::evaluate(force);
+          collected = true;
         }
+
 #else
         throw std::runtime_error("getloadavg() not available");
 #endif
@@ -83,7 +84,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.load1 = j.value(json::json_pointer("/data/load1"), 0.0);
       d.pimpl->data.load5 = j.value(json::json_pointer("/data/load5"), 0.0);

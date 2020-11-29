@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <cstdlib>
 #include <memory>
 #include <shared_mutex>
@@ -107,7 +106,7 @@ namespace wassail {
           data.core_hard = rl.rlim_max;
           data.core_soft = rl.rlim_cur;
 
-          d.timestamp = std::chrono::system_clock::now();
+          d.common::evaluate(force);
           collected = true;
         }
 
@@ -173,7 +172,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.core_hard =
           j.value(json::json_pointer("/data/hard/core"), 0ULL);

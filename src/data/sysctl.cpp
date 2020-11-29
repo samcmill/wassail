@@ -8,7 +8,6 @@
 #include "config.h"
 #include "internal.hpp"
 
-#include <chrono>
 #include <memory>
 #include <shared_mutex>
 #include <stdexcept>
@@ -193,7 +192,7 @@ namespace wassail {
         _sysctlbyname(d, "vm.loadavg", &(d.pimpl->data.vm.loadavg));
         _sysctlbyname(d, "vm.swapusage", &(d.pimpl->data.vm.swapusage));
 
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
         collected = true;
 #else
         throw std::runtime_error("sysctlbyname not available");
@@ -260,7 +259,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.hw.cpufamily =
           j.value(json::json_pointer("/data/hw/cpufamily"), 0L);

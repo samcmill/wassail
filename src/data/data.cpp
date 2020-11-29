@@ -25,6 +25,12 @@ std::shared_timed_mutex wassail::data::common::mutex;
 
 namespace wassail {
   namespace data {
+    void common::evaluate(bool force) {
+      hostname = get_hostname();
+      timestamp = std::chrono::system_clock::now();
+      uid = getuid();
+    }
+
     /*! JSON type conversion */
     void from_json(const json &j, wassail::data::common &d) {
       d.hostname = j.value("hostname", "");

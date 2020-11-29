@@ -8,7 +8,6 @@
 #include "config.h"
 #include "internal.hpp"
 
-#include <chrono>
 #include <memory>
 #include <shared_mutex>
 #include <stdexcept>
@@ -70,7 +69,7 @@ namespace wassail {
 
         cpuid(d);
 
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
         collected = true;
       }
     }
@@ -157,7 +156,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.family = j.value(json::json_pointer("/data/family"), 0UL);
       d.pimpl->data.model = j.value(json::json_pointer("/data/model"), 0UL);

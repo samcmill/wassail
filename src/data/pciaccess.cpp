@@ -8,7 +8,6 @@
 #include "config.h"
 #include "internal.hpp"
 
-#include <chrono>
 #include <cstdlib>
 #include <list>
 #include <memory>
@@ -189,7 +188,7 @@ namespace wassail {
           data.devices.push_back(item);
         }
 
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
         collected = true;
 
         _pci_system_cleanup();
@@ -210,7 +209,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       for (auto i :
            j.value(json::json_pointer("/data/devices"), json::array())) {

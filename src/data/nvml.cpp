@@ -8,7 +8,6 @@
 #include "config.h"
 #include "internal.hpp"
 
-#include <chrono>
 #include <cstdlib>
 #include <list>
 #include <memory>
@@ -260,7 +259,7 @@ namespace wassail {
           wassail::internal::logger()->error("error shutting down nvml");
         }
 
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evalate(force);
         collected = true;
 
         dlclose(handle);
@@ -720,7 +719,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.cuda_driver_version =
           j.value(json::json_pointer("/data/cuda_driver_version"), 0);

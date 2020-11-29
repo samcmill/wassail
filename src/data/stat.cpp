@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <cstdlib>
 #include <memory>
 #include <shared_mutex>
@@ -92,8 +91,6 @@ namespace wassail {
 
         rv = ::stat(d.path.c_str(), &s);
         if (rv == 0) {
-          d.timestamp = std::chrono::system_clock::now();
-          collected = true;
           data.dev = s.st_dev;
           data.mode = s.st_mode;
           data.nlink = s.st_nlink;
@@ -125,6 +122,9 @@ namespace wassail {
 #else
           data.mtime = static_cast<double>(s.st_mtime);
 #endif
+
+          d.common::evaluate(force);
+          collected = true;
         }
 #else
         throw std::runtime_error("stat() is not available");
@@ -141,7 +141,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.path = j.value(json::json_pointer("/data/path"), "");
       d.pimpl->data.dev =

@@ -128,7 +128,7 @@ namespace wassail {
       }
 
       if (force or not collected) {
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
 
         /* libssh initialization may not be thread safe */
         ssh_init();
@@ -262,7 +262,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains(json::json_pointer("/data/0/data/returncode"))) {
+        d.pimpl->collected = true;
+      }
 
       for (auto i : j.value("data", json::array())) {
         remote_shell_command::impl::item tmp;

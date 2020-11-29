@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-#include <chrono>
 #include <memory>
 #include <shared_mutex>
 #include <stdexcept>
@@ -65,7 +64,7 @@ namespace wassail {
         data.page_size = ::sysconf(_SC_PAGESIZE);
         data.phys_pages = ::sysconf(_SC_PHYS_PAGES);
 
-        d.timestamp = std::chrono::system_clock::now();
+        d.common::evaluate(force);
         collected = true;
       }
 #else
@@ -82,7 +81,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       d.pimpl->data.nprocessors_conf =
           j.value(json::json_pointer("/data/nprocessors_conf"), 0L);

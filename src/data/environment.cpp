@@ -8,7 +8,6 @@
 #include "config.h"
 #include "internal.hpp"
 
-#include <chrono>
 #include <cstdlib>
 #include <map>
 #include <memory>
@@ -85,7 +84,7 @@ namespace wassail {
             }
           }
 
-          d.timestamp = std::chrono::system_clock::now();
+          d.common::evaluate(force);
         }
 #else
         throw std::runtime_error("environment data source is not available");
@@ -102,7 +101,10 @@ namespace wassail {
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
+
+      if (j.contains("data")) {
+        d.pimpl->collected = true;
+      }
 
       auto jdata = j.value("data", json::object());
       for (auto &e : jdata.items()) {

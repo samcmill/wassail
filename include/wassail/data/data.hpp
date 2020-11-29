@@ -82,7 +82,7 @@ namespace wassail {
        *                   be collected even if it already has been
        *                   evaluated.
        */
-      virtual void evaluate(bool force = false) = 0;
+      virtual void evaluate(bool force = false);
 
       /*! JSON type conversion
        * \param[in] j
