@@ -34,16 +34,16 @@ jobs:
         fi
         sudo apt-get update -y
         sudo apt-get install -y cuda-nvml-dev-10-1
-        echo "::set-env name=CPATH::/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH"
+        echo "CPATH=/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
 
     - name: set compiler
       run: |
         if [ "${{ matrix.compiler }}" = "clang" ]; then
-          echo "::set-env name=CC::clang"
-          echo "::set-env name=CXX::clang++"
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
         else
-          echo "::set-env name=CC::gcc"
-          echo "::set-env name=CXX::g++"
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
         fi
 
     - name: autogen

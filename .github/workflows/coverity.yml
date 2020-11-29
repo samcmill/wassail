@@ -28,7 +28,7 @@ jobs:
         sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
         sudo apt-get update -y
         sudo apt-get install -y cuda-nvml-dev-10-1
-        echo "::set-env name=CPATH::/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH"
+        echo "CPATH=/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
 
     - name: autogen
       run: ./autogen.sh
