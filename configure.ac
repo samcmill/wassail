@@ -363,11 +363,11 @@ AS_IF([test "x$ac_cv_header_poll_h" = "xyes" &&
        test "x$ac_cv_header_unistd_h" = "xyes" &&
        test "x$ac_cv_func_dup2" = "xyes" &&
        test "x$ac_cv_func_execvp" = "xyes" &&
-       test "x$ac_cv_func_fork" = "xyes" &&
        test "x$ac_cv_func_killpg" = "xyes" &&
        test "x$ac_cv_func_pipe" = "xyes" &&
        test "x$ac_cv_func_poll" = "xyes" &&
        test "x$ac_cv_func_setpgid" = "xyes" &&
+       test "x$ac_cv_func_vfork" = "xyes" &&
        test "x$ac_cv_func_waitpid" = "xyes"],
       [AM_CONDITIONAL(WITH_DATA_SHELL_COMMAND, true)
        AC_DEFINE(WITH_DATA_SHELL_COMMAND,,[shell_command data source])],
