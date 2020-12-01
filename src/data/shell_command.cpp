@@ -21,9 +21,9 @@
 #include <unistd.h>
 #include <wassail/data/shell_command.hpp>
 
-#if defined HAVE_DUP2 && defined HAVE_EXECVP && defined HAVE_FORK &&           \
-    defined HAVE_KILLPG && defined HAVE_PIPE && defined HAVE_POLL &&           \
-    defined HAVE_SETPGID && defined HAVE_WAITPID
+#if defined HAVE_DUP2 && defined HAVE_EXECVP && defined HAVE_KILLPG &&         \
+    defined HAVE_PIPE && defined HAVE_POLL && defined HAVE_SETPGID &&          \
+    defined HAVE_VFORK && defined HAVE_WAITPID
 #define HAVE_SHELL_COMMAND
 #endif
 
@@ -114,8 +114,7 @@ namespace wassail {
       /* LCOV_EXCL_STOP */
 
       // fork the child process to execute the command
-      pid_t child;
-      child = fork();
+      pid_t child = vfork();
 
       /* LCOV_EXCL_START */
       if (child == -1) {
