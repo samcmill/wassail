@@ -27,9 +27,6 @@ namespace wassail {
     /* \cond pimpl */
     class pciutils::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief PCI device attributes */
       struct pci_item {
         std::string slot;        /*!< Slot, bus:dev:func triplet */
@@ -89,7 +86,7 @@ namespace wassail {
     void pciutils::evaluate(bool force) { pimpl->evaluate(*this, force); }
 
     void pciutils::impl::evaluate(pciutils &d, bool force) {
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_PCIUTILS
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -165,7 +162,6 @@ namespace wassail {
         }
 
         d.common::evaluate(force);
-        collected = true;
 
         _pci_cleanup(p);
 
@@ -178,15 +174,11 @@ namespace wassail {
     /* \endcond */
 
     void from_json(const json &j, pciutils &d) {
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       for (auto i :
            j.value(json::json_pointer("/data/devices"), json::array())) {

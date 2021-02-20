@@ -5,6 +5,15 @@
   "type": "object",
   "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
   "properties": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "filesystem path",
+          "type": "string"
+        }
+      }
+    },
     "data": {
       "type": "object",
       "properties": {

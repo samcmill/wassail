@@ -76,8 +76,8 @@ TEST_CASE("pciutils JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("pciutils invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("pciutils invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::pciutils d;
   REQUIRE_THROWS(d = jin);
 }
@@ -92,4 +92,16 @@ TEST_CASE("pciutils incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("devices") == 1);
   REQUIRE(jout["data"]["devices"].size() == 0);
+}
+
+TEST_CASE("pciutils factory evaluate") {
+  auto jin = R"({ "name": "pciutils" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "pciutils");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["devices"].size() > 0);
+  }
 }

@@ -237,6 +237,11 @@ TEST_CASE("overlapping reader and writer access") {
 TEST_CASE("shell_command JSON conversion") {
   auto jin = R"(
     {
+      "configuration": {
+        "command": "uptime",
+        "exclusive": false,
+        "timeout": 60
+      },
       "data": {
         "command": "uptime",
         "elapsed": 0.011148364,
@@ -259,8 +264,8 @@ TEST_CASE("shell_command JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("shell_command invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("shell_command invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::shell_command d;
   REQUIRE_THROWS(d = jin);
 }
@@ -276,4 +281,24 @@ TEST_CASE("shell_command incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("command") == 1);
   REQUIRE(jout["data"]["command"] == "");
+}
+
+TEST_CASE("shell_command factory evaluate") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "command": "echo 'foo'"
+      },
+      "name": "shell_command"
+    }
+  )"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "shell_command");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["command"].get<std::string>() == "echo 'foo'");
+    REQUIRE(jout["data"]["stdout"].get<std::string>() == "foo\n");
+  }
 }

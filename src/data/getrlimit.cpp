@@ -23,9 +23,6 @@ namespace wassail {
     /* \cond pimpl */
     class getrlimit::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief System data */
       struct {
         rlim_t core_hard;    /*!< The largest size (in bytes) core file that
@@ -93,7 +90,7 @@ namespace wassail {
     void getrlimit::impl::evaluate(getrlimit &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_GETRLIMIT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -107,7 +104,6 @@ namespace wassail {
           data.core_soft = rl.rlim_cur;
 
           d.common::evaluate(force);
-          collected = true;
         }
 
         rv = ::getrlimit(RLIMIT_CPU, &rl);
@@ -167,15 +163,11 @@ namespace wassail {
     void from_json(const json &j, getrlimit &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.core_hard =
           j.value(json::json_pointer("/data/hard/core"), 0ULL);

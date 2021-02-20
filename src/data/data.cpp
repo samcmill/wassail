@@ -29,10 +29,17 @@ namespace wassail {
       hostname = get_hostname();
       timestamp = std::chrono::system_clock::now();
       uid = getuid();
+      set_collected();
     }
+
+    void common::set_collected() { collected_ = true; }
 
     /*! JSON type conversion */
     void from_json(const json &j, wassail::data::common &d) {
+      if (j.contains("data")) {
+        d.set_collected();
+      }
+
       d.hostname = j.value("hostname", "");
       d.timestamp = std::chrono::system_clock::from_time_t(
           j.value("timestamp", static_cast<time_t>(0)));

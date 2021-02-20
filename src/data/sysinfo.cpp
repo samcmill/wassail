@@ -22,9 +22,6 @@ namespace wassail {
     /* \cond pimpl */
     class sysinfo::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                average has been collected */
-
       /*! \brief System information */
       struct {
         long uptime;               /*!< Seconds since boot */
@@ -67,7 +64,7 @@ namespace wassail {
     void sysinfo::impl::evaluate(sysinfo &d, bool force = false) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef HAVE_SYSINFO
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -92,10 +89,9 @@ namespace wassail {
           data.loads_scale = 1 << SI_LOAD_SHIFT;
 
           d.common::evaluate(force);
-          collected = true;
         }
 #else
-        throw std::runtime_error("sysinfo() not available");
+        throw std::runtime_error("sysinfo data source is not available");
 #endif
       }
     }
@@ -104,15 +100,11 @@ namespace wassail {
     void from_json(const json &j, sysinfo &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.uptime = j.value(json::json_pointer("/data/uptime"), 0L);
       d.pimpl->data.loads[0] = j.value(json::json_pointer("/data/load1"), 0UL);

@@ -22,9 +22,6 @@ namespace wassail {
     /* \cond pimpl */
     class uname::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief System data */
       struct {
         std::string sysname; /*!< name of the operating system implementation */
@@ -59,7 +56,7 @@ namespace wassail {
     void uname::impl::evaluate(uname &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef HAVE_UNAME
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -75,7 +72,6 @@ namespace wassail {
           data.machine = name.machine;
 
           d.common::evaluate(force);
-          collected = true;
         }
 #else
         throw std::runtime_error("uname() is not available");
@@ -87,15 +83,11 @@ namespace wassail {
     void from_json(const json &j, uname &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.sysname = j.value(json::json_pointer("/data/sysname"), "");
       d.pimpl->data.nodename =

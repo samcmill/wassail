@@ -28,9 +28,6 @@ namespace wassail {
     /* \cond pimpl */
     class getmntent::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                average has been collected */
-
       /*! \brief Mounted filesystems */
       struct fs_item {
         unsigned long bsize;  /*!< file system block size */
@@ -87,7 +84,7 @@ namespace wassail {
     void getmntent::impl::evaluate(getmntent &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef HAVE_GETMNTENT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -127,7 +124,6 @@ namespace wassail {
         endmntent(fp);
 
         d.common::evaluate(force);
-        collected = true;
 #else
         throw std::runtime_error("getmntent data source is not available");
 #endif
@@ -138,15 +134,11 @@ namespace wassail {
     void from_json(const json &j, getmntent &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       for (auto i :
            j.value(json::json_pointer("/data/file_systems"), json::array())) {

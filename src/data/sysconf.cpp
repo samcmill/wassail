@@ -19,9 +19,6 @@ namespace wassail {
     /* \cond pimpl */
     class sysconf::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                average has been collected */
-
       /*! \brief System configuration */
       struct {
         long nprocessors_conf; /*!< Number of processors configured */
@@ -55,7 +52,7 @@ namespace wassail {
     void sysconf::impl::evaluate(sysconf &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef HAVE_SYSCONF
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -65,7 +62,6 @@ namespace wassail {
         data.phys_pages = ::sysconf(_SC_PHYS_PAGES);
 
         d.common::evaluate(force);
-        collected = true;
       }
 #else
         throw std::runtime_error("sysconf() not available");
@@ -76,15 +72,11 @@ namespace wassail {
     void from_json(const json &j, sysconf &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.nprocessors_conf =
           j.value(json::json_pointer("/data/nprocessors_conf"), 0L);

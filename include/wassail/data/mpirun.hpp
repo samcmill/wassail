@@ -135,12 +135,16 @@ namespace wassail {
        */
       friend void to_json(json &j, const mpirun &d);
 
+    protected:
+      /*! Helper to build the command line */
+      void set_cmdline();
+
     private:
+      /*! Number of seconds to wait before timing out */
+      uint8_t mpirun_timeout = 60;
+
       /*! Interface version for this building block */
       uint16_t version() const { return 100; };
-
-      /*! Helper to build the command line */
-      void set_cmdline(uint8_t);
     };
   } // namespace data
 } // namespace wassail

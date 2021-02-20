@@ -24,9 +24,6 @@ namespace wassail {
     /* \cond pimpl */
     class getcpuid::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                   average has been collected */
-
       struct {
         uint32_t family;    /*!< Processor family */
         uint32_t model;     /*!< Processor model */
@@ -64,13 +61,12 @@ namespace wassail {
     void getcpuid::impl::evaluate(getcpuid &d, bool force = false) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
         cpuid(d);
 
         d.common::evaluate(force);
-        collected = true;
       }
     }
 
@@ -151,15 +147,11 @@ namespace wassail {
     void from_json(const json &j, getcpuid &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.family = j.value(json::json_pointer("/data/family"), 0UL);
       d.pimpl->data.model = j.value(json::json_pointer("/data/model"), 0UL);

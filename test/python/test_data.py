@@ -223,6 +223,15 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
+    def test_stat_factory(self):
+        """stat factory data source"""
+        jin = {'configuration': {'path': '/tmp'}, 'name': 'stat'}
+        jout = wassail.data.evaluate(jin)
+        if jout:
+          self.assertEqual(jout['name'], 'stat')
+          self.assertEqual(jout['data']['path'], '/tmp')
+          self.assertNotEqual(jout['data']['inode'], 0)
+
     def test_stream(self):
         """stream data source"""
         d = wassail.data.stream()
@@ -329,3 +338,11 @@ class Test(unittest.TestCase):
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()
+
+    def test_name_factory(self):
+        """factory uname data source"""
+        jin = {'name': 'uname'}
+        jout = wassail.data.evaluate(jin)
+        if jout:
+            self.assertEqual(jout['name'], 'uname')
+            self.assertGreater(len(jout['data']['machine']), 0)

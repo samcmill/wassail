@@ -32,6 +32,9 @@ TEST_CASE("stat basic usage") {
 TEST_CASE("stat JSON conversion") {
   auto jin = R"(
     {
+      "configuration": {
+        "path": "/tmp"
+      },
       "data": {
         "atime": 1542691487.0,
         "blksize": 4096,
@@ -63,8 +66,8 @@ TEST_CASE("stat JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("stat invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("stat invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::stat d;
   REQUIRE_THROWS(d = jin);
 }
@@ -79,4 +82,23 @@ TEST_CASE("stat incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("path") == 1);
   REQUIRE(jout["data"]["path"] == "");
+}
+
+TEST_CASE("stat factory evaluate") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "path": "/tmp"
+      },
+      "name": "stat"
+    }
+  )"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "stat");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["inode"].get<uint32_t>() != 0);
+  }
 }

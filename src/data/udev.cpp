@@ -26,9 +26,6 @@ namespace wassail {
     /* \cond pimpl */
     class udev::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief udev sysfs entries */
       struct {
         json devices = json::object(); /* sysfs devices, i.e., /sys/devices */
@@ -75,7 +72,7 @@ namespace wassail {
     void udev::impl::evaluate(udev &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_UDEV
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -162,7 +159,6 @@ namespace wassail {
         _udev_unref(u);
 
         d.common::evaluate(force);
-        collected = true;
 
         dlclose(handle);
 #else
@@ -175,15 +171,11 @@ namespace wassail {
     void from_json(const json &j, udev &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.devices = j.value("data", json::object());
     }

@@ -247,8 +247,8 @@ TEST_CASE("nvml JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("nvml invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("nvml invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::nvml d;
   REQUIRE_THROWS(d = jin);
 }
@@ -263,4 +263,24 @@ TEST_CASE("nvml incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("devices") == 1);
   REQUIRE(jout["data"]["devices"].size() == 0);
+}
+
+TEST_CASE("nvml factory evaluate") {
+  auto jin = R"({ "name": "nvml" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "nvml");
+    REQUIRE(jout.count("data") == 1);
+
+    struct stat s;
+    if (stat("/dev/nvidia0", &s) == 0) {
+      /* will only pass on machines that actually have a device */
+      REQUIRE(jout["data"]["devices"].size() > 0);
+    }
+    else {
+      REQUIRE(jout["data"]["devices"].size() == 0);
+    }
+  }
 }

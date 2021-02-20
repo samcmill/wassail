@@ -53,8 +53,8 @@ TEST_CASE("getloadavg JSON conversions") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("getloadavg invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("getloadavg invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getloadavg d;
   REQUIRE_THROWS(d = jin);
 }
@@ -68,4 +68,16 @@ TEST_CASE("getloadavg incomplete JSON conversion") {
   REQUIRE(jout["name"] == "getloadavg");
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("load1") == 1);
+}
+
+TEST_CASE("getloadavg factory evaluate") {
+  auto jin = R"({ "name": "getloadavg" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "getloadavg");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["load1"].get<double>() >= 0);
+  }
 }

@@ -26,9 +26,6 @@ namespace wassail {
     /* \cond pimpl */
     class nvml::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /* \brief NvLink attributes */
       struct nvlink {
         bool active = false;      /*!< NvLink active state */
@@ -195,7 +192,7 @@ namespace wassail {
     void nvml::impl::evaluate(nvml &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_NVML
         /* collect data */
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
@@ -260,7 +257,6 @@ namespace wassail {
         }
 
         d.common::evaluate(force);
-        collected = true;
 
         dlclose(handle);
 #else
@@ -714,15 +710,11 @@ namespace wassail {
     void from_json(const json &j, nvml &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.cuda_driver_version =
           j.value(json::json_pointer("/data/cuda_driver_version"), 0);

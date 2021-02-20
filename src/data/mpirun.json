@@ -5,17 +5,9 @@
   "type": "object",
   "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
   "properties": {
-    "data": {
+    "configuration": {
       "type": "object",
       "properties": {
-        "command": {
-          "description": "mpirun command line",
-          "type": "string"
-        },
-        "elapsed": {
-          "description": "Number of seconds the command took to execute",
-          "type": "number"
-        },
         "hostfile": {
           "description": "Path to file containing list of hosts",
           "type": "string"
@@ -50,6 +42,23 @@
         "program_args": {
           "description": "Arguments to pass to the MPI program",
           "type": "string"
+        },
+        "timeout": {
+          "description": "Number of seconds to wait before timing out",
+          "type": "number"
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "mpirun command line",
+          "type": "string"
+        },
+        "elapsed": {
+          "description": "Number of seconds the command took to execute",
+          "type": "number"
         },
         "returncode": {
           "description": "shell exit status",

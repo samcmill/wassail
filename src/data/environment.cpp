@@ -26,9 +26,6 @@ namespace wassail {
     /* \cond pimpl */
     class environment::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief System data */
       struct {
         std::map<std::string, std::string> envvar;
@@ -60,7 +57,7 @@ namespace wassail {
     void environment::impl::evaluate(environment &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_ENVIRONMENT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -96,15 +93,11 @@ namespace wassail {
     void from_json(const json &j, environment &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       auto jdata = j.value("data", json::object());
       for (auto &e : jdata.items()) {

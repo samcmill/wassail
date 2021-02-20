@@ -99,8 +99,8 @@ TEST_CASE("umad JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("umad invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("umad invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::umad d;
   REQUIRE_THROWS(d = jin);
 }
@@ -115,4 +115,24 @@ TEST_CASE("umad incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("devices") == 1);
   REQUIRE(jout["data"]["devices"].size() == 0);
+}
+
+TEST_CASE("umad factory evaluate") {
+  auto jin = R"({ "name": "umad" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "umad");
+    REQUIRE(jout.count("data") == 1);
+
+    struct stat s;
+    if (stat("/sys/class/infiniband_mad/abi_version", &s) == 0) {
+      /* will only pass on machines that actually have a device */
+      REQUIRE(jout["data"]["devices"].size() > 0);
+    }
+    else {
+      REQUIRE(jout["data"]["devices"].size() == 0);
+    }
+  }
 }

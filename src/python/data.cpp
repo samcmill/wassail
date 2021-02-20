@@ -36,6 +36,10 @@ namespace py = pybind11;
 void py_data(py::module &m) {
   py::module data = m.def_submodule("data", "Data building blocks");
 
+  /* factory method */
+  data.def("evaluate",
+           py::overload_cast<const json &>(&wassail::data::evaluate));
+
   MAKE_DATA_CLASS(data, environment)
   MAKE_DATA_CLASS(data, getcpuid)
   MAKE_DATA_CLASS(data, getfsstat)

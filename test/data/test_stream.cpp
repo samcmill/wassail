@@ -105,3 +105,23 @@ TEST_CASE("stream JSON conversion") {
   jout["data"].erase("triad");
   REQUIRE(jout == jin);
 }
+
+TEST_CASE("stream factory evaluate") {
+  auto jin = R"({ "name": "stream" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "stream");
+    REQUIRE(jout.count("data") == 1);
+
+    /* The factory method is compiled separately with the normal libexecdir, not
+     * the specially defined value used when building this test.  Therefore
+     * unless the package has been installed, the stream binary will not be
+     * found. */
+    if (jout["data"]["command"] == std::string(LIBEXECDIR) + "/stream" or
+        jout["data"]["returncode"] == 0) {
+      REQUIRE(jout["data"]["triad"] >= 1);
+    }
+  }
+}

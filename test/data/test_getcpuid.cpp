@@ -59,8 +59,8 @@ TEST_CASE("getcpuid JSON conversions") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("getcpuid invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("getcpuid invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getcpuid d;
   REQUIRE_THROWS(d = jin);
 }
@@ -75,4 +75,16 @@ TEST_CASE("getcpuid incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("vendor") == 1);
   REQUIRE(jout["data"]["vendor"] == "");
+}
+
+TEST_CASE("getcpuid factory evaluate") {
+  auto jin = R"({ "name": "getcpuid" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "getcpuid");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["family"].get<uint32_t>() > 0);
+  }
 }

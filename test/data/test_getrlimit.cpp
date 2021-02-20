@@ -94,8 +94,8 @@ TEST_CASE("getrlimit JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("getrlimit invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("getrlimit invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getrlimit d;
   REQUIRE_THROWS(d = jin);
 }
@@ -110,4 +110,16 @@ TEST_CASE("getrlimit incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("hard") == 1);
   REQUIRE(jout["data"].count("soft") == 1);
+}
+
+TEST_CASE("getrlimit factory evaluate") {
+  auto jin = R"({ "name": "getrlimit" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "getrlimit");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["hard"]["core"].get<uint64_t>() >= 0);
+  }
 }

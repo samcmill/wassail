@@ -5,6 +5,30 @@
   "type": "object",
   "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
   "properties": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "description": "shell command line",
+          "type": "string"
+        },
+        "exclusive": {
+          "description": "Block until the command be executed exclusively",
+          "type": "boolean"
+        },
+        "hosts": {
+          "description": "List of hosts",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "timeout": {
+          "description": "Number of seconds to wait before timing out",
+          "type": "number"
+        }
+      }
+    },
     "data": {
       "type": "object",
       "properties": {

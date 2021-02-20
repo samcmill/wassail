@@ -20,9 +20,6 @@ namespace wassail {
     /* \cond pimpl */
     class skeleton::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief System data */
       struct {
       } data; /*!< System data */
@@ -52,9 +49,11 @@ namespace wassail {
     void skeleton::impl::evaluate(skeleton &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_SKELETON
         /* collect data */
+
+        d.common::evaluate(force);
 #else
         throw std::runtime_error("skeleton data source is not available");
 #endif
@@ -65,12 +64,11 @@ namespace wassail {
     void from_json(const json &j, skeleton &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.at("version").get<uint16_t>() != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.at("name").get<std::string>() != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-      d.pimpl->collected = true;
 
       /* d.pimpl->data.foo = j.value(json::json_pointer("/data/foo"), 0); */
     }

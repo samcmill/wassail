@@ -96,15 +96,18 @@ TEST_CASE("mpirun additional args") {
 TEST_CASE("mpirun JSON conversion") {
   auto jin = R"(
     {
-      "data": {
-        "command": "mpirun -n 2 osu_hello",
-        "elapsed": 0.982017832,
+      "configuration": {
         "mpirun_args": "",
         "mpi_impl": "openmpi",
         "num_procs": 2,
         "per_node": 0,
         "program": "osu_hello",
         "program_args": "",
+        "timeout": 10
+      },
+      "data": {
+        "command": "mpirun -n 2 osu_hello",
+        "elapsed": 0.982017832,
         "returncode": 0,
         "stderr": "",
         "stdout": "# OSU MPI Init Test v5.6.2\nnprocs: 2, min: 129 ms, max: 131 ms, avg: 130 ms\n"
@@ -121,4 +124,30 @@ TEST_CASE("mpirun JSON conversion") {
   json jout = d;
 
   REQUIRE(jout == jin);
+}
+
+TEST_CASE("mpirun factory evaluate") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "mpirun_args": "-l",
+        "mpi_impl": "mpich",
+        "num_procs": 4,
+        "per_node": 4,
+        "program": "hostname",
+        "program_args": "-s",
+        "timeout": 10
+      },
+      "name": "mpirun"
+    }
+  )"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "mpirun");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["command"].get<std::string>() ==
+            "MPIEXEC_TIMEOUT=10 mpirun -n 4 -ppn 4 -l hostname -s");
+  }
 }

@@ -16,7 +16,7 @@ libwassail_data_la_CPPFLAGS = -I$(top_srcdir)/include \
                               -I$(top_srcdir)/include/wassail \
                               -I$(top_srcdir)/src \
                               -I$(top_srcdir)/src/3rdparty
-libwassail_data_la_SOURCES = data.cpp \
+libwassail_data_la_SOURCES = data.cpp factory.cpp \
     $(top_srcdir)/include/wassail/data/data.hpp
 
 libwassail_data_la_SOURCES += environment.cpp \

@@ -104,8 +104,8 @@ TEST_CASE("sysctl JSON conversions") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("sysctl invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("sysctl invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::sysctl d;
   REQUIRE_THROWS(d = jin);
 }
@@ -121,4 +121,16 @@ TEST_CASE("sysctl incomplete JSON conversion") {
   REQUIRE(jout["data"].count("hw") == 1);
   REQUIRE(jout["data"]["hw"].count("cpufamily") == 1);
   REQUIRE(jout["data"]["hw"]["cpufamily"] == 0);
+}
+
+TEST_CASE("sysctl factory evaluate") {
+  auto jin = R"({ "name": "sysctl" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "sysctl");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["hw"]["cpufrequency_max"].get<int64_t>() > 0);
+  }
 }

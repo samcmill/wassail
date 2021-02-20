@@ -18,9 +18,6 @@ namespace wassail {
     /* \cond pimpl */
     class getloadavg::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                   average has been collected */
-
       /*! \brief System load average data */
       struct {
         double load1;  /*!< 1 minute load average */
@@ -54,7 +51,7 @@ namespace wassail {
     void getloadavg::impl::evaluate(getloadavg &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef HAVE_GETLOADAVG
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -66,7 +63,6 @@ namespace wassail {
           data.load15 = loadavg[2];
 
           d.common::evaluate(force);
-          collected = true;
         }
 
 #else
@@ -79,15 +75,11 @@ namespace wassail {
     void from_json(const json &j, getloadavg &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
-
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
-      }
 
       d.pimpl->data.load1 = j.value(json::json_pointer("/data/load1"), 0.0);
       d.pimpl->data.load5 = j.value(json::json_pointer("/data/load5"), 0.0);

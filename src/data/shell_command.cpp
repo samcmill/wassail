@@ -32,17 +32,15 @@ namespace wassail {
     /* \cond pimpl */
     class shell_command::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the load
-                                average has been collected */
-
       /*! \brief Shell command output data */
       struct {
-        double elapsed = 0.0;    /*!< Number of seconds the command
-                                      took to execute */
-        int returncode = 255;    /*!< Shell exit status */
-        std::string stderr = ""; /*!< Standard error */
-        std::string stdout = ""; /*!< Standard output */
-      } data;                    /*!< Shell command output data */
+        std::string command = ""; /*!< Shell command */
+        double elapsed = 0.0;     /*!< Number of seconds the command
+                                       took to execute */
+        int returncode = 255;     /*!< Shell exit status */
+        std::string stderr = "";  /*!< Standard error */
+        std::string stdout = "";  /*!< Standard output */
+      } data;                     /*!< Shell command output data */
 
       /* \brief Mutex to control concurrent reads and writes */
       std::shared_timed_mutex rw_mutex;
@@ -91,12 +89,11 @@ namespace wassail {
         throw std::runtime_error("Missing command");
       }
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
         d.exclusive ? d.mutex.lock() : d.mutex.lock_shared();
         popen3(d);
         d.exclusive ? d.mutex.unlock() : d.mutex.unlock_shared();
         d.common::evaluate(force);
-        collected = true;
       }
     }
 
@@ -104,6 +101,9 @@ namespace wassail {
 #ifdef HAVE_SHELL_COMMAND
       int rv = 0; // child process return value
       int in[2], out[2], err[2];
+
+      // shell command
+      data.command = d.command;
 
       // initialize the pipes
       /* LCOV_EXCL_START */
@@ -282,17 +282,25 @@ namespace wassail {
     void from_json(const json &j, shell_command &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
 
-      if (j.contains(json::json_pointer("/data/returncode"))) {
-        d.pimpl->collected = true;
+      /* Derived classes need to handle their own configuration */
+      if (j.value("name", "") == "shell_command") {
+        /* Need to keep these default values in sync with shell_command.hpp */
+        d.command = j.value(json::json_pointer("/configuration/command"), "");
+        if (d.command == "") {
+          wassail::internal::logger()->warn("No shell command specified");
+        }
+        d.exclusive =
+            j.value(json::json_pointer("/configuration/exclusive"), false);
+        d.timeout = j.value(json::json_pointer("/configuration/timeout"), 60);
       }
 
-      d.command = j.value(json::json_pointer("/data/command"), "");
+      d.pimpl->data.command = j.value(json::json_pointer("/data/command"), "");
       d.pimpl->data.elapsed = j.value(json::json_pointer("/data/elapsed"), 0.0);
       d.pimpl->data.returncode =
           j.value(json::json_pointer("/data/returncode"), 0);
@@ -305,7 +313,14 @@ namespace wassail {
 
       j = dynamic_cast<const wassail::data::common &>(d);
 
-      j["data"]["command"] = d.command;
+      /* Derived classes need to handle their own configuration */
+      if (d.name() == "shell_command") {
+        j["configuration"]["command"] = d.command;
+        j["configuration"]["exclusive"] = d.exclusive;
+        j["configuration"]["timeout"] = d.timeout;
+      }
+
+      j["data"]["command"] = d.pimpl->data.command;
       j["data"]["elapsed"] = d.pimpl->data.elapsed;
       j["data"]["returncode"] = d.pimpl->data.returncode;
       j["data"]["stderr"] = d.pimpl->data.stderr;

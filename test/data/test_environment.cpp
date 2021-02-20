@@ -56,8 +56,8 @@ TEST_CASE("environment JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("environment invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("environment invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::environment d;
   REQUIRE_THROWS(d = jin);
 }
@@ -71,4 +71,20 @@ TEST_CASE("environment incomplete JSON conversion") {
   REQUIRE(jout["name"] == "environment");
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].size() == 0);
+}
+
+TEST_CASE("environment factory evaluate") {
+  auto jin = R"({ "name": "environment" })"_json;
+
+  /* set a dummy environment variable */
+  int rv = setenv("__ZZZ", "FOO=BAR", 1);
+  REQUIRE(rv == 0);
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "environment");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["__ZZZ"].get<std::string>() == "FOO=BAR");
+  }
 }

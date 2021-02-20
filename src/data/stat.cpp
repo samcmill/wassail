@@ -6,6 +6,7 @@
  */
 
 #include "config.h"
+#include "internal.hpp"
 
 #include <cstdlib>
 #include <memory>
@@ -32,11 +33,9 @@ namespace wassail {
     /* \cond pimpl */
     class stat::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief File information data */
       struct {
+        std::string path;  /*!< fileystem path */
         dev_t dev;         /*!< ID of device containing file */
         mode_t mode;       /*!< protection mode of file */
         ino_t ino;         /*!< file serial number */
@@ -81,7 +80,7 @@ namespace wassail {
     void stat::impl::evaluate(stat &d, bool force) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
 #ifdef WITH_DATA_STAT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
@@ -91,6 +90,7 @@ namespace wassail {
 
         rv = ::stat(d.path.c_str(), &s);
         if (rv == 0) {
+          data.path = d.path;
           data.dev = s.st_dev;
           data.mode = s.st_mode;
           data.nlink = s.st_nlink;
@@ -124,7 +124,6 @@ namespace wassail {
 #endif
 
           d.common::evaluate(force);
-          collected = true;
         }
 #else
         throw std::runtime_error("stat() is not available");
@@ -136,17 +135,18 @@ namespace wassail {
     void from_json(const json &j, stat &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
 
-      if (j.contains("data")) {
-        d.pimpl->collected = true;
+      d.path = j.value(json::json_pointer("/configuration/path"), "");
+      if (d.path == "") {
+        wassail::internal::logger()->warn("No path specified");
       }
 
-      d.path = j.value(json::json_pointer("/data/path"), "");
+      d.pimpl->data.path = j.value(json::json_pointer("/data/path"), "");
       d.pimpl->data.dev =
           j.value(json::json_pointer("/data/device"), static_cast<dev_t>(0));
       d.pimpl->data.mode =
@@ -177,7 +177,9 @@ namespace wassail {
 
       j = dynamic_cast<const wassail::data::common &>(d);
 
-      j["data"]["path"] = d.path;
+      j["configuration"]["path"] = d.path;
+
+      j["data"]["path"] = d.pimpl->data.path;
       j["data"]["device"] = d.pimpl->data.dev;
       j["data"]["mode"] = d.pimpl->data.mode;
       j["data"]["nlink"] = d.pimpl->data.nlink;

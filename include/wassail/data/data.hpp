@@ -25,6 +25,9 @@ namespace wassail {
     /*! \brief Parent class for all data source building blocks */
     class common {
     private:
+      /*! Flag to denote whether the data has been collected */
+      bool collected_ = false;
+
       /*! Get the hostname of the system
        *  \return Hostname
        */
@@ -56,7 +59,7 @@ namespace wassail {
       /*! Virtual destructor */
       virtual ~common() = default;
 
-      /*! Mutex to control parallel data source execution. */
+      /*! Mutex to control parallel data source execution */
 #if __cplusplus >= 201703L
       inline static std::shared_timed_mutex mutex;
 #else
@@ -64,6 +67,12 @@ namespace wassail {
 #endif
 
     public:
+      /*! Query whether the data source has already been evaluated.
+       *  \return true if the data source has already been evaluated,
+       *          false otherwise
+       */
+      bool collected() { return collected_; }
+
       /*! Hostname of the system where the data source was invoked. */
       std::string hostname = get_hostname();
 
@@ -84,6 +93,9 @@ namespace wassail {
        */
       virtual void evaluate(bool force = false);
 
+      /*! Set the collected state to true */
+      void set_collected();
+
       /*! JSON type conversion
        * \param[in] j
        * \param[in,out] d
@@ -96,6 +108,15 @@ namespace wassail {
        */
       friend void to_json(json &j, const wassail::data::common &d);
     };
+
+    /*! Evaluate the data source corresponding to the JSON input.
+     *  \param[in] j Base JSON input.  At a minimum the "name" field
+     *               must be specified.
+     *  \return JSON representation of the evaluated data source if
+     *          successful, or a nullptr if an error occurred during
+     *          evaluation.
+     */
+    json evaluate(const json &j);
 
     /*! JSON type conversion */
     void from_json(const json &j, wassail::data::common &d);

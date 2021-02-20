@@ -123,8 +123,8 @@ TEST_CASE("udev JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("udev invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("udev invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::udev d;
   REQUIRE_THROWS(d = jin);
 }
@@ -138,4 +138,16 @@ TEST_CASE("udev incomplete JSON conversion") {
   REQUIRE(jout["name"] == "udev");
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].size() == 0);
+}
+
+TEST_CASE("udev factory evaluate") {
+  auto jin = R"({ "name": "udev" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "udev");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["sys"]["devices"].size() > 0);
+  }
 }

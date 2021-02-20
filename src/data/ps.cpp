@@ -15,8 +15,8 @@
 namespace wassail {
   namespace data {
     void from_json(const json &j, ps &d) {
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<shell_command &>(d));

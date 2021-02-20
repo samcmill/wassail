@@ -52,14 +52,14 @@ namespace wassail {
     }
 
     void from_json(const json &j, osu_micro_benchmarks &d) {
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<mpirun &>(d));
 
       std::string benchmark =
-          j.value(json::json_pointer("/data/benchmark"), "");
+          j.value(json::json_pointer("/configuration/benchmark"), "");
 
       if (benchmark == "osu_allreduce") {
         d.osu_benchmark = osu_micro_benchmarks::osu_benchmark_t::ALLREDUCE;
@@ -86,10 +86,19 @@ namespace wassail {
         throw std::runtime_error(std::string("unknown OSU Micro-Benchmark: ") +
                                  benchmark);
       }
+
+      d.program = d.osu_program(d.osu_benchmark);
+
+      d.set_cmdline();
     }
 
     void to_json(json &j, const osu_micro_benchmarks &d) {
       j = dynamic_cast<const mpirun &>(d);
+
+      /* the program is configured by selecting the benchmark, not
+       * by setting the program itself */
+      j["configuration"].erase("program");
+      j["configuration"].erase("program_args");
 
       std::string stdout = j.value(json::json_pointer("/data/stdout"), "");
 
@@ -104,7 +113,7 @@ namespace wassail {
 
       switch (d.osu_benchmark) {
       case osu_micro_benchmarks::osu_benchmark_t::ALLREDUCE: {
-        j["data"]["benchmark"] = "osu_allreduce";
+        j["configuration"]["benchmark"] = "osu_allreduce";
 
         std::regex re("(\\d+)\\s+(\\d+\\.\\d+)");
 
@@ -119,7 +128,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::ALLTOALL: {
-        j["data"]["benchmark"] = "osu_alltoall";
+        j["configuration"]["benchmark"] = "osu_alltoall";
 
         std::regex re("(\\d+)\\s+(\\d+\\.\\d+)");
 
@@ -134,7 +143,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::BW: {
-        j["data"]["benchmark"] = "osu_bw";
+        j["configuration"]["benchmark"] = "osu_bw";
 
         std::regex re("(\\d+)\\s+(\\d+\\.\\d+)");
 
@@ -149,7 +158,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::HELLO: {
-        j["data"]["benchmark"] = "osu_hello";
+        j["configuration"]["benchmark"] = "osu_hello";
 
         std::regex re("This is a test with (\\d+) processes");
 
@@ -160,7 +169,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::INIT: {
-        j["data"]["benchmark"] = "osu_init";
+        j["configuration"]["benchmark"] = "osu_init";
 
         std::regex re("nprocs: (\\d+), min: (\\d+) ms, max: (\\d+) ms, avg: "
                       "(\\d+) ms\\n");
@@ -175,7 +184,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::LATENCY: {
-        j["data"]["benchmark"] = "osu_latency";
+        j["configuration"]["benchmark"] = "osu_latency";
 
         std::regex re("(\\d+)\\s+(\\d+\\.\\d+)");
 
@@ -190,7 +199,7 @@ namespace wassail {
         break;
       }
       case osu_micro_benchmarks::osu_benchmark_t::REDUCE: {
-        j["data"]["benchmark"] = "osu_reduce";
+        j["configuration"]["benchmark"] = "osu_reduce";
 
         std::regex re("(\\d+)\\s+(\\d+\\.\\d+)");
 

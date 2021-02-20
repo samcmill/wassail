@@ -54,8 +54,8 @@ TEST_CASE("sysconf JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("sysconf invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("sysconf invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::sysconf d;
   REQUIRE_THROWS(d = jin);
 }
@@ -70,4 +70,16 @@ TEST_CASE("sysconf incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("nprocessors_conf") == 1);
   REQUIRE(jout["data"]["nprocessors_conf"] == 0);
+}
+
+TEST_CASE("sysconf factory evaluate") {
+  auto jin = R"({ "name": "sysconf" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "sysconf");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["nprocessors_onln"].get<long>() >= 1);
+  }
 }

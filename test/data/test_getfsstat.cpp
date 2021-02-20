@@ -74,8 +74,8 @@ TEST_CASE("getfsstat JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("getfsstat invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("getfsstat invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getfsstat d;
   REQUIRE_THROWS(d = jin);
 }
@@ -90,4 +90,16 @@ TEST_CASE("getfsstat incomplete JSON conversion") {
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].count("file_systems") == 1);
   REQUIRE(jout["data"]["file_systems"].size() == 0);
+}
+
+TEST_CASE("getfsstat factory evaluate") {
+  auto jin = R"({ "name": "getfsstat" })"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "getfsstat");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"]["file_systems"].size() >= 1);
+  }
 }

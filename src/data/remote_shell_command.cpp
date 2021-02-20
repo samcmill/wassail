@@ -28,9 +28,6 @@ namespace wassail {
     /* \cond pimpl */
     class remote_shell_command::impl {
     public:
-      bool collected = false; /*!< Flag to denote whether the data
-                                   has been collected */
-
       /*! \brief Remote shell command output
        *
        *  This is an intentional duplicate of wassail::data::shell_command.
@@ -127,7 +124,7 @@ namespace wassail {
         throw std::runtime_error("Empty host list");
       }
 
-      if (force or not collected) {
+      if (force or not d.collected()) {
         d.common::evaluate(force);
 
         /* libssh initialization may not be thread safe */
@@ -140,7 +137,7 @@ namespace wassail {
         /* libssh cleanup may not be thread safe */
         ssh_finalize();
 
-        collected = true;
+        d.common::evaluate(force);
       }
 #else
       throw std::runtime_error(
@@ -257,15 +254,21 @@ namespace wassail {
     void from_json(const json &j, remote_shell_command &d) {
       std::unique_lock<std::shared_timed_mutex> writer(d.pimpl->rw_mutex);
 
-      if (j.value("version", 0) != d.version()) {
-        throw std::runtime_error("Version mismatch");
+      if (j.value("name", "") != d.name()) {
+        throw std::runtime_error("name mismatch");
       }
 
       from_json(j, dynamic_cast<wassail::data::common &>(d));
 
-      if (j.contains(json::json_pointer("/data/0/data/returncode"))) {
-        d.pimpl->collected = true;
+      d.command = j.value(json::json_pointer("/configuration/command"), "");
+      if (d.command == "") {
+        wassail::internal::logger()->warn("No shell command specified");
       }
+      d.exclusive =
+          j.value(json::json_pointer("/configuration/exclusive"), false);
+      d.hosts = j.value(json::json_pointer("/configuration/hosts"),
+                        std::list<std::string>({}));
+      d.timeout = j.value(json::json_pointer("/configuration/timeout"), 60);
 
       for (auto i : j.value("data", json::array())) {
         remote_shell_command::impl::item tmp;
@@ -291,6 +294,11 @@ namespace wassail {
       std::shared_lock<std::shared_timed_mutex> reader(d.pimpl->rw_mutex);
 
       j = dynamic_cast<const wassail::data::common &>(d);
+
+      j["configuration"]["command"] = d.command;
+      j["configuration"]["exclusive"] = d.exclusive;
+      j["configuration"]["hosts"] = d.hosts;
+      j["configuration"]["timeout"] = d.timeout;
 
       j["data"] = json::array();
 

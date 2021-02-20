@@ -5,6 +5,46 @@
   "type": "object",
   "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
   "properties": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "benchmark: {
+          "description": "OSU Micro-Benchmark",
+          "type": "string"
+        },
+        "hostfile": {
+          "description": "Path to file containing list of hosts",
+          "type": "string"
+        },
+        "hostlist": {
+          "description": "List of hosts",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "mpi_impl": {
+          "description": "MPI implementation",
+          "type": "number"
+        },
+        "mpirun_args": {
+          "description": "Extra mpirun arguments",
+          "type": "string"
+        },
+        "nprocs": {
+          "description": "number of benchmark processes",
+          "type": "number"
+        },
+        "num_procs": {
+          "description": "Number of MPI processes to start",
+          "type": "number"
+        },
+        "per_node": {
+          "description": "Number of MPI processes per node",
+          "type": "number"
+        }
+      }
+    },
     "data": {
       "type": "object",
       "properties": {
@@ -26,10 +66,6 @@
             }
           }
         },
-        "benchmark: {
-          "description": "OSU Micro-Benchmark",
-          "type": "string"
-        },
         "command": {
           "description": "OSU Micro-Benchmarks command line",
           "type": "string"
@@ -37,17 +73,6 @@
         "elapsed": {
           "description": "Number of seconds the command took to execute",
           "type": "number"
-        },
-        "hostfile": {
-          "description": "Path to file containing list of hosts",
-          "type": "string"
-        },
-        "hostlist": {
-          "description": "List of hosts",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
         },
         "latency": {
           "description": "benchmark latency (osu_allreduce, osu_alltoall, osu_latency, osu_reduce)",
@@ -70,34 +95,6 @@
         "min": {
           "description": "minimum init time (osu_init)",
           "type": "number"
-        },
-        "mpi_impl": {
-          "description": "MPI implementation",
-          "type": "number"
-        },
-        "mpirun_args": {
-          "description": "Extra mpirun arguments",
-          "type": "string"
-        },
-        "nprocs": {
-          "description": "number of benchmark processes",
-          "type": "number"
-        },
-        "num_procs": {
-          "description": "Number of MPI processes to start",
-          "type": "number"
-        },
-        "per_node": {
-          "description": "Number of MPI processes per node",
-          "type": "number"
-        },
-        "program": {
-          "description": "MPI program to launch",
-          "type": "string"
-        },
-        "program_args": {
-          "description": "Arguments to pass to the MPI program",
-          "type": "string"
         },
         "returncode": {
           "description": "shell exit status",

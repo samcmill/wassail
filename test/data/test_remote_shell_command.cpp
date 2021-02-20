@@ -148,6 +148,12 @@ TEST_CASE("remote_shell_command long string", "[!mayfail]") {
 TEST_CASE("remote_shell_command JSON conversion") {
   auto jin = R"(
     {
+      "configuration": {
+        "command": "uptime",
+        "exclusive": false,
+        "hosts": [ "node1", "node2" ],
+        "timeout": 10
+      },
       "data": [
         {
           "data": {
@@ -189,8 +195,8 @@ TEST_CASE("remote_shell_command JSON conversion") {
   REQUIRE(jout == jin);
 }
 
-TEST_CASE("remote_shell_command invalid version JSON conversion") {
-  auto jin = R"({ "version": 999999 })"_json;
+TEST_CASE("remote_shell_command invalid JSON conversion") {
+  auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::remote_shell_command d;
   REQUIRE_THROWS(d = jin);
 }
@@ -205,4 +211,29 @@ TEST_CASE("remote_shell_command incomplete JSON conversion") {
   REQUIRE(jout["name"] == "remote_shell_command");
   REQUIRE(jout.count("data") == 1);
   REQUIRE(jout["data"].size() == 0);
+}
+
+TEST_CASE("remote_shell_command factory evaluate") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "command": "echo 'foo'",
+        "hosts": [ "localhost" ]
+      },
+      "name": "remote_shell_command"
+    }
+  )"_json;
+
+  auto jout = wassail::data::evaluate(jin);
+
+  if (not jout.is_null()) {
+    REQUIRE(jout["name"] == "remote_shell_command");
+    REQUIRE(jout.count("data") == 1);
+    REQUIRE(jout["data"].size() == 1);
+    REQUIRE(jout["data"][0]["data"]["command"].get<std::string>() ==
+            "echo 'foo'");
+    if (jout["data"][0]["data"]["returncode"].get<int>() == 0) {
+      REQUIRE(jout["data"][0]["data"]["stdout"].get<std::string>() == "foo\n");
+    }
+  }
 }
