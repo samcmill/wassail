@@ -1,8 +1,6 @@
 name: Coverity scan
 
-on: 
-  schedule:
-    - cron: '0 0 * * 1' # Weekly
+on: push
 
 jobs:
   build:
