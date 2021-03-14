@@ -107,6 +107,9 @@ namespace wassail {
 
         return r;
       }
+
+      /*! Unique name for this building block */
+      std::string name() const { return "rules_engine"; };
     };
   } // namespace check
 } // namespace wassail

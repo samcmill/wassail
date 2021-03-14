@@ -52,6 +52,9 @@ namespace wassail {
 
       /*! \brief Virtual check function */
       virtual std::shared_ptr<wassail::result> check(const json &j) = 0;
+
+      /*! \brief Building block unique name */
+      virtual std::string name() const = 0;
     };
   } // namespace check
 } // namespace wassail

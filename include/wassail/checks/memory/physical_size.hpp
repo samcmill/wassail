@@ -97,7 +97,6 @@ namespace wassail {
          */
         std::shared_ptr<wassail::result> check(wassail::data::sysinfo &data);
 
-      private:
         /*! Unique name for this building block */
         std::string name() const { return "memory/physical_size"; };
       };

@@ -82,7 +82,6 @@ namespace wassail {
         std::shared_ptr<wassail::result>
         check(wassail::data::environment &data);
 
-      private:
         /*! Unique name for this building block */
         std::string name() const { return "misc/environment"; };
       };

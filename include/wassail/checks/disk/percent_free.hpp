@@ -88,7 +88,6 @@ namespace wassail {
          */
         std::shared_ptr<wassail::result> check(wassail::data::getmntent &data);
 
-      private:
         /*! Unique name for this building block */
         std::string name() const { return "disk/percent_free"; };
       };

@@ -37,24 +37,6 @@ namespace wassail {
         return std::string(hostname);
       }
 
-      /*! Indicate whether the building block is enabled or not.  If not,
-       *  evaluating the building block will throw and exception.
-       *  \return true if the building block is available, false otherwise
-       */
-      virtual bool enabled() const = 0;
-
-      /*! Unique name for this building block
-       *  \return Building block identifier
-       */
-      virtual std::string name() const = 0;
-
-      /*! Interface version of the building block
-       *  The version format is XXXYY where XXX is the major version
-       *  and YY is the minor version, e.g. 1.01 would be 101.
-       *  \return Building block interface version
-       */
-      virtual uint16_t version() const = 0;
-
     protected:
       /*! Virtual destructor */
       virtual ~common() = default;
@@ -73,14 +55,32 @@ namespace wassail {
        */
       bool collected() { return collected_; }
 
-      /*! Hostname of the system where the data source was invoked. */
-      std::string hostname = get_hostname();
-
-      /*! Timestamp corresponding to when the data source was invoked. */
-      std::chrono::time_point<std::chrono::system_clock> timestamp;
+      /*! Indicate whether the building block is enabled or not.  If not,
+       *  evaluating the building block will throw and exception.
+       *  \return true if the building block is available, false otherwise
+       */
+      virtual bool enabled() const = 0;
 
       /*! User ID of the user who invoked the data source. */
       uid_t uid = getuid();
+
+      /*! Hostname of the system where the data source was invoked. */
+      std::string hostname = get_hostname();
+
+      /*! Unique name for this building block
+       *  \return Building block identifier
+       */
+      virtual std::string name() const = 0;
+
+      /*! Interface version of the building block
+       *  The version format is XXXYY where XXX is the major version
+       *  and YY is the minor version, e.g. 1.01 would be 101.
+       *  \return Building block interface version
+       */
+      virtual uint16_t version() const = 0;
+
+      /*! Timestamp corresponding to when the data source was invoked. */
+      std::chrono::time_point<std::chrono::system_clock> timestamp;
 
       /*! Evaluate the data source.  The implementation should cache
        *  the result and return the cached data in subsequent calls

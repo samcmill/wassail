@@ -83,7 +83,6 @@ namespace wassail {
          */
         std::shared_ptr<wassail::result> check(wassail::data::sysctl &data);
 
-      private:
         /*! Unique name for this building block */
         std::string name() const { return "cpu/core_count"; };
       };
