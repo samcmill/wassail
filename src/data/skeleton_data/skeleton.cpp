@@ -53,7 +53,7 @@ namespace wassail {
 #ifdef WITH_DATA_SKELETON
         /* collect data */
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 #else
         throw std::runtime_error("skeleton data source is not available");
 #endif

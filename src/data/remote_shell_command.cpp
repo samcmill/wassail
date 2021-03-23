@@ -125,7 +125,7 @@ namespace wassail {
       }
 
       if (force or not d.collected()) {
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 
         /* libssh initialization may not be thread safe */
         ssh_init();
@@ -137,7 +137,7 @@ namespace wassail {
         /* libssh cleanup may not be thread safe */
         ssh_finalize();
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
       }
 #else
       throw std::runtime_error(
