@@ -61,7 +61,7 @@ namespace wassail {
         data.page_size = ::sysconf(_SC_PAGESIZE);
         data.phys_pages = ::sysconf(_SC_PHYS_PAGES);
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
       }
 #else
         throw std::runtime_error("sysconf() not available");

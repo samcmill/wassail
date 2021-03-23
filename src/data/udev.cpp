@@ -158,7 +158,7 @@ namespace wassail {
         _udev_enumerate_unref(enumerate);
         _udev_unref(u);
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 
         dlclose(handle);
 #else

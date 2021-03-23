@@ -62,7 +62,7 @@ namespace wassail {
           data.load5 = loadavg[1];
           data.load15 = loadavg[2];
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 
 #else

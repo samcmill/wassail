@@ -103,7 +103,7 @@ namespace wassail {
           data.core_hard = rl.rlim_max;
           data.core_soft = rl.rlim_cur;
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 
         rv = ::getrlimit(RLIMIT_CPU, &rl);

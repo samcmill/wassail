@@ -123,7 +123,7 @@ namespace wassail {
 
         endmntent(fp);
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 #else
         throw std::runtime_error("getmntent data source is not available");
 #endif

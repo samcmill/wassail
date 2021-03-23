@@ -76,6 +76,57 @@ TEST_CASE("pciutils JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("pciutils common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "devices": [
+          {
+            "bus":0,
+            "class_id":4096,
+            "class_name":"Network and computing encryption device",
+            "dev":7,
+            "device_id":4101,
+            "device_name":"Virtio RNG",
+            "domain":0,
+            "func":0,
+            "slot":"00:07.0",
+            "vendor_id":6900,
+            "vendor_name":"Red Hat, Inc."
+          },
+          {
+            "bus":0,
+            "class_id":262,
+            "class_name":"SATA controller",
+            "dev":4,
+            "device_id":10273,
+            "device_name":"82801HR/HO/HH (ICH8R/DO/DH) 6 port SATA Controller [AHCI mode]",
+            "domain":0,
+            "func":0,
+            "slot":"00:04.0",
+            "vendor_id":32902,
+            "vendor_name":"Intel Corporation"
+          }
+        ]
+      },
+      "hostname": "localhost.local",
+      "name": "pciutils",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::pciutils>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("pciutils invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::pciutils d;

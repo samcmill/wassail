@@ -88,7 +88,7 @@ namespace wassail {
           data.mem_unit = info.mem_unit;
           data.loads_scale = 1 << SI_LOAD_SHIFT;
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 #else
         throw std::runtime_error("sysinfo data source is not available");

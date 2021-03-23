@@ -110,6 +110,52 @@ TEST_CASE("osu_allreduce JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("osu_allreduce common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "benchmark": "osu_allreduce",
+        "mpi_impl": "openmpi",
+        "mpirun_args": "",
+        "num_procs": 2,
+        "per_node": 0,
+        "timeout": 60
+      },
+      "data": {
+        "command": "mpirun -n 2 osu_allreduce",
+        "elapsed": 0.982017832,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "# OSU MPI Allreduce Latency Test v5.6.2\n# Size       Avg Latency(us)\n4                      21.76\n8                      22.88\n16                     22.17\n32                     26.30\n64                     23.99\n128                    20.52\n256                    21.12\n512                    18.42\n1024                   14.83\n2048                   24.23\n4096                  368.40\n8192                  418.04\n16384                 639.20\n32768                 673.19\n65536                 763.51\n131072                853.01\n262144               1118.53\n524288               1897.82\n1048576              3291.21\n"
+      },
+      "hostname": "localhost.local",
+      "name": "osu_micro_benchmarks",
+      "timestamp": 1539144880,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::osu_micro_benchmarks>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+
+  /* Verify fields are parsed correctly from stdout */
+  REQUIRE(jout["data"]["latency"].size() == 19);
+  REQUIRE(jout["data"]["latency"][0]["size"] == 4);
+  REQUIRE(jout["data"]["latency"][0]["latency"] == 21.76);
+  REQUIRE(jout["data"]["latency"][18]["size"] == 1048576);
+  REQUIRE(jout["data"]["latency"][18]["latency"] == 3291.21);
+
+  /* jout should be equal to jin except for the parsed process list */
+  jout["data"].erase("latency");
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("osu_alltoall JSON conversion") {
   auto jin = R"(
     {

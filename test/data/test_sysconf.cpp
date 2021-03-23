@@ -54,6 +54,33 @@ TEST_CASE("sysconf JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("sysconf common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "nprocessors_conf": 4,
+        "nprocessors_onln": 4,
+        "page_size": 4096,
+        "phys_pages": 2097152
+      },
+      "hostname": "localhost.local",
+      "name": "sysconf",
+      "timestamp": 1528057219,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::sysconf>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("sysconf invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::sysconf d;

@@ -65,6 +65,45 @@ TEST_CASE("stat JSON conversion") {
   REQUIRE(jout.size() > 0);
   REQUIRE(jout == jin);
 }
+TEST_CASE("stat common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "path": "/tmp"
+      },
+      "data": {
+        "atime": 1542691487.0,
+        "blksize": 4096,
+        "blocks": 0,
+        "ctime": 1542691639.0,
+        "device": 16777220,
+        "gid": 0,
+        "inode": 4312304510,
+        "mode": 41453,
+        "mtime": 1542691487.0,
+        "nlink": 1,
+        "path": "/tmp",
+        "rdev": 0,
+        "size": 11,
+        "uid": 0
+      },
+      "hostname": "localhost.local",
+      "name": "stat",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::stat>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
 
 TEST_CASE("stat invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;

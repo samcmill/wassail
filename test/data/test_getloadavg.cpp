@@ -53,6 +53,32 @@ TEST_CASE("getloadavg JSON conversions") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("getloadavg common pointer JSON conversions") {
+  auto jin = R"(
+    {
+      "data": {
+        "load1": 1.5361328125,
+        "load5": 1.48095703125,
+        "load15": 1.74267578125
+      },
+      "hostname": "localhost.local",
+      "name": "getloadavg",
+      "timestamp": 1528948131,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::getloadavg>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("getloadavg invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getloadavg d;

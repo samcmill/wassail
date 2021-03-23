@@ -104,6 +104,78 @@ TEST_CASE("sysctl JSON conversions") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("sysctl common pointer JSON conversions") {
+  auto jin = R"(
+    {
+      "data": {
+        "hw": {
+          "cpufamily": 526772277,
+          "cpufrequency": 2600000000,
+          "cpufrequency_max": 2600000000,
+          "cputype": 7,
+          "logicalcpu": 4,
+          "logicalcpu_max": 4,
+          "machine": "x86_64",
+          "memsize": 8589934592,
+          "model": "MacBookPro10,2",
+          "ncpu":4,
+          "packages": 1,
+          "physicalcpu": 2,
+          "physicalcpu_max": 2
+        },
+        "kern": {
+          "hostname": "localhost.local",
+          "osrelease": "17.5.0",
+          "osrevision": 199506,
+          "ostype": "Darwin",
+          "osversion": "17E202",
+          "version": "Darwin Kernel Version 17.5.0: Fri Apr 13 19:32:32 PDT 2018; root:xnu-4570.51.2~1/RELEASE_X86_64"
+        },
+        "machdep": {
+          "cpu": {
+            "brand_string": "Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz",
+            "core_count": 2,
+            "cores_per_package": 8,
+            "family": 6,
+            "logical_per_package": 16,
+            "model": 58,
+            "stepping": 9,
+            "vendor": "GenuineIntel"
+          }
+        },
+        "vm": {
+          "loadavg": {
+            "fscale": 2048,
+            "load1": 3010,
+            "load15": 3225,
+            "load5": 3063
+          },
+          "swapusage": {
+            "xsu_avail": 907804672,
+            "xsu_pagesize": 4096,
+            "xsu_total": 1073741824,
+            "xsu_used": 165937152
+          }
+        }
+      },
+      "hostname": "localhost.local",
+      "name": "sysctl",
+      "timestamp": 1528058096,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::sysctl>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("sysctl invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::sysctl d;

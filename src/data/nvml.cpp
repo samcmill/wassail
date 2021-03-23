@@ -256,7 +256,7 @@ namespace wassail {
           wassail::internal::logger()->error("error shutting down nvml");
         }
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 
         dlclose(handle);
 #else

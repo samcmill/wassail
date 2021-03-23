@@ -87,6 +87,70 @@ TEST_CASE("ps JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("ps common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "command": "ps -eo user,pid,pcpu,pmem,vsz,rss,tt,state,start,time,command",
+        "elapsed": 0.088170979,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "USER               PID  %CPU %MEM      VSZ    RSS   TT  STAT STARTED      TIME COMMAND\nscott              792   0.0  0.0  4296080    772 s001  S     7Aug18   0:00.51 -tcsh\nscott            42117   0.0  0.0  4269348   1108 s001  S+   11:05PM   0:00.01 wassail-dump\n"
+      },
+      "hostname": "localhost.local",
+      "name": "ps",
+      "timestamp": 1539144880,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::ps>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+
+  /* Verify fields are parsed correctly from stdout */
+  auto gold = R"(
+        [
+          {
+            "command": "-tcsh",
+            "pcpu": 0.0,
+            "pid": 792,
+            "pmem": 0.0,
+            "rss": 772,
+            "start": "7Aug18",
+            "state": "S",
+            "time": "0:00.51",
+            "tt": "s001",
+            "user": "scott",
+            "vsz": 4296080
+          },
+          {
+            "command": "wassail-dump",
+            "pcpu": 0.0,
+            "pid": 42117,
+            "pmem": 0.0,
+            "rss": 1108,
+            "start": "11:05PM",
+            "state": "S+",
+            "time": "0:00.01",
+            "tt": "s001",
+            "user": "scott",
+            "vsz": 4269348
+          }
+        ]
+  )"_json;
+  REQUIRE(jout["data"]["processes"] == gold);
+
+  /* jout should be equal to jin except for the parsed process list */
+  jout["data"].erase("processes");
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("ps JSON conversion - Linux") {
   auto jin = R"(
     {

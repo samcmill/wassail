@@ -66,6 +66,44 @@ TEST_CASE("sysinfo JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("sysinfo common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "bufferram": 0,
+        "freehigh": 0,
+        "freeram": 610422784,
+        "freeswap": 312442880,
+        "load1": 80672,
+        "load15": 101664,
+        "load5": 87520,
+        "loads_scale": 65536,
+        "mem_unit": 1,
+        "procs": 394,
+        "sharedram": 0,
+        "totalhigh": 0,
+        "totalram": 1040621568,
+        "totalswap": 859828224,
+        "uptime": 44835
+      },
+      "hostname": "localhost.local",
+      "name": "sysinfo",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::sysinfo>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("sysinfo invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::sysinfo d;

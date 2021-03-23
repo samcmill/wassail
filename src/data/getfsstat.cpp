@@ -123,7 +123,7 @@ namespace wassail {
 
         free(buf);
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 #else
         throw std::runtime_error("getfsstat() not available");
 #endif

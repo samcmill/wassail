@@ -71,7 +71,7 @@ namespace wassail {
           data.version = name.version;
           data.machine = name.machine;
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 #else
         throw std::runtime_error("uname() is not available");

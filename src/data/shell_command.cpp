@@ -93,7 +93,7 @@ namespace wassail {
         d.exclusive ? d.mutex.lock() : d.mutex.lock_shared();
         popen3(d);
         d.exclusive ? d.mutex.unlock() : d.mutex.unlock_shared();
-        d.common::evaluate(force);
+        d.common::evaluate_common();
       }
     }
 

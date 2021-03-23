@@ -126,6 +126,42 @@ TEST_CASE("mpirun JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("mpirun common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "mpirun_args": "",
+        "mpi_impl": "openmpi",
+        "num_procs": 2,
+        "per_node": 0,
+        "program": "osu_hello",
+        "program_args": "",
+        "timeout": 10
+      },
+      "data": {
+        "command": "mpirun -n 2 osu_hello",
+        "elapsed": 0.982017832,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "# OSU MPI Init Test v5.6.2\nnprocs: 2, min: 129 ms, max: 131 ms, avg: 130 ms\n"
+      },
+      "hostname": "localhost.local",
+      "name": "mpirun",
+      "timestamp": 1539144880,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::mpirun>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("mpirun factory evaluate") {
   auto jin = R"(
     {

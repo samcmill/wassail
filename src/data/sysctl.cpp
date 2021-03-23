@@ -189,7 +189,7 @@ namespace wassail {
         _sysctlbyname(d, "vm.loadavg", &(d.pimpl->data.vm.loadavg));
         _sysctlbyname(d, "vm.swapusage", &(d.pimpl->data.vm.swapusage));
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 #else
         throw std::runtime_error("sysctlbyname not available");
 #endif

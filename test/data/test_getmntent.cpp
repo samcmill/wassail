@@ -61,6 +61,46 @@ TEST_CASE("getmntent JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("getmntent common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "file_systems": [
+          {
+            "bavail": 76420,
+            "bfree": 76420,
+            "blocks": 1621504,
+            "bsize": 4096,
+            "dir": "/",
+            "favail": 64768,
+            "ffree": 611763,
+            "files": 778784,
+            "flag": 4096,
+            "frsize": 4096,
+            "fsid": 64768,
+            "fsname": "/dev/mapper/centos_centos7-root",
+            "type": "xfs"
+          }
+	]
+      },
+      "hostname": "localhost.local",
+      "name": "getmntent",
+      "timestamp": 1529033551,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::getmntent>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() >= 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("getmntent invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getmntent d;

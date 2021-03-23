@@ -41,6 +41,9 @@ namespace wassail {
       /*! Virtual destructor */
       virtual ~common() = default;
 
+      /*! Common evaluate routine for all data sources */
+      void evaluate_common();
+
       /*! Mutex to control parallel data source execution */
 #if __cplusplus >= 201703L
       inline static std::shared_timed_mutex mutex;
@@ -91,7 +94,7 @@ namespace wassail {
        *                   be collected even if it already has been
        *                   evaluated.
        */
-      virtual void evaluate(bool force = false);
+      virtual void evaluate(bool force = false) = 0;
 
       /*! Set the collected state to true */
       void set_collected();
@@ -102,11 +105,44 @@ namespace wassail {
        */
       friend void from_json(const json &j, wassail::data::common &d);
 
+      /*! Populate the data source from the JSON representation of
+       *  the data source.  This method should only be used with a pointer
+       *  of type wassail::data::common.  Otherwise use the from_json
+       *  friend method, e.g.,
+       *  \code{.cpp}
+       *  wassail::data::environment d = j; // preferred
+       *
+       *  <std::shared_ptr<wassail::data::common> dptr =
+       *      std::make_shared<wassail::data::environment>();
+       *  dptr->from_json(j); // only for base class pointer
+       *  \endcode
+       *  \param[in] j
+       */
+      virtual void from_json(const json &j) = 0;
+
       /*! JSON type conversion
        * \param[in,out] j
        * \param[in] d
        */
       friend void to_json(json &j, const wassail::data::common &d);
+
+      /*! Return a JSON representation of the data source.
+       *  This method should only be used with a pointer of type
+       *  wassail::data::common.  Otherwise use the to_json friend
+       *  method, e.g,
+       *  \code{.cpp}
+       *  auto d = wassail::data::environment();
+       *  d.evaluate();
+       *  json j1 = d; // preferred
+       *  auto j2 = static_cast<json>(d); // alternative
+       *
+       *  std::shared_ptr<wassail::data::common> dptr =
+       *      std::make_shared<wassail::data::environment>();
+       *  dptr->evaluate();
+       *  auto j3 = dptr->to_json(); // only for base class pointer
+       *  \endcode
+       */
+      virtual json to_json() = 0;
     };
 
     /*! Evaluate the data source corresponding to the JSON input.

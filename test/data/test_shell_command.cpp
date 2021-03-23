@@ -264,6 +264,39 @@ TEST_CASE("shell_command JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("shell_command common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "command": "uptime",
+        "exclusive": false,
+        "timeout": 60
+      },
+      "data": {
+        "command": "uptime",
+        "elapsed": 0.011148364,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "22:53  up 17 days, 23:57, 3 users, load averages: 1.25 1.42 1.63\n"
+      },
+      "hostname": "localhost.local",
+      "name": "shell_command",
+      "timestamp": 1528948436,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::shell_command>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("shell_command invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::shell_command d;

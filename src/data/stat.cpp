@@ -123,7 +123,7 @@ namespace wassail {
           data.mtime = static_cast<double>(s.st_mtime);
 #endif
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 #else
         throw std::runtime_error("stat() is not available");

@@ -66,7 +66,7 @@ namespace wassail {
 
         cpuid(d);
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
       }
     }
 

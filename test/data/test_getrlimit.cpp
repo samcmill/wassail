@@ -94,6 +94,51 @@ TEST_CASE("getrlimit JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("getrlimit common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "hard": {
+          "core": 9223372036854775807,
+          "cpu": 9223372036854775807,
+          "data": 9223372036854775807,
+          "fsize": 9223372036854775807,
+          "memlock": 9223372036854775807,
+          "nofile": 9223372036854775807,
+          "nproc": 1064,
+          "rss": 9223372036854775807,
+          "stack": 67104768
+        },
+        "soft": {
+          "core": 0,
+          "cpu": 9223372036854775807,
+          "data": 9223372036854775807,
+          "fsize": 9223372036854775807,
+          "memlock": 9223372036854775807,
+          "nofile": 256,
+          "nproc": 709,
+          "rss": 9223372036854775807,
+          "stack": 8388608
+        }
+      },
+      "hostname": "localhost.local",
+      "name": "getrlimit",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::getrlimit>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("getrlimit invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getrlimit d;

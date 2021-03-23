@@ -51,6 +51,11 @@ namespace wassail {
       friend void from_json(const json &j, sysinfo &d);
 
       /*! JSON type conversion
+       *  \param[in] j JSON object
+       */
+      void from_json(const json &j) { *this = j; };
+
+      /*! JSON type conversion
        * \param[in,out] j JSON object
        * \param[in] d
        *
@@ -58,6 +63,9 @@ namespace wassail {
        * \include sysinfo.json
        */
       friend void to_json(json &j, const sysinfo &d);
+
+      /*! JSON type conversion */
+      json to_json() { return static_cast<json>(*this); };
 
     private:
       /*! Interface version for this building block */

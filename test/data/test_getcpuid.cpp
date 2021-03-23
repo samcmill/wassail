@@ -59,12 +59,40 @@ TEST_CASE("getcpuid JSON conversions") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("getcpuid common pointer JSON conversions") {
+  auto jin = R"(
+    {
+      "data": {
+        "family": 6,
+        "model": 58,
+        "name": "Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz",
+        "stepping": 9,
+        "type": 0,
+        "vendor": "GenuineIntel"
+      },
+      "hostname": "localhost.local",
+      "name": "getcpuid",
+      "timestamp": 1528860991,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::getcpuid>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("getcpuid invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getcpuid d;
   REQUIRE_THROWS(d = jin);
 }
-
 TEST_CASE("getcpuid incomplete JSON conversion") {
   auto jin = R"({ "name": "getcpuid", "timestamp": 0, "version": 100})"_json;
 

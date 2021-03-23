@@ -56,6 +56,34 @@ TEST_CASE("uname JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("uname common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "machine":"x86_64",
+        "nodename":"localhost.local",
+        "release":"18.0.0",
+        "sysname":"Darwin",
+        "version":"Darwin Kernel Version 18.0.0: Wed Aug 22 20:13:40 PDT 2018; root:xnu-4903.201.2~1/RELEASE_X86_64"
+      },
+      "hostname": "localhost.local",
+      "name": "uname",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::uname>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("uname invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::uname d;

@@ -56,6 +56,32 @@ TEST_CASE("environment JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("environment common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "USER": "ncognito",
+        "HOME": "/home/ncognito",
+        "SHELL": "/bin/bash"
+      },
+      "hostname": "localhost.local",
+      "name": "environment",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::environment>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("environment invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::environment d;

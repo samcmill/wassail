@@ -51,6 +51,10 @@ namespace wassail {
        */
       void evaluate(bool force = false);
 
+      void from_json(const json &j) { *this = j; };
+
+      json to_json() { return static_cast<json>(*this); };
+
       /*! Unique name for this building block */
       std::string name() const { return "stat"; };
 

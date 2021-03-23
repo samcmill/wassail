@@ -122,10 +122,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7d5c10439abc21679d9bd2c2a99db1e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d524b265411dde65b3e294abb6d8704"><td class="memItemLeft" align="right" valign="top">virtual uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#a8d524b265411dde65b3e294abb6d8704">version</a> () const =0</td></tr>
 <tr class="separator:a8d524b265411dde65b3e294abb6d8704"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7c7079d72703db18c125c5fc33a885a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#ae7c7079d72703db18c125c5fc33a885a">evaluate</a> (bool force=false)</td></tr>
-<tr class="separator:ae7c7079d72703db18c125c5fc33a885a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6e88d13829539c3290f386d46d4ab26"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#aa6e88d13829539c3290f386d46d4ab26">evaluate</a> (bool force=false)=0</td></tr>
+<tr class="separator:aa6e88d13829539c3290f386d46d4ab26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a319e1202c617a62f96a797c7f5af5092"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#a319e1202c617a62f96a797c7f5af5092">set_collected</a> ()</td></tr>
 <tr class="separator:a319e1202c617a62f96a797c7f5af5092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf7786ed203b74132e4f3a4766690b19"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#acf7786ed203b74132e4f3a4766690b19">from_json</a> (const json &amp;j)=0</td></tr>
+<tr class="separator:acf7786ed203b74132e4f3a4766690b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7be92d6a41b32b368e555b7839d808f3"><td class="memItemLeft" align="right" valign="top">virtual json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#a7be92d6a41b32b368e555b7839d808f3">to_json</a> ()=0</td></tr>
+<tr class="separator:a7be92d6a41b32b368e555b7839d808f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -140,6 +144,8 @@ Public Attributes</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:af8c42c96937d3aec01aa9fd99a869c59"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#af8c42c96937d3aec01aa9fd99a869c59">~common</a> ()=default</td></tr>
 <tr class="separator:af8c42c96937d3aec01aa9fd99a869c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a359c21daff7dd30b4bf0da2895ffb71b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwassail_1_1data_1_1common.html#a359c21daff7dd30b4bf0da2895ffb71b">evaluate_common</a> ()</td></tr>
+<tr class="separator:a359c21daff7dd30b4bf0da2895ffb71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
@@ -237,8 +243,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="ae7c7079d72703db18c125c5fc33a885a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7c7079d72703db18c125c5fc33a885a">&#9670;&nbsp;</a></span>evaluate()</h2>
+<a id="aa6e88d13829539c3290f386d46d4ab26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6e88d13829539c3290f386d46d4ab26">&#9670;&nbsp;</a></span>evaluate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,7 +253,7 @@ Friends</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void wassail::data::common::evaluate </td>
+          <td class="memname">virtual void wassail::data::common::evaluate </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>force</em> = <code>false</code></td><td>)</td>
@@ -256,7 +262,7 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -267,7 +273,67 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classwassail_1_1data_1_1remote__shell__command.html#a6a8a27ea2d32cde4233f5b84f5bb4576">wassail::data::remote_shell_command</a>, <a class="el" href="classwassail_1_1data_1_1shell__command.html#a89d29dcff610db7a02a0854c77f6ad81">wassail::data::shell_command</a>, <a class="el" href="classwassail_1_1data_1_1stat.html#afce7f2c1dc22628fc0c29cf8cefd43cb">wassail::data::stat</a>, <a class="el" href="classwassail_1_1data_1_1getcpuid.html#afbdca58bb27893383a6341cfeec9d54c">wassail::data::getcpuid</a>, <a class="el" href="classwassail_1_1data_1_1getfsstat.html#ae4209a61953217484332768d4d4d2777">wassail::data::getfsstat</a>, <a class="el" href="classwassail_1_1data_1_1getloadavg.html#ab6281406fa45e4c0390208659343bf57">wassail::data::getloadavg</a>, <a class="el" href="classwassail_1_1data_1_1getmntent.html#af64fb34ed866560267a81b295d7291d8">wassail::data::getmntent</a>, <a class="el" href="classwassail_1_1data_1_1getrlimit.html#aac16a48e7448de1fba969aaf56e9dea6">wassail::data::getrlimit</a>, <a class="el" href="classwassail_1_1data_1_1pciaccess.html#ac37844f946a4df13dea4b6355273ba4e">wassail::data::pciaccess</a>, <a class="el" href="classwassail_1_1data_1_1pciutils.html#a23808a60e6016f1f5a76b00145a2bcd1">wassail::data::pciutils</a>, <a class="el" href="classwassail_1_1data_1_1umad.html#a72ad9595700e2e64b9113f75ce2ca72e">wassail::data::umad</a>, <a class="el" href="classwassail_1_1data_1_1uname.html#af27e60802591ffcb2649290580072508">wassail::data::uname</a>, <a class="el" href="classwassail_1_1data_1_1environment.html#aed3b9370a929a0b66937c9eb4a7e4519">wassail::data::environment</a>, <a class="el" href="classwassail_1_1data_1_1sysconf.html#ada575d7ea3f23cb0972a2b1b5aebf371">wassail::data::sysconf</a>, <a class="el" href="classwassail_1_1data_1_1sysctl.html#abb9f569fb7604f3466c5c27d1720236a">wassail::data::sysctl</a>, <a class="el" href="classwassail_1_1data_1_1sysinfo.html#a7d17a11c5561c4ff1a7e58814bc95392">wassail::data::sysinfo</a>, <a class="el" href="classwassail_1_1data_1_1nvml.html#a5228dc4e1697b2da63b68ea5522eed5e">wassail::data::nvml</a>, <a class="el" href="classwassail_1_1data_1_1udev.html#a12e219f7402323d4099515841bbb4217">wassail::data::udev</a>, and <a class="el" href="classwassail_1_1data_1_1skeleton.html#a6d221cc3da5e6e128ce4e0e53f0b02b4">wassail::data::skeleton</a>.</p>
+<p>Implemented in <a class="el" href="classwassail_1_1data_1_1remote__shell__command.html#a6a8a27ea2d32cde4233f5b84f5bb4576">wassail::data::remote_shell_command</a>, <a class="el" href="classwassail_1_1data_1_1shell__command.html#a89d29dcff610db7a02a0854c77f6ad81">wassail::data::shell_command</a>, <a class="el" href="classwassail_1_1data_1_1stat.html#afce7f2c1dc22628fc0c29cf8cefd43cb">wassail::data::stat</a>, <a class="el" href="classwassail_1_1data_1_1getcpuid.html#afbdca58bb27893383a6341cfeec9d54c">wassail::data::getcpuid</a>, <a class="el" href="classwassail_1_1data_1_1getfsstat.html#ae4209a61953217484332768d4d4d2777">wassail::data::getfsstat</a>, <a class="el" href="classwassail_1_1data_1_1getloadavg.html#ab6281406fa45e4c0390208659343bf57">wassail::data::getloadavg</a>, <a class="el" href="classwassail_1_1data_1_1getmntent.html#af64fb34ed866560267a81b295d7291d8">wassail::data::getmntent</a>, <a class="el" href="classwassail_1_1data_1_1getrlimit.html#aac16a48e7448de1fba969aaf56e9dea6">wassail::data::getrlimit</a>, <a class="el" href="classwassail_1_1data_1_1pciaccess.html#ac37844f946a4df13dea4b6355273ba4e">wassail::data::pciaccess</a>, <a class="el" href="classwassail_1_1data_1_1pciutils.html#a23808a60e6016f1f5a76b00145a2bcd1">wassail::data::pciutils</a>, <a class="el" href="classwassail_1_1data_1_1umad.html#a72ad9595700e2e64b9113f75ce2ca72e">wassail::data::umad</a>, <a class="el" href="classwassail_1_1data_1_1uname.html#af27e60802591ffcb2649290580072508">wassail::data::uname</a>, <a class="el" href="classwassail_1_1data_1_1environment.html#aed3b9370a929a0b66937c9eb4a7e4519">wassail::data::environment</a>, <a class="el" href="classwassail_1_1data_1_1sysconf.html#ada575d7ea3f23cb0972a2b1b5aebf371">wassail::data::sysconf</a>, <a class="el" href="classwassail_1_1data_1_1sysctl.html#abb9f569fb7604f3466c5c27d1720236a">wassail::data::sysctl</a>, <a class="el" href="classwassail_1_1data_1_1sysinfo.html#a7d17a11c5561c4ff1a7e58814bc95392">wassail::data::sysinfo</a>, <a class="el" href="classwassail_1_1data_1_1nvml.html#a5228dc4e1697b2da63b68ea5522eed5e">wassail::data::nvml</a>, <a class="el" href="classwassail_1_1data_1_1udev.html#a12e219f7402323d4099515841bbb4217">wassail::data::udev</a>, and <a class="el" href="classwassail_1_1data_1_1skeleton.html#a6d221cc3da5e6e128ce4e0e53f0b02b4">wassail::data::skeleton</a>.</p>
+
+</div>
+</div>
+<a id="a359c21daff7dd30b4bf0da2895ffb71b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a359c21daff7dd30b4bf0da2895ffb71b">&#9670;&nbsp;</a></span>evaluate_common()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wassail::data::common::evaluate_common </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Common evaluate routine for all data sources </p>
+
+</div>
+</div>
+<a id="acf7786ed203b74132e4f3a4766690b19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf7786ed203b74132e4f3a4766690b19">&#9670;&nbsp;</a></span>from_json()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void wassail::data::common::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const json &amp;&#160;</td>
+          <td class="paramname"><em>j</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Populate the data source from the JSON representation of the data source. This method should only be used with a pointer of type <a class="el" href="classwassail_1_1data_1_1common.html" title="Parent class for all data source building blocks. ">wassail::data::common</a>. Otherwise use the from_json friend method, e.g., </p><div class="fragment"><div class="line"><a class="code" href="classwassail_1_1data_1_1environment.html">wassail::data::environment</a> d = j; <span class="comment">// preferred</span></div><div class="line"></div><div class="line">&lt;std::shared_ptr&lt;wassail::data::common&gt; dptr =</div><div class="line">    std::make_shared&lt;wassail::data::environment&gt;();</div><div class="line">dptr-&gt;from_json(j); <span class="comment">// only for base class pointer</span></div></div><!-- fragment --> <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">j</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classwassail_1_1data_1_1mpirun.html#a5282c57343b42b843d0d58111d8569f4">wassail::data::mpirun</a>, <a class="el" href="classwassail_1_1data_1_1osu__micro__benchmarks.html#af878a7833fb2b2ee58eb1548081ec00a">wassail::data::osu_micro_benchmarks</a>, <a class="el" href="classwassail_1_1data_1_1remote__shell__command.html#a0576c1831ca939e96b19dbf115f1fdc7">wassail::data::remote_shell_command</a>, <a class="el" href="classwassail_1_1data_1_1shell__command.html#ad7a33cc1820b40334862f2f4646c3801">wassail::data::shell_command</a>, <a class="el" href="classwassail_1_1data_1_1getcpuid.html#a0e2f28695968b67228c11564495ea2a5">wassail::data::getcpuid</a>, <a class="el" href="classwassail_1_1data_1_1getfsstat.html#afc3a66ea376be19f5146dfdb2b897a4f">wassail::data::getfsstat</a>, <a class="el" href="classwassail_1_1data_1_1getloadavg.html#a683bc435ebbf98292be8369189e90402">wassail::data::getloadavg</a>, <a class="el" href="classwassail_1_1data_1_1getmntent.html#a88b0ae61b0e10bcdc78befdeab349ba3">wassail::data::getmntent</a>, <a class="el" href="classwassail_1_1data_1_1getrlimit.html#a88d2c93c145b1885896be489900859af">wassail::data::getrlimit</a>, <a class="el" href="classwassail_1_1data_1_1pciaccess.html#a5c177aa932503b722410ca59556e9f57">wassail::data::pciaccess</a>, <a class="el" href="classwassail_1_1data_1_1pciutils.html#a7f11969022da02f65b43014bfb0c14d1">wassail::data::pciutils</a>, <a class="el" href="classwassail_1_1data_1_1umad.html#aaa986f40a17fad575923752b22134548">wassail::data::umad</a>, <a class="el" href="classwassail_1_1data_1_1uname.html#ab43ad73ab14e36d8ac1b2ed66f669d62">wassail::data::uname</a>, <a class="el" href="classwassail_1_1data_1_1environment.html#a5542188d4eb74f19ee47f80194ac7c15">wassail::data::environment</a>, <a class="el" href="classwassail_1_1data_1_1sysconf.html#acfbfe64be63df925658dce36fee54d11">wassail::data::sysconf</a>, <a class="el" href="classwassail_1_1data_1_1sysctl.html#ac426d26a63f4281df974c077c4a662ff">wassail::data::sysctl</a>, <a class="el" href="classwassail_1_1data_1_1sysinfo.html#a49ce47ecf94c09463e14c0312e117635">wassail::data::sysinfo</a>, <a class="el" href="classwassail_1_1data_1_1nvml.html#ab07ca75179ae46c124a6f036f2ceea53">wassail::data::nvml</a>, <a class="el" href="classwassail_1_1data_1_1udev.html#ad3cf82077737f14e03f0552d93d981da">wassail::data::udev</a>, <a class="el" href="classwassail_1_1data_1_1stat.html#ad5f1d23be56985927626bbe3e2897cac">wassail::data::stat</a>, <a class="el" href="classwassail_1_1data_1_1skeleton.html#aa957ae4e2d4a492373665d28de5e191a">wassail::data::skeleton</a>, <a class="el" href="classwassail_1_1data_1_1stream.html#ab0ed926800820f3a73fda9897ac10338">wassail::data::stream</a>, and <a class="el" href="classwassail_1_1data_1_1ps.html#a30dc4e996bf2adee68fb98b75418aa56">wassail::data::ps</a>.</p>
 
 </div>
 </div>
@@ -314,6 +380,33 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Set the collected state to true </p>
+
+</div>
+</div>
+<a id="a7be92d6a41b32b368e555b7839d808f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7be92d6a41b32b368e555b7839d808f3">&#9670;&nbsp;</a></span>to_json()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual json wassail::data::common::to_json </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Return a JSON representation of the data source. This method should only be used with a pointer of type <a class="el" href="classwassail_1_1data_1_1common.html" title="Parent class for all data source building blocks. ">wassail::data::common</a>. Otherwise use the to_json friend method, e.g, </p><div class="fragment"><div class="line"><span class="keyword">auto</span> d = <a class="code" href="classwassail_1_1data_1_1environment.html">wassail::data::environment</a>();</div><div class="line">d.evaluate();</div><div class="line">json j1 = d; <span class="comment">// preferred</span></div><div class="line"><span class="keyword">auto</span> j2 = <span class="keyword">static_cast&lt;</span>json<span class="keyword">&gt;</span>(d); <span class="comment">// alternative</span></div><div class="line"></div><div class="line">std::shared_ptr&lt;wassail::data::common&gt; dptr =</div><div class="line">    std::make_shared&lt;wassail::data::environment&gt;();</div><div class="line">dptr-&gt;evaluate();</div><div class="line"><span class="keyword">auto</span> j3 = dptr-&gt;to_json(); <span class="comment">// only for base class pointer</span></div></div><!-- fragment --> 
+<p>Implemented in <a class="el" href="classwassail_1_1data_1_1mpirun.html#a6b98c458efd4da836d939bae653e1e98">wassail::data::mpirun</a>, <a class="el" href="classwassail_1_1data_1_1osu__micro__benchmarks.html#ad656ae3680d32a6df9782b0c57289fb5">wassail::data::osu_micro_benchmarks</a>, <a class="el" href="classwassail_1_1data_1_1remote__shell__command.html#a708135ce29827c39f355297a9acdf74f">wassail::data::remote_shell_command</a>, <a class="el" href="classwassail_1_1data_1_1shell__command.html#a9a2945c22c7ce8b631e6a12864df0db2">wassail::data::shell_command</a>, <a class="el" href="classwassail_1_1data_1_1getcpuid.html#ad16c0ea652d4202628a2283ebcd220fc">wassail::data::getcpuid</a>, <a class="el" href="classwassail_1_1data_1_1getfsstat.html#ab4ab3ba5c3b9388110a107bb96a7a50d">wassail::data::getfsstat</a>, <a class="el" href="classwassail_1_1data_1_1getloadavg.html#a4f7f74c595c8f51245f6cb4a922de11e">wassail::data::getloadavg</a>, <a class="el" href="classwassail_1_1data_1_1getmntent.html#a210be687d98e9b3f7e3bcae7769d2490">wassail::data::getmntent</a>, <a class="el" href="classwassail_1_1data_1_1getrlimit.html#a0ce769ceb7937943c05feaca5953da30">wassail::data::getrlimit</a>, <a class="el" href="classwassail_1_1data_1_1pciaccess.html#a95f71ef08f1e6fb1297f8c1f38afae9e">wassail::data::pciaccess</a>, <a class="el" href="classwassail_1_1data_1_1pciutils.html#ae4af24daebc395a8381a6191d77cad71">wassail::data::pciutils</a>, <a class="el" href="classwassail_1_1data_1_1umad.html#a1839d9eed146bac806c82e3f4226eb37">wassail::data::umad</a>, <a class="el" href="classwassail_1_1data_1_1uname.html#ac0d20f2cd147244fbc0d70296f14d9bc">wassail::data::uname</a>, <a class="el" href="classwassail_1_1data_1_1environment.html#ab8e0ac8fb9a55647095a72363d7dfe69">wassail::data::environment</a>, <a class="el" href="classwassail_1_1data_1_1sysconf.html#a9804e8f7d28c0c52c1e397a4c3a21097">wassail::data::sysconf</a>, <a class="el" href="classwassail_1_1data_1_1sysctl.html#a8d9de0c75635513e599a903456d3d6d4">wassail::data::sysctl</a>, <a class="el" href="classwassail_1_1data_1_1sysinfo.html#a9eba4924b0cdfdca5fa47910b6014ab2">wassail::data::sysinfo</a>, <a class="el" href="classwassail_1_1data_1_1nvml.html#aedb05db0e974ec2391ad8b99d50e9c82">wassail::data::nvml</a>, <a class="el" href="classwassail_1_1data_1_1udev.html#acaacc2db0e751fc4b11904f44acf4399">wassail::data::udev</a>, <a class="el" href="classwassail_1_1data_1_1skeleton.html#aeaf749ef23b9962c0243fc93021c30f6">wassail::data::skeleton</a>, <a class="el" href="classwassail_1_1data_1_1stat.html#aded7734b91da1228194157c4038f2286">wassail::data::stat</a>, <a class="el" href="classwassail_1_1data_1_1stream.html#ad16de4786f6284f91120de3a08ba4045">wassail::data::stream</a>, and <a class="el" href="classwassail_1_1data_1_1ps.html#a05116403e2a686f3e7aea02cb07f6c3c">wassail::data::ps</a>.</p>
 
 </div>
 </div>

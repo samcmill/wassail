@@ -53,7 +53,6 @@ namespace wassail {
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
        * \param[in] program MPI program to launch
-       * \param[in] mpi_impl MPI implementation
        */
       mpirun(uint32_t num_procs, std::string program)
           : mpirun(num_procs, 0, "", "", program, "", 60,
@@ -127,6 +126,11 @@ namespace wassail {
       friend void from_json(const json &j, mpirun &d);
 
       /*! JSON type conversion
+       *  \param[in] j JSON object
+       */
+      void from_json(const json &j) { *this = j; };
+
+      /*! JSON type conversion
        * \param[in,out] j JSON object
        * \param[in] d
        *
@@ -134,6 +138,9 @@ namespace wassail {
        * \include mpirun.json
        */
       friend void to_json(json &j, const mpirun &d);
+
+      /*! JSON type conversion */
+      json to_json() { return static_cast<json>(*this); };
 
     protected:
       /*! Helper to build the command line */

@@ -198,7 +198,7 @@ namespace wassail {
           return;
         }
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 
         dlclose(handle);
 #else

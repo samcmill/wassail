@@ -25,7 +25,7 @@ std::shared_timed_mutex wassail::data::common::mutex;
 
 namespace wassail {
   namespace data {
-    void common::evaluate(bool force) {
+    void common::evaluate_common() {
       hostname = get_hostname();
       timestamp = std::chrono::system_clock::now();
       uid = getuid();

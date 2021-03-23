@@ -195,6 +195,59 @@ TEST_CASE("remote_shell_command JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("remote_shell_command common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "configuration": {
+        "command": "uptime",
+        "exclusive": false,
+        "hosts": [ "node1", "node2" ],
+        "timeout": 10
+      },
+      "data": [
+        {
+          "data": {
+            "command": "uptime",
+            "elapsed": 0.011148364,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "22:53  up 17 days, 23:57, 3 users, load averages: 1.25 1.42 1.63\n"
+          },
+          "hostname": "node1",
+          "timestamp": 152894836,
+          "uid": 99
+        },
+        {
+          "data": {
+            "command": "uptime",
+            "elapsed": 0.011124915,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "22:53  up 17 days, 23:57, 3 users, load averages: 0.43 0.42 0.63\n"
+          },
+          "hostname": "node2",
+          "timestamp": 152894836,
+          "uid": 99
+        }
+      ],
+      "hostname": "localhost.local",
+      "name": "remote_shell_command",
+      "timestamp": 1528948436,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::remote_shell_command>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("remote_shell_command invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::remote_shell_command d;

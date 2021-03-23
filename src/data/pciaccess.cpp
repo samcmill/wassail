@@ -185,7 +185,7 @@ namespace wassail {
           data.devices.push_back(item);
         }
 
-        d.common::evaluate(force);
+        d.common::evaluate_common();
 
         _pci_system_cleanup();
 

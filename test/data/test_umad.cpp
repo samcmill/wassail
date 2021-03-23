@@ -99,6 +99,73 @@ TEST_CASE("umad JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("umad common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "devices": [
+          {
+            "ca_type": "MT4113",
+            "fw_ver": "10.16.1006",
+            "hw_ver": "0",
+            "name": "mlx5_0",
+            "node_guid": 1000000000000000000,
+            "node_type": 1,
+            "numports": 2,
+            "ports": [
+              {
+                "base_lid": 14,
+                "ca_name": "mlx5_0",
+                "capmask": 1214796070,
+                "gid_prefix": 33022,
+                "link_layer": "InfiniBand",
+                "lmc": 0,
+                "phys_state": 5,
+                "port_guid": 4660669261498097124,
+                "portnum": 1,
+                "rate": 56,
+                "sm_lid": 1,
+                "sm_sl": 0,
+                "state": 4
+              },
+              {
+                "base_lid": 65535,
+                "ca_name": "mlx5_0",
+                "capmask": 1214796070,
+                "gid_prefix": 33022,
+                "link_layer": "InfiniBand",
+                "lmc": 0,
+                "phys_state": 3,
+                "port_guid": 5237130013801520612,
+                "portnum": 2,
+                "rate": 10,
+                "sm_lid": 0,
+                "sm_sl": 0,
+                "state": 1
+              }
+            ],
+            "system_guid": 1000000000000000000
+          }
+        ]
+      },
+      "hostname": "localhost.local",
+      "name": "umad",
+      "timestamp": 1530420039,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::umad>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() > 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("umad invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::umad d;

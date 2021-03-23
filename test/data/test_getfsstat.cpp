@@ -74,6 +74,57 @@ TEST_CASE("getfsstat JSON conversion") {
   REQUIRE(jout == jin);
 }
 
+TEST_CASE("getfsstat common pointer JSON conversion") {
+  auto jin = R"(
+    {
+      "data": {
+        "file_systems": [
+          {
+            "bavail": 5771575,
+            "bfree": 6722834,
+            "blocks": 61228134,
+            "bsize": 4096,
+            "ffree": 9223372036853658231,
+            "files": 9223372036854775807,
+            "flags": 75550720,
+            "fstypename": "apfs",
+            "mntfromname": "/dev/disk1s1",
+            "mntonname": "/",
+            "owner": 0
+          },
+          {
+            "bavail": 0,
+            "bfree": 0,
+            "blocks": 0,
+            "bsize": 1024,
+            "ffree": 0,
+            "files": 0,
+            "flags": 72351744,
+            "fstypename": "apfs",
+            "mntfromname": "map auto_home",
+            "mntonname": "/home",
+            "owner": 0
+          }
+        ]
+      },
+      "hostname": "localhost.local",
+      "name": "getfsstat",
+      "timestamp": 1529033551,
+      "uid": 99,
+      "version": 100
+    }
+  )"_json;
+
+  std::shared_ptr<wassail::data::common> d =
+      std::make_shared<wassail::data::getfsstat>();
+
+  d->from_json(jin);
+  json jout = d->to_json();
+
+  REQUIRE(jout.size() != 0);
+  REQUIRE(jout == jin);
+}
+
 TEST_CASE("getfsstat invalid JSON conversion") {
   auto jin = R"({ "name": "invalid" })"_json;
   wassail::data::getfsstat d;

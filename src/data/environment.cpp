@@ -81,7 +81,7 @@ namespace wassail {
             }
           }
 
-          d.common::evaluate(force);
+          d.common::evaluate_common();
         }
 #else
         throw std::runtime_error("environment data source is not available");
