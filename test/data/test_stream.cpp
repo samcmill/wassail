@@ -18,7 +18,7 @@
 TEST_CASE("stream basic usage") {
   auto d = wassail::data::stream();
 
-  REQUIRE(d.command == std::string(LIBEXECDIR) + "/stream");
+  REQUIRE(d.command == std::string(WASSAIL_LIBEXECDIR) + "/stream");
 
   if (d.enabled()) {
     d.evaluate();
@@ -159,7 +159,8 @@ TEST_CASE("stream factory evaluate") {
      * the specially defined value used when building this test.  Therefore
      * unless the package has been installed, the stream binary will not be
      * found. */
-    if (jout["data"]["command"] == std::string(LIBEXECDIR) + "/stream" or
+    if (jout["data"]["command"] ==
+            std::string(WASSAIL_LIBEXECDIR) + "/stream" or
         jout["data"]["returncode"] == 0) {
       REQUIRE(jout["data"]["triad"] >= 1);
     }

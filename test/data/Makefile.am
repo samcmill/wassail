@@ -45,7 +45,7 @@ nvml_test_SOURCES = test_nvml.cpp
 
 check_PROGRAMS += osu_micro_benchmarks.test
 osu_micro_benchmarks_test_SOURCES = test_osu_micro_benchmarks.cpp
-osu_micro_benchmarks_test_CXXFLAGS = -DLIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty"'
+osu_micro_benchmarks_test_CXXFLAGS = -DWASSAIL_LIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty"'
 
 check_PROGRAMS += pciaccess.test
 pciaccess_test_SOURCES = test_pciaccess.cpp
@@ -67,7 +67,7 @@ stat_test_SOURCES = test_stat.cpp
 
 check_PROGRAMS += stream.test
 stream_test_SOURCES = test_stream.cpp
-stream_test_CXXFLAGS = -DLIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty/stream"'
+stream_test_CXXFLAGS = -DWASSAIL_LIBEXECDIR='"$(abs_top_srcdir)/src/3rdparty/stream"'
 
 check_PROGRAMS += sysconf.test
 sysconf_test_SOURCES = test_sysconf.cpp

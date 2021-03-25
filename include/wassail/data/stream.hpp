@@ -12,8 +12,8 @@
 #include <string>
 #include <wassail/data/shell_command.hpp>
 
-#ifndef LIBEXECDIR
-#define LIBEXECDIR "/usr/libexec/wassail"
+#ifndef WASSAIL_LIBEXECDIR
+#define WASSAIL_LIBEXECDIR "/usr/libexec/wassail"
 #endif
 
 namespace wassail {
@@ -24,7 +24,7 @@ namespace wassail {
     class stream final : public wassail::data::shell_command {
     public:
       /* STREAM memory benchmark */
-      stream() : shell_command(std::string(LIBEXECDIR) + "/stream", 5) {
+      stream() : shell_command(std::string(WASSAIL_LIBEXECDIR) + "/stream", 5) {
         exclusive = true;
       };
 

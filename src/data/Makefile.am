@@ -1,5 +1,5 @@
 AM_CPPFLAGS = $(CODE_COVERAGE_CPPFLAGS)
-AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS) -DLIBEXECDIR='"$(libexecdir)/$(PACKAGE)"'
+AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS)
 
 schemadir = $(pkgdatadir)/schemas
 dist_schema_DATA =

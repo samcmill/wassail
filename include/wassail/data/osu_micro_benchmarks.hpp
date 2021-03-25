@@ -12,8 +12,8 @@
 #include <string>
 #include <wassail/data/mpirun.hpp>
 
-#ifndef LIBEXECDIR
-#define LIBEXECDIR "/usr/libexec/wassail"
+#ifndef WASSAIL_LIBEXECDIR
+#define WASSAIL_LIBEXECDIR "/usr/libexec/wassail"
 #endif
 
 namespace wassail {
@@ -145,8 +145,9 @@ namespace wassail {
       uint16_t version() const { return 100; };
 
       /*! Table lookup to map osu_benchmark_t to program string */
-      std::string osu_program(osu_benchmark_t osu_benchmark,
-                              std::string libexecdir = std::string(LIBEXECDIR));
+      std::string
+      osu_program(osu_benchmark_t osu_benchmark,
+                  std::string libexecdir = std::string(WASSAIL_LIBEXECDIR));
     };
   } // namespace data
 } // namespace wassail

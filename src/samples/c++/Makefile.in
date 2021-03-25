@@ -6,7 +6,7 @@ libexecdir := @libexecdir@/@PACKAGE@
 
 CXX := @CXX@
 CXXFLAGS := -I$(includedir) @CXXFLAGS@
-DEFS := -DLIBEXECDIR='"$(libexecdir)"'
+DEFS := -DWASSAIL_LIBEXECDIR='"$(libexecdir)"'
 LDFLAGS := -L$(libdir) @LDFLAGS@
 LIBS := -lwassail @LIBS@
 RM := rm -rf

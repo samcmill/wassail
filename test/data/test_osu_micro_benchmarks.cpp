@@ -21,12 +21,12 @@ TEST_CASE("osu_init basic usage") {
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command ==
             "mpirun -n 2 --allow-run-as-root -x MPIEXEC_TIMEOUT=60 " +
-                std::string(LIBEXECDIR) +
+                std::string(WASSAIL_LIBEXECDIR) +
                 "/osu-micro-benchmarks/mpi/startup/osu_init");
   }
   else {
     REQUIRE(d.command == "mpirun -n 2 -x MPIEXEC_TIMEOUT=60 " +
-                             std::string(LIBEXECDIR) +
+                             std::string(WASSAIL_LIBEXECDIR) +
                              "/osu-micro-benchmarks/mpi/startup/osu_init");
   }
 }
@@ -38,12 +38,12 @@ TEST_CASE("osu_hello basic usage") {
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command ==
             "mpirun -n 4 --allow-run-as-root -x MPIEXEC_TIMEOUT=60 " +
-                std::string(LIBEXECDIR) +
+                std::string(WASSAIL_LIBEXECDIR) +
                 "/osu-micro-benchmarks/mpi/startup/osu_hello");
   }
   else {
     REQUIRE(d.command == "mpirun -n 4 -x MPIEXEC_TIMEOUT=60 " +
-                             std::string(LIBEXECDIR) +
+                             std::string(WASSAIL_LIBEXECDIR) +
                              "/osu-micro-benchmarks/mpi/startup/osu_hello");
   }
 }
@@ -56,13 +56,13 @@ TEST_CASE("osu_bw basic usage") {
   if (getuid() == 0 and d.allow_run_as_root) {
     REQUIRE(d.command == "mpirun -n 2 --npernode 1 -f hostfile "
                          "--allow-run-as-root -x MPIEXEC_TIMEOUT=60 " +
-                             std::string(LIBEXECDIR) +
+                             std::string(WASSAIL_LIBEXECDIR) +
                              "/osu-micro-benchmarks/mpi/pt2pt/osu_bw");
   }
   else {
     REQUIRE(d.command ==
             "mpirun -n 2 --npernode 1 -f hostfile -x MPIEXEC_TIMEOUT=60 " +
-                std::string(LIBEXECDIR) +
+                std::string(WASSAIL_LIBEXECDIR) +
                 "/osu-micro-benchmarks/mpi/pt2pt/osu_bw");
   }
 }
