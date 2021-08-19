@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-18.04, ubuntu-16.04]
+        os: [ubuntu-20.04, ubuntu-18.04]
         compiler: [gcc, clang]
         mpi: [mpich, openmpi]
     
@@ -24,14 +24,7 @@ jobs:
         else
           sudo apt-get install -y libopenmpi-dev openmpi-bin
         fi
-        if [ "${{ matrix.os }}" = "ubuntu-16.04" ]; then
-          sudo apt-get install -y gnupg-curl pciutils-dev
-          sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-          sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/ /"
-          sudo apt-get update -y
-          sudo apt-get install -y cuda-nvml-dev-10-1
-          echo "CPATH=/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
-        elif [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
           sudo apt-get install -y pciutils-dev
           sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
           sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
