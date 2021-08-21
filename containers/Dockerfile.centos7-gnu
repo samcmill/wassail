@@ -1,10 +1,24 @@
 # wassail container
 
-FROM centos:8
+FROM centos:7
 
-RUN yum install -y dnf-utils && \
-    yum-config-manager --set-enabled PowerTools && \
+# GNU compiler
+RUN yum install -y centos-release-scl && \
     yum install -y \
+        devtoolset-7-gcc \
+        devtoolset-7-gcc-c++ && \
+    rm -rf /var/cache/yum/*
+RUN update-alternatives --install /usr/bin/g++ g++ /opt/rh/devtoolset-7/root/usr/bin/g++ 30 && \
+    update-alternatives --install /usr/bin/gcc gcc /opt/rh/devtoolset-7/root/usr/bin/gcc 30 && \
+    update-alternatives --install /usr/bin/gcov gcov /opt/rh/devtoolset-7/root/usr/bin/gcov 30
+
+# Python
+RUN yum install -y \
+        python3 \
+        python3-devel && \
+    rm -rf /var/cache/yum/*
+
+RUN yum install -y \
         autoconf \
         autoconf-archive \
         automake \
@@ -14,18 +28,6 @@ RUN yum install -y dnf-utils && \
         git \
         libtool \
         make && \
-    rm -rf /var/cache/yum/*
-
-# Python
-RUN yum install -y \
-        python3 \
-        python3-devel && \
-    rm -rf /var/cache/yum/*
-
-# GNU compiler
-RUN yum install -y \
-        gcc \
-        gcc-c++ && \
     rm -rf /var/cache/yum/*
 
 RUN yum install -y \

@@ -1,8 +1,26 @@
 # wassail container
 
-FROM centos:7
+FROM centos:8
 
+# LLVM compiler
 RUN yum install -y \
+        gcc \
+        gcc-c++ && \
+    rm -rf /var/cache/yum/*
+RUN yum install -y \
+        clang && \
+    rm -rf /var/cache/yum/*
+ENV CPATH=/usr/lib/gcc/x86_64-redhat-linux/8/include:$CPATH
+
+# Python
+RUN yum install -y \
+        python3 \
+        python3-devel && \
+    rm -rf /var/cache/yum/*
+
+RUN yum install -y dnf-utils && \
+    yum-config-manager --set-enabled powertools && \
+    yum install -y \
         autoconf \
         autoconf-archive \
         automake \
@@ -13,20 +31,6 @@ RUN yum install -y \
         libtool \
         make && \
     rm -rf /var/cache/yum/*
-
-# Python
-RUN yum install -y \
-        python3 \
-        python3-devel && \
-    rm -rf /var/cache/yum/*
-
-# GNU compiler
-RUN yum install -y centos-release-scl && \
-    yum install -y \
-        devtoolset-7-gcc \
-        devtoolset-7-gcc-c++ && \
-    rm -rf /var/cache/yum/*
-ENV PATH=/opt/rh/devtoolset-7/root/usr/bin:$PATH
 
 RUN yum install -y \
         libpciaccess-devel \
@@ -41,7 +45,7 @@ RUN yum install -y \
 RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
     cd /var/tmp/wassail && \
     ./autogen.sh && \
-    cd /var/tmp/wassail &&  CC=gcc CXX=g++ ./configure --prefix=/usr/local && \
+    cd /var/tmp/wassail &&  CC=clang CXX=clang++ ./configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make -j$(nproc) check && \
     make -j$(nproc) install && \

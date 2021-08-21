@@ -1,0 +1,46 @@
+name: Container build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container:
+          - centos7-gnu
+          - centos7-llvm
+          - centos8-gnu
+          - centos8-llvm
+          - nvhpc
+          - oneapi
+          - rockylinux8-gnu
+          - rockylinux8-llvm
+          - ubuntu16-gcc
+          - ubuntu16-llvm
+          - ubuntu18-gcc
+          - ubuntu18-llvm
+          - ubuntu20-gcc
+          - ubuntu20-llvm
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build container
+      uses: docker/build-push-action@v2
+      with:
+        context: ./containers
+        file: ./containers/Dockerfile.${{ matrix.container }}
+        platforms: linux/amd64
+        push: false
+        tags: wassail:${{ matrix.container }}

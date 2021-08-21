@@ -1,0 +1,55 @@
+# wassail container
+
+FROM ubuntu:20.04
+
+# LLVM compiler
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        clang \
+        libomp-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Python
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3 \
+        python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libtool \
+        make && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libdispatch-dev \
+        libibumad-dev \
+        libopenmpi-dev \
+        libpciaccess-dev \
+        libssh-dev \
+        libudev-dev \
+        openmpi-bin && \
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/samcmill/wassail
+RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
+    cd /var/tmp/wassail && \
+    ./autogen.sh && \
+    cd /var/tmp/wassail &&  CC=clang CXX=clang++ ./configure --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make -j$(nproc) check && \
+    make -j$(nproc) install && \
+    rm -rf /var/tmp/wassail
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+
