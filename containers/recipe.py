@@ -16,13 +16,12 @@ elif toolset == 'oneapi':
 else:
   if image == 'ubuntu:20.04':
     Stage0 += baseimage(image='ubuntu:20.04')
-    apt = ['libopenmpi-dev', 'openmpi-bin']
   elif image == 'ubuntu:18.04':
     Stage0 += baseimage(image='ubuntu:18.04')
-    apt = ['libopenmpi-dev', 'openmpi-bin', 'pciutils-dev']
+    apt = ['pciutils-dev']
   elif image == 'ubuntu:16.04':
     Stage0 += baseimage(image='ubuntu:16.04')
-    apt = ['libopenmpi-dev', 'openmpi-bin', 'pciutils-dev']
+    apt = ['pciutils-dev']
   elif image == 'centos:8':
     Stage0 += baseimage(image='centos:8')
   elif image == 'rockylinux:8':
@@ -37,6 +36,7 @@ else:
       compiler = gnu(fortran=False, version='7')
     else:
       compiler = gnu(fortran=False)
+      apt.extend(['libopenmpi-dev', 'openmpi-bin'])
   elif toolset == 'llvm':
     compiler = llvm()
   else:

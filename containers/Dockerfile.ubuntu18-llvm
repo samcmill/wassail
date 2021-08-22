@@ -33,11 +33,9 @@ RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         libdispatch-dev \
         libibumad-dev \
-        libopenmpi-dev \
         libpciaccess-dev \
         libssh-dev \
         libudev-dev \
-        openmpi-bin \
         pciutils-dev && \
     rm -rf /var/lib/apt/lists/*
 
