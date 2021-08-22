@@ -20,11 +20,11 @@ jobs:
           - oneapi
           - rockylinux8-gnu
           - rockylinux8-llvm
-          - ubuntu16-gcc
+          - ubuntu16-gnu
           - ubuntu16-llvm
-          - ubuntu18-gcc
+          - ubuntu18-gnu
           - ubuntu18-llvm
-          - ubuntu20-gcc
+          - ubuntu20-gnu
           - ubuntu20-llvm
     
     steps:
