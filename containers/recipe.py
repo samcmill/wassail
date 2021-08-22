@@ -64,9 +64,11 @@ Stage0 += packages(apt=apt,
                    yum=['libpciaccess-devel', 'libssh-devel', 'pciutils-devel',
                         'rdma-core-devel', 'systemd-devel', 'tbb'])
 
-Stage0 += generic_autotools(branch='master', check=True,
-                            preconfigure=['./autogen.sh'],
-                            repository='https://github.com/samcmill/wassail',
-                            toolchain=toolchain)
-Stage0 += environment(variables={'LD_LIBRARY_PATH':
-                                 '/usr/local/lib:$LD_LIBRARY_PATH'})
+Stage0 += generic_autotools(
+  branch='master',
+  check=True,
+  devel_environment={'LD_LIBRARY_PATH': '/usr/local/lib:$LD_LIBRARY_PATH'},
+  preconfigure=['./autogen.sh'],
+  repository='https://github.com/samcmill/wassail',
+  runtime_environment={'LD_LIBRARY_PATH': '/usr/local/lib:$LD_LIBRARY_PATH'},
+  toolchain=toolchain)

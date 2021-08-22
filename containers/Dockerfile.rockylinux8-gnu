@@ -46,7 +46,6 @@ RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master http
     make -j$(nproc) check && \
     make -j$(nproc) install && \
     rm -rf /var/tmp/wassail
-
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 
