@@ -29,7 +29,8 @@ dnl Internal logger
 AC_DEFINE(LOGGER, "wassail_logger", [Logger name])
 AC_DEFINE(SPDLOG_FMT_EXTERNAL, [], [Use external fmtlib with spdlog])
 
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+dnl Use serial-tests to get more verbose output
+AM_INIT_AUTOMAKE([-Wall -Werror foreign serial-tests])
 
 AC_CONFIG_MACRO_DIRS([m4])
 m4_include([m4/ax_check_compile_flag.m4])
