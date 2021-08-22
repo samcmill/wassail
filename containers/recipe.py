@@ -38,7 +38,10 @@ else:
       compiler = gnu(fortran=False)
       apt.extend(['libopenmpi-dev', 'openmpi-bin'])
   elif toolset == 'llvm':
-    compiler = llvm()
+    if image == 'centos:7':
+      compiler = llvm(version='7')
+    else:
+      compiler = llvm()
   else:
     raise RuntimeError('unrecognized toolset')
 
