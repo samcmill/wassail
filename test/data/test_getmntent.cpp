@@ -9,6 +9,7 @@
 #include "3rdparty/catch/catch.hpp"
 #include "3rdparty/catch/catch_reporter_automake.hpp"
 
+#include <sys/stat.h>
 #include <wassail/data/getmntent.hpp>
 
 TEST_CASE("getmntent basic usage") {
@@ -17,7 +18,14 @@ TEST_CASE("getmntent basic usage") {
   if (d.enabled()) {
     d.evaluate();
     json j = d;
-    REQUIRE(j["data"]["file_systems"].size() >= 1);
+    struct stat s;
+    if (stat("/etc/mtab", &s) == 0) {
+      /* will only pass on machines that actually have a mtab */
+      REQUIRE(j["data"]["file_systems"].size() > 0);
+    }
+    else {
+      REQUIRE(j["data"]["file_systems"].size() == 0);
+    }
   }
   else {
     REQUIRE_THROWS(d.evaluate());
@@ -127,6 +135,14 @@ TEST_CASE("getmntent factory evaluate") {
   if (not jout.is_null()) {
     REQUIRE(jout["name"] == "getmntent");
     REQUIRE(jout.count("data") == 1);
-    REQUIRE(jout["data"]["file_systems"].size() >= 1);
+
+    struct stat s;
+    if (stat("/etc/mtab", &s) == 0) {
+      /* will only pass on machines that actually have a mtab */
+      REQUIRE(jout["data"]["file_systems"].size() >= 1);
+    }
+    else {
+      REQUIRE(jout["data"]["file_systems"].size() == 0);
+    }
   }
 }
