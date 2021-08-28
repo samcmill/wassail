@@ -1,12 +1,16 @@
 # wassail container
 
-FROM rockylinux/rockylinux:8
+FROM amazonlinux:2
 
-# GNU compiler
+# LLVM compiler
 RUN yum install -y \
         gcc \
         gcc-c++ && \
     rm -rf /var/cache/yum/*
+RUN yum install -y \
+        clang && \
+    rm -rf /var/cache/yum/*
+ENV CPATH=/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include:$CPATH
 
 # Python
 RUN yum install -y \
@@ -14,9 +18,7 @@ RUN yum install -y \
         python3-devel && \
     rm -rf /var/cache/yum/*
 
-RUN yum install -y dnf-utils && \
-    yum-config-manager --set-enabled powertools && \
-    yum install -y \
+RUN yum install -y \
         autoconf \
         autoconf-archive \
         automake \
@@ -42,7 +44,7 @@ RUN yum install -y \
 RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch master https://github.com/samcmill/wassail wassail && cd - && \
     cd /var/tmp/wassail && \
     ./autogen.sh && \
-    cd /var/tmp/wassail &&  CC=gcc CXX=g++ ./configure --prefix=/usr/local && \
+    cd /var/tmp/wassail &&  CC=clang CXX=clang++ ./configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make -j$(nproc) check && \
     make -j$(nproc) install && \

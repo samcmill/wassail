@@ -26,6 +26,8 @@ else:
     Stage0 += baseimage(image='centos:8')
   elif image == 'rockylinux:8':
     Stage0 += baseimage(image='rockylinux/rockylinux:8')
+  elif image == 'amazonlinux:2':
+    Stage0 += baseimage(image='amazonlinux:2', _distro='centos7')
   elif image == 'centos:7':
     Stage0 += baseimage(image='centos:7')
   else:
@@ -62,7 +64,7 @@ apt.extend(['libdispatch-dev', 'libibumad-dev', 'libpciaccess-dev',
             'libssh-dev', 'libudev-dev'])
 Stage0 += packages(apt=apt,
                    yum=['libpciaccess-devel', 'libssh-devel', 'pciutils-devel',
-                        'rdma-core-devel', 'systemd-devel', 'tbb'])
+                        'procps', 'rdma-core-devel', 'systemd-devel', 'tbb'])
 
 Stage0 += generic_autotools(
   branch='master',

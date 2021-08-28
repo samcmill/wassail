@@ -38,6 +38,7 @@ RUN yum install -y \
         libpciaccess-devel \
         libssh-devel \
         pciutils-devel \
+        procps \
         rdma-core-devel \
         systemd-devel \
         tbb && \
