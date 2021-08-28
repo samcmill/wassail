@@ -45,7 +45,7 @@ class Test(unittest.TestCase):
         r2 = c2.check(j)
         self.assertEqual(r2.issue, wassail.issue_t.NO)
 
-        c3 = wassail.check.misc.load_average(1.1234, wassail.check.misc.load_average.minute_t.FIFTEEN, "Brief {0}", "{1} > {2}", ":shrug:", "{1} <= {2}")
+        c3 = wassail.check.misc.load_average(1.1234, wassail.check.misc.load_average.minute_t.FIFTEEN, "Brief {0}", "{1:6.5f} > {2}", ":shrug:", "{1:6.5f} <= {2}")
         r3 = c3.check(j)
         self.assertEqual(r3.issue, wassail.issue_t.YES)
         self.assertEqual(r3.brief, "Brief 15")
@@ -75,7 +75,7 @@ class Test(unittest.TestCase):
         r2 = c2.check(j)
         self.assertEqual(r2.issue, wassail.issue_t.NO)
 
-        c3 = wassail.check.misc.load_average(1.5678, wassail.check.misc.load_average.minute_t.FIFTEEN, "Brief {0}", "{1} > {2}", ":shrug:", "{1} <= {2}")
+        c3 = wassail.check.misc.load_average(1.5678, wassail.check.misc.load_average.minute_t.FIFTEEN, "Brief {0}", "{1:6.5f} > {2}", ":shrug:", "{1:6.5f} <= {2}")
         r3 = c3.check(j)
         self.assertEqual(r3.issue, wassail.issue_t.NO)
         self.assertEqual(r3.brief, "Brief 15")
