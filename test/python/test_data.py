@@ -339,7 +339,7 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
-    def test_name_factory(self):
+    def test_uname_factory(self):
         """factory uname data source"""
         jin = {'name': 'uname'}
         jout = wassail.data.evaluate(jin)
