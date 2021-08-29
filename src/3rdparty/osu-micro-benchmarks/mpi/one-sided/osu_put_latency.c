@@ -1,6 +1,6 @@
 #define BENCHMARK "OSU MPI_Put%s Latency Test"
 /*
- * Copyright (C) 2003-2019 the Network-Based Computing Laboratory
+ * Copyright (C) 2003-2021 the Network-Based Computing Laboratory
  * (NBCL), The Ohio State University.            
  *
  * Contact: Dr. D. K. Panda (panda@cse.ohio-state.edu)
@@ -12,7 +12,7 @@
 #include <osu_util_mpi.h>
 
 double  t_start = 0.0, t_end = 0.0;
-char    *sbuf=NULL, *rbuf=NULL;
+char    *sbuf=NULL, *win_base = NULL;
 
 void print_latency (int, int);
 void run_put_with_lock (int, enum WINDOW);
@@ -95,8 +95,8 @@ int main (int argc, char *argv[])
             break;
     }
 
-    if(nprocs != 2) {
-        if(rank == 0) {
+    if (nprocs != 2) {
+        if (rank == 0) {
             fprintf(stderr, "This test requires exactly two processes\n");
         }
 
@@ -107,7 +107,7 @@ int main (int argc, char *argv[])
 
     print_header_one_sided(rank, options.win, options.sync);
 
-    switch (options.sync){
+    switch (options.sync) {
         case LOCK:
             run_put_with_lock(rank, options.win);
             break;
@@ -160,18 +160,18 @@ void run_put_with_flush_local (int rank, enum WINDOW type)
     MPI_Win     win;
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
         if (type == WIN_DYNAMIC) {
             disp = disp_remote;
         }
 
-        if(size > LARGE_MESSAGE_SIZE) {
+        if (size > LARGE_MESSAGE_SIZE) {
             options.iterations = options.iterations_large;
             options.skip = options.skip_large;
         }
 
-        if(rank == 0) {
+        if (rank == 0) {
             MPI_CHECK(MPI_Win_lock(MPI_LOCK_SHARED, 1, 0, win));
             for (i = 0; i < options.skip + options.iterations; i++) {
                 if (i == options.skip) {
@@ -188,7 +188,7 @@ void run_put_with_flush_local (int rank, enum WINDOW type)
 
         print_latency(rank, size);
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
 }
 
@@ -200,18 +200,18 @@ void run_put_with_flush (int rank, enum WINDOW type)
     MPI_Win     win;
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
         if (type == WIN_DYNAMIC) {
             disp = disp_remote;
         }
 
-        if(size > LARGE_MESSAGE_SIZE) {
+        if (size > LARGE_MESSAGE_SIZE) {
             options.iterations = options.iterations_large;
             options.skip = options.skip_large;
         }
 
-        if(rank == 0) {
+        if (rank == 0) {
             MPI_CHECK(MPI_Win_lock(MPI_LOCK_SHARED, 1, 0, win));
             for (i = 0; i < options.skip + options.iterations; i++) {
                 if (i == options.skip) {
@@ -228,7 +228,7 @@ void run_put_with_flush (int rank, enum WINDOW type)
 
         print_latency(rank, size);
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
 }
 
@@ -240,18 +240,18 @@ void run_put_with_lock_all (int rank, enum WINDOW type)
     MPI_Win     win;
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
         if (type == WIN_DYNAMIC) {
             disp = disp_remote;
         }
 
-        if(size > LARGE_MESSAGE_SIZE) {
+        if (size > LARGE_MESSAGE_SIZE) {
             options.iterations = options.iterations_large;
             options.skip = options.skip_large;
         }
 
-        if(rank == 0) {
+        if (rank == 0) {
             for (i = 0; i < options.skip + options.iterations; i++) {
                 if (i == options.skip) {
                     t_start = MPI_Wtime ();
@@ -267,7 +267,7 @@ void run_put_with_lock_all (int rank, enum WINDOW type)
 
         print_latency(rank, size);
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
 }
 #endif 
@@ -280,7 +280,7 @@ void run_put_with_lock(int rank, enum WINDOW type)
     MPI_Win     win;
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
 #if MPI_VERSION >= 3
         if (type == WIN_DYNAMIC) {
@@ -288,12 +288,12 @@ void run_put_with_lock(int rank, enum WINDOW type)
         }
 #endif
 
-        if(size > LARGE_MESSAGE_SIZE) {
+        if (size > LARGE_MESSAGE_SIZE) {
             options.iterations = options.iterations_large;
             options.skip = options.skip_large;
         }
 
-        if(rank == 0) {
+        if (rank == 0) {
             for (i = 0; i < options.skip + options.iterations; i++) {
                 if (i == options.skip) {
                     t_start = MPI_Wtime ();
@@ -309,7 +309,7 @@ void run_put_with_lock(int rank, enum WINDOW type)
 
         print_latency(rank, size);
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
 }
 
@@ -321,7 +321,7 @@ void run_put_with_fence(int rank, enum WINDOW type)
     MPI_Win     win;
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
 #if MPI_VERSION >= 3
         if (type == WIN_DYNAMIC) {
@@ -329,14 +329,14 @@ void run_put_with_fence(int rank, enum WINDOW type)
         }
 #endif
 
-        if(size > LARGE_MESSAGE_SIZE) {
+        if (size > LARGE_MESSAGE_SIZE) {
             options.iterations = options.iterations_large;
             options.skip = options.skip_large;
         }
 
         MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
 
-        if(rank == 0) {
+        if (rank == 0) {
             for (i = 0; i < options.skip + options.iterations; i++) {
                 if (i == options.skip) {
                     t_start = MPI_Wtime ();
@@ -364,7 +364,7 @@ void run_put_with_fence(int rank, enum WINDOW type)
             fflush(stdout);
         }
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
 }
 
@@ -379,7 +379,7 @@ void run_put_with_pscw(int rank, enum WINDOW type)
     MPI_CHECK(MPI_Comm_group(MPI_COMM_WORLD, &comm_group));
 
     for (size = options.min_message_size; size <= options.max_message_size; size = (size ? size * 2 : 1)) {
-        allocate_memory_one_sided(rank, &sbuf, &rbuf, &sbuf, size, type, &win);
+        allocate_memory_one_sided(rank, &sbuf, &win_base, size, type, &win);
 
 #if MPI_VERSION >= 3
         if (type == WIN_DYNAMIC) {
@@ -436,7 +436,7 @@ void run_put_with_pscw(int rank, enum WINDOW type)
 
         MPI_CHECK(MPI_Group_free(&group));
 
-        free_memory_one_sided (sbuf, rbuf, win, rank);
+        free_memory_one_sided (sbuf, win_base, type, win, rank);
     }
     MPI_CHECK(MPI_Group_free(&comm_group));
 }

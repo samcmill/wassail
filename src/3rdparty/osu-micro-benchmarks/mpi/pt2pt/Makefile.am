@@ -1,10 +1,11 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
 NVCC = nvcc
-NVCFLAGS = -cuda -maxrregcount 32 -ccbin $(CXX)
+NVCFLAGS = -cuda -maxrregcount 32 -ccbin $(CXX) $(NVCCFLAGS)
 SUFFIXES = .cu .cpp
 .cu.cpp:
-	$(NVCC) $(NVCFLAGS) $(INCLUDES) $(CPPFLAGS) --output-file $@ $<
+	$(NVCC) $(NVCFLAGS) $(INCLUDES) $(CPPFLAGS) --output-file $@.ii $<
+	mv $@.ii $@
 
 pt2ptdir = $(pkglibexecdir)/mpi/pt2pt
 pt2pt_PROGRAMS = osu_bibw osu_bw osu_latency osu_mbw_mr osu_multi_lat
@@ -29,9 +30,11 @@ osu_multi_lat_SOURCES = osu_multi_lat.c
 osu_multi_lat_LDADD = $(top_builddir)/util/libutil.la
 osu_latency_mt_SOURCES = osu_latency_mt.c
 osu_latency_mt_LDADD = $(top_builddir)/util/libutil.la
+osu_latency_mp_SOURCES = osu_latency_mp.c
+osu_latency_mp_LDADD = $(top_builddir)/util/libutil.la
 
 if MPI2_LIBRARY
-    pt2pt_PROGRAMS += osu_latency_mt 
+    pt2pt_PROGRAMS += osu_latency_mt osu_latency_mp
 endif
 
 if EMBEDDED_BUILD

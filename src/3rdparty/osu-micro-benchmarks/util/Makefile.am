@@ -12,6 +12,10 @@ if MPI
 libutil_la_SOURCES += osu_util_mpi.c osu_util_mpi.h
 endif
 
+if NCCL
+libutil_la_SOURCES += osu_util_nccl.c osu_util_nccl.h
+endif
+
 if OSHM
 libutil_la_SOURCES += osu_util_pgas.c osu_util_pgas.h
 endif

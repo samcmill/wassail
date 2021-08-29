@@ -1,5 +1,5 @@
 diff --git a/src/3rdparty/osu-micro-benchmarks/Makefile.am b/src/3rdparty/osu-micro-benchmarks/Makefile.am
-index fc5c447..daa7cfe 100644
+index 0a9c675..0f451b3 100644
 --- a/src/3rdparty/osu-micro-benchmarks/Makefile.am
 +++ b/src/3rdparty/osu-micro-benchmarks/Makefile.am
 @@ -1,4 +1,4 @@
@@ -9,21 +9,21 @@ index fc5c447..daa7cfe 100644
  if CUDA
      dist_pkglibexec_SCRIPTS = get_local_rank
 diff --git a/src/3rdparty/osu-micro-benchmarks/configure.ac b/src/3rdparty/osu-micro-benchmarks/configure.ac
-index 3da6339..fd03bfb 100644
+index 903f6cc..5dc4669 100644
 --- a/src/3rdparty/osu-micro-benchmarks/configure.ac
 +++ b/src/3rdparty/osu-micro-benchmarks/configure.ac
-@@ -141,5 +141,5 @@ AC_DEFINE([FLOAT_PRECISION], [2], [Precision of reported numbers])
+@@ -209,5 +209,5 @@ AC_DEFINE([FLOAT_PRECISION], [2], [Precision of reported numbers])
  
  AC_CONFIG_FILES([Makefile mpi/Makefile mpi/pt2pt/Makefile mpi/startup/Makefile
-                  mpi/one-sided/Makefile mpi/collective/Makefile
--                 openshmem/Makefile upc/Makefile upcxx/Makefile])
-+                 openshmem/Makefile upc/Makefile upcxx/Makefile util/Makefile])
+                  mpi/one-sided/Makefile mpi/collective/Makefile openshmem/Makefile 
+-                 upc/Makefile upcxx/Makefile nccl/Makefile nccl/collective/Makefile nccl/pt2pt/Makefile])
++                 upc/Makefile upcxx/Makefile nccl/Makefile nccl/collective/Makefile nccl/pt2pt/Makefile util/Makefile])
  AC_OUTPUT
 diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
-index e7bb87c..61f7d6c 100644
+index 79924ce..e0bc762 100644
 --- a/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
 +++ b/src/3rdparty/osu-micro-benchmarks/mpi/collective/Makefile.am
-@@ -11,40 +11,64 @@ collective_PROGRAMS = osu_alltoallv osu_allgatherv osu_scatterv osu_gatherv osu_
+@@ -12,40 +12,64 @@ collective_PROGRAMS = osu_alltoallv osu_allgatherv osu_scatterv osu_gatherv osu_
  
  AM_CFLAGS = -I${top_srcdir}/util
  
@@ -117,10 +117,10 @@ index e7bb87c..61f7d6c 100644
  if EMBEDDED_BUILD
      AM_LDFLAGS =
 diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
-index 19963af..86b3e55 100644
+index 687b0d5..fcc5afc 100644
 --- a/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
 +++ b/src/3rdparty/osu-micro-benchmarks/mpi/one-sided/Makefile.am
-@@ -15,23 +15,30 @@ endif
+@@ -16,23 +16,30 @@ endif
  
  AM_CFLAGS = -I${top_srcdir}/util
  
@@ -163,10 +163,10 @@ index 19963af..86b3e55 100644
  if EMBEDDED_BUILD
      AM_LDFLAGS =
 diff --git a/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am b/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
-index 17f85a4..53a54d1 100644
+index f484efa..8e10d76 100644
 --- a/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
 +++ b/src/3rdparty/osu-micro-benchmarks/mpi/pt2pt/Makefile.am
-@@ -11,21 +11,24 @@ pt2pt_PROGRAMS = osu_bibw osu_bw osu_latency osu_mbw_mr osu_multi_lat
+@@ -12,22 +12,26 @@ pt2pt_PROGRAMS = osu_bibw osu_bw osu_latency osu_mbw_mr osu_multi_lat
  
  AM_CFLAGS = -I${top_srcdir}/util
  
@@ -185,6 +185,7 @@ index 17f85a4..53a54d1 100644
 -osu_mbw_mr_SOURCES = osu_mbw_mr.c $(UTILITIES)
 -osu_multi_lat_SOURCES = osu_multi_lat.c $(UTILITIES)
 -osu_latency_mt_SOURCES = osu_latency_mt.c $(UTILITIES)
+-osu_latency_mp_SOURCES = osu_latency_mp.c $(UTILITIES)
 +osu_bw_SOURCES = osu_bw.c
 +osu_bw_LDADD = $(top_builddir)/util/libutil.la
 +osu_bibw_SOURCES = osu_bibw.c
@@ -197,9 +198,74 @@ index 17f85a4..53a54d1 100644
 +osu_multi_lat_LDADD = $(top_builddir)/util/libutil.la
 +osu_latency_mt_SOURCES = osu_latency_mt.c
 +osu_latency_mt_LDADD = $(top_builddir)/util/libutil.la
++osu_latency_mp_SOURCES = osu_latency_mp.c
++osu_latency_mp_LDADD = $(top_builddir)/util/libutil.la
  
  if MPI2_LIBRARY
-     pt2pt_PROGRAMS += osu_latency_mt 
+     pt2pt_PROGRAMS += osu_latency_mt osu_latency_mp
+diff --git a/src/3rdparty/osu-micro-benchmarks/nccl/collective/Makefile.am b/src/3rdparty/osu-micro-benchmarks/nccl/collective/Makefile.am
+index 3228784..2431be0 100644
+--- a/src/3rdparty/osu-micro-benchmarks/nccl/collective/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/nccl/collective/Makefile.am
+@@ -12,19 +12,22 @@ ncclcollective_PROGRAMS = osu_nccl_allgather osu_nccl_allreduce osu_nccl_bcast o
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h ../../util/osu_util_nccl.c ../../util/osu_util_nccl.h
+ if CUDA_KERNELS
+-UTILITIES += ../../util/kernel.cu
+ if BUILD_USE_PGI
+ AM_CXXFLAGS = --nvcchost --no_preincludes
+ endif
+ endif
+ 
+-osu_nccl_allgather_SOURCES = osu_nccl_allgather.c $(UTILITIES)
+-osu_nccl_allreduce_SOURCES = osu_nccl_allreduce.c $(UTILITIES)
+-osu_nccl_bcast_SOURCES = osu_nccl_bcast.c $(UTILITIES)
+-osu_nccl_reduce_SOURCES = osu_nccl_reduce.c $(UTILITIES)
+-osu_nccl_reduce_scatter_SOURCES = osu_nccl_reduce_scatter.c $(UTILITIES)
++osu_nccl_allgather_SOURCES = osu_nccl_allgather.c
++osu_nccl_allgather_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_allreduce_SOURCES = osu_nccl_allreduce.c
++osu_nccl_allreduce_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_bcast_SOURCES = osu_nccl_bcast.c
++osu_nccl_bcast_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_reduce_SOURCES = osu_nccl_reduce.c
++osu_nccl_reduce_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_reduce_scatter_SOURCES = osu_nccl_reduce_scatter.c
++osu_nccl_reduce_scatter_LDADD = $(top_builddir)/util/libutil.la
+ 
+ if EMBEDDED_BUILD
+     AM_LDFLAGS =
+diff --git a/src/3rdparty/osu-micro-benchmarks/nccl/pt2pt/Makefile.am b/src/3rdparty/osu-micro-benchmarks/nccl/pt2pt/Makefile.am
+index 58946d9..2d47ebe 100644
+--- a/src/3rdparty/osu-micro-benchmarks/nccl/pt2pt/Makefile.am
++++ b/src/3rdparty/osu-micro-benchmarks/nccl/pt2pt/Makefile.am
+@@ -12,18 +12,18 @@ ncclpt2pt_PROGRAMS = osu_nccl_bibw osu_nccl_bw osu_nccl_latency
+ 
+ AM_CFLAGS = -I${top_srcdir}/util
+ 
+-UTILITIES = ../../util/osu_util.c ../../util/osu_util.h ../../util/osu_util_mpi.c ../../util/osu_util_mpi.h ../../util/osu_util_nccl.c ../../util/osu_util_nccl.h
+ if CUDA_KERNELS
+-UTILITIES += ../../util/kernel.cu
+-CLEANFILES = ../../util/kernel.cpp
+ if BUILD_USE_PGI
+ AM_CXXFLAGS = --nvcchost --no_preincludes
+ endif
+ endif
+ 
+-osu_nccl_bw_SOURCES = osu_nccl_bw.c $(UTILITIES)
+-osu_nccl_bibw_SOURCES = osu_nccl_bibw.c $(UTILITIES)
+-osu_nccl_latency_SOURCES = osu_nccl_latency.c $(UTILITIES)
++osu_nccl_bw_SOURCES = osu_nccl_bw.c
++osu_nccl_bw_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_bibw_SOURCES = osu_nccl_bibw.c
++osu_nccl_bibw_LDADD = $(top_builddir)/util/libutil.la
++osu_nccl_latency_SOURCES = osu_nccl_latency.c
++osu_nccl_latency_LDADD = $(top_builddir)/util/libutil.la
+ 
+ if EMBEDDED_BUILD
+     AM_LDFLAGS =
 diff --git a/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am b/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am
 index 82529f9..2cf22e9 100644
 --- a/src/3rdparty/osu-micro-benchmarks/openshmem/Makefile.am
@@ -259,14 +325,14 @@ index 82529f9..2cf22e9 100644
 +osu_oshm_put_mr_nb_SOURCES = osu_oshm_put_mr_nb.c
 +osu_oshm_put_mr_nb_LDADD = $(top_builddir)/util/libutil.la
 diff --git a/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am b/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
-index 8dafc4e..bd48440 100644
+index ceb6f98..bd48440 100644
 --- a/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
 +++ b/src/3rdparty/osu-micro-benchmarks/upc/Makefile.am
 @@ -8,18 +8,23 @@ upc_PROGRAMS = osu_upc_memget osu_upc_memput osu_upc_all_barrier \
  
  AM_CFLAGS = -I${top_srcdir}/util
  
--UTILITIES = ../util/osu_util.c ../util/osu_util.h  ../util/osu_util_pgas.c ../util/osu_util_pgas.h
+-UTILITIES = ../util/osu_util.c ../util/osu_util.h  ../util/osu_util_pgas.c ../util/util_pgas.h
 -
  if EMBEDDED_BUILD
       AM_CPPFLAGS = -I$(top_builddir)/../src/include \
@@ -337,10 +403,11 @@ index 5794923..d25100e 100644
 +osu_upcxx_async_copy_put_LDADD = $(top_builddir)/util/libutil.la
 diff --git a/src/3rdparty/osu-micro-benchmarks/util/Makefile.am b/src/3rdparty/osu-micro-benchmarks/util/Makefile.am
 new file mode 100644
-index 0000000..5d4579c
+index 0000000..5fab013
+diff --git a/util/Makefile.am b/util/Makefile.am
 --- /dev/null
 +++ b/src/3rdparty/osu-micro-benchmarks/util/Makefile.am
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,53 @@
 +NVCC = nvcc
 +NVCFLAGS = -cuda -maxrregcount 32 -ccbin $(CXX)
 +SUFFIXES = .cu .cpp
@@ -353,6 +420,10 @@ index 0000000..5d4579c
 +
 +if MPI
 +libutil_la_SOURCES += osu_util_mpi.c osu_util_mpi.h
++endif
++
++if NCCL
++libutil_la_SOURCES += osu_util_nccl.c osu_util_nccl.h
 +endif
 +
 +if OSHM

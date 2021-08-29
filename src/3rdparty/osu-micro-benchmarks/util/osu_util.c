@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2019 the Network-Based Computing Laboratory
+ * Copyright (C) 2002-2021 the Network-Based Computing Laboratory
  * (NBCL), The Ohio State University.
  *
  * Contact: Dr. D. K. Panda (panda@cse.ohio-state.edu)
@@ -38,6 +38,9 @@ print_header(int rank, int full)
                     case OPENACC:
                         printf(benchmark_header, "-OPENACC");
                         break;
+                    case ROCM:
+                        printf(benchmark_header, "-ROCM");
+                        break;
                     default:
                         printf(benchmark_header, "");
                         break;
@@ -46,9 +49,12 @@ print_header(int rank, int full)
                 switch (options.accel) {
                     case CUDA:
                     case OPENACC:
+                    case ROCM:
                         fprintf(stdout, "# Send Buffer on %s and Receive Buffer on %s\n",
-                               'M' == options.src ? "MANAGED (M)" : ('D' == options.src ? "DEVICE (D)" : "HOST (H)"),
-                               'M' == options.dst ? "MANAGED (M)" : ('D' == options.dst ? "DEVICE (D)" : "HOST (H)"));
+                                'M' == options.src ? ('D' == options.MMsrc ? "MANAGED (MD)" : "MANAGED (MH)") :
+                                ('D' == options.src ? "DEVICE (D)" : "HOST (H)"),
+                                'M' == options.dst ? ('D' == options.MMdst ? "MANAGED (MD)" : "MANAGED (MH)"):
+                                ('D' == options.dst ? "DEVICE (D)" : "HOST (H)"));
                     default:
                         if (options.subtype == BW && options.bench != MBW_MR) {
                             fprintf(stdout, "%-*s%*s\n", 10, "# Size", FIELD_WIDTH, "Bandwidth (MB/s)");
@@ -60,7 +66,7 @@ print_header(int rank, int full)
             }
             break;
         case COLLECTIVE :
-            if(rank == 0) {
+            if (rank == 0) {
                 fprintf(stdout, HEADER, "");
 
                 if (options.show_size) {
@@ -93,7 +99,7 @@ print_header(int rank, int full)
 void print_data (int rank, int full, int size, double avg_time,
                  double min_time, double max_time, int iterations)
 {
-    if(rank == 0) {
+    if (rank == 0) {
         if (options.show_size) {
             fprintf(stdout, "%-*d", 10, size);
             fprintf(stdout, "%*.*f", FIELD_WIDTH, FLOAT_PRECISION, avg_time);
@@ -175,7 +181,7 @@ set_message_size (char *val_str)
 
 static int
 set_receiver_threads (int value){
-    if (MIN_NUM_THREADS > value || value>=MAX_NUM_THREADS) {
+    if (MIN_NUM_THREADS > value || value >= MAX_NUM_THREADS) {
         return -1;
     }
 
@@ -187,7 +193,7 @@ set_receiver_threads (int value){
 
 static int
 set_sender_threads (int value){
-    if (MIN_NUM_THREADS > value || value>=MAX_NUM_THREADS) {
+    if (MIN_NUM_THREADS > value || value >= MAX_NUM_THREADS) {
         return -1;
     }
 
@@ -196,6 +202,7 @@ set_sender_threads (int value){
     return 0;
 
 }
+
 static int
 set_threads (char *val_str)
 {
@@ -210,17 +217,79 @@ set_threads (char *val_str)
 
     if (!count) {
         retval = set_receiver_threads(atoi(val_str));
-        options.sender_thread=-1;
+        options.sender_thread = -1;
     } else if (count == 1) {
         val1 = strtok(val_str, ":");
         val2 = strtok(NULL, ":");
 
         if (val1 && val2) {
             retval = set_sender_threads(atoi(val1));
-            if(retval==-1){
+            if (retval == -1){
                 return retval;
             }
             retval = set_receiver_threads(atoi(val2));
+            if (retval == -1){
+                return retval;
+            }
+        } 
+        
+    }
+
+    return retval;
+}
+
+static int
+set_receiver_processes (int value){
+    if (MIN_NUM_PROCESSES > value || value >= MAX_NUM_PROCESSES) {
+        return -1;
+    }
+
+    options.num_processes = value;
+
+    return 0;
+
+}
+
+static int
+set_sender_processes (int value){
+    if (MIN_NUM_PROCESSES > value || value >= MAX_NUM_PROCESSES) {
+        return -1;
+    }
+
+    options.sender_processes = value;
+
+    return 0;
+
+}
+
+static int
+set_processes (char *val_str)
+{
+    int retval = -1;
+    int i, count = 0;
+    char *val1, *val2;
+
+    for (i=0; val_str[i]; i++) {
+        if (val_str[i] == ':')
+            count++;
+    }
+
+    if (!count) {
+        retval = set_receiver_processes(atoi(val_str));
+        options.sender_processes = -1;
+    } else if (count == 1) {
+        val1 = strtok(val_str, ":");
+        val2 = strtok(NULL, ":");
+
+        if (val1 && val2) {
+            retval = set_sender_processes(atoi(val1));
+            if (retval == -1){
+                return retval;
+            }
+            retval = set_receiver_processes(atoi(val2));
+            if (retval == -1){
+                return retval;
+            }
         } 
         
     }
@@ -248,6 +317,17 @@ static int set_num_iterations (int value)
 
     options.iterations = value;
     options.iterations_large = value;
+
+    return 0;
+}
+
+static int set_validate (int value)
+{
+    if (value < 0 || value > 1) {
+        return -1;
+    }
+
+    options.validate = value;
 
     return 0;
 }
@@ -310,7 +390,8 @@ void set_benchmark_name (const char * name)
 
 void enable_accel_support (void)
 {
-    accel_enabled = (CUDA_ENABLED || OPENACC_ENABLED);
+    accel_enabled = ((CUDA_ENABLED || OPENACC_ENABLED || ROCM_ENABLED) &&
+            !(options.subtype == LAT_MT || options.subtype == LAT_MP));
 }
 
 int process_options (int argc, char *argv[])
@@ -340,46 +421,52 @@ int process_options (int argc, char *argv[])
             {"cuda-target",     required_argument,  0,  'r'},
             {"print-rate",      required_argument,  0,  'R'},
             {"num-pairs",       required_argument,  0,  'p'},
-            {"vary-window",     required_argument,  0,  'V'}
-            
+            {"vary-window",     required_argument,  0,  'V'},
+            {"validation",      required_argument,  0,  'c'},
+            {"buffer-num",      required_argument,  0,  'b'},
     };
 
     enable_accel_support();
 
-    if(options.bench == PT2PT) {
+    if (options.bench == PT2PT) {
         if (accel_enabled) {
-            if (options.subtype == LAT_MT) {
-                optstring = "+:x:i:t:m:d:hv";
-            } else if (options.subtype == BW) {
-                optstring = "+:x:i:t:m:d:W:hv";
+            if (options.subtype == BW) {
+                optstring = "+:x:i:t:m:d:W:hvb";
             } else {
                 optstring = "+:x:i:m:d:hv";
             }
         } else{
             if (options.subtype == LAT_MT) {
                 optstring = "+:hvm:x:i:t:";
+            } else if (options.subtype == LAT_MP) {
+                optstring = "+:hvm:x:i:t:";
             } else if (options.subtype == BW) {
-                optstring = "+:hvm:x:i:t:W:";
+                optstring = "+:hvm:x:i:t:W:b:";
             } else {
-                optstring = "+:hvm:x:i:";
+                optstring = "+:hvm:x:i:b:";
             }
         }
     } else if (options.bench == COLLECTIVE) {
         if (options.subtype == LAT) { /* Blocking */
-            optstring = "+:hvfm:i:x:M:a:";
+            optstring = "+:hvfm:i:x:M:a:c:";
             if (accel_enabled) {
-                optstring = (CUDA_KERNEL_ENABLED) ? "+:d:hvfm:i:x:M:r:a:" : "+:d:hvfm:i:x:M:a:";
+                optstring = (CUDA_KERNEL_ENABLED) ? "+:d:hvfm:i:x:M:r:a:c:" : "+:d:hvfm:i:x:M:a:c:";
             }
         } else { /* Non-Blocking */
-            optstring = "+:hvfm:i:x:M:t:a:";
+            optstring = "+:hvfm:i:x:M:t:a:c";
             if (accel_enabled) {
-                optstring = (CUDA_KERNEL_ENABLED) ? "+:d:hvfm:i:x:M:t:r:a:" : "+:d:hvfm:i:x:M:t:a:";
+                optstring = (CUDA_KERNEL_ENABLED) ? "+:d:hvfm:i:x:M:t:r:a:c:" : "+:d:hvfm:i:x:M:t:a:c:";
             }
         }
     } else if (options.bench == ONE_SIDED) {
-        optstring = (accel_enabled) ? "+:w:s:hvm:d:x:i:" : "+:w:s:hvm:x:i:";
+        if(options.subtype == BW) {
+            optstring = (accel_enabled) ? "+:w:s:hvm:d:x:i:W:" : "+:w:s:hvm:x:i:W:";
+        } else {
+            optstring = (accel_enabled) ? "+:w:s:hvm:d:x:i:" : "+:w:s:hvm:x:i:";
+        }
+        
     } else if (options.bench == MBW_MR){
-        optstring = (accel_enabled) ? "p:W:R:x:i:m:d:Vhv" : "p:W:R:x:i:m:Vhv";
+        optstring = (accel_enabled) ? "p:W:R:x:i:m:d:Vhvb:" : "p:W:R:x:i:m:Vhvb:";
     } else if (options.bench == OSHM || options.bench == UPC || options.bench == UPCXX) {
         optstring = ":hvfm:i:M:";
     } else {
@@ -405,6 +492,8 @@ int process_options (int argc, char *argv[])
     options.window_size = WINDOW_SIZE_LARGE;
     options.window_varied = 0;
     options.print_rate = 1;
+    options.validate = 0;
+    options.buf_num = SINGLE;
 
     options.src = 'H';
     options.dst = 'H';
@@ -420,6 +509,10 @@ int process_options (int argc, char *argv[])
             options.num_threads = DEF_NUM_THREADS;
             options.min_message_size = 0;
             options.sender_thread=-1;
+        case LAT_MP:
+            options.num_processes = DEF_NUM_PROCESSES;
+            options.min_message_size = 0;
+            options.sender_processes = DEF_NUM_PROCESSES;
         case LAT:
         case NBC:
             if (options.bench == COLLECTIVE) {
@@ -483,14 +576,21 @@ int process_options (int argc, char *argv[])
                         return PO_BAD_USAGE;
                     }
                 } else if (options.bench == PT2PT) {
-            
-                    if(set_threads(optarg)){
-                        bad_usage.message = "Invalid Number of Threads";
-                        bad_usage.optarg = optarg;
+                    if (options.subtype == LAT_MT) {
+                        if (set_threads(optarg)){
+                            bad_usage.message = "Invalid Number of Threads";
+                            bad_usage.optarg = optarg;
 
-                        return PO_BAD_USAGE;
+                            return PO_BAD_USAGE;
+                        }
+                    } else if (options.subtype == LAT_MP) {
+                        if (set_processes(optarg)){
+                            bad_usage.message = "Invalid Number of Processes";
+                            bad_usage.optarg = optarg;
+
+                            return PO_BAD_USAGE;
+                        } 
                     }
-                    
                 }
                 break;
             case 'i':
@@ -511,7 +611,7 @@ int process_options (int argc, char *argv[])
                 break;
             case 'R':
                 options.print_rate = atoi(optarg);
-                if(0 != options.print_rate && 1 != options.print_rate) {
+                if (0 != options.print_rate && 1 != options.print_rate) {
                     return PO_BAD_USAGE;
                 }
                 break;
@@ -580,6 +680,15 @@ int process_options (int argc, char *argv[])
                         bad_usage.optarg = optarg;
                         return PO_BAD_USAGE;
                     }
+                } else if (0 == strncasecmp(optarg, "rocm", 10)) {
+                    if (ROCM_ENABLED) {
+                        options.accel = ROCM;
+                    } else {
+                        bad_usage.message = "ROCm Support Not Enabled\n"
+                                "Please recompile benchmark with ROCm support";
+                        bad_usage.optarg = optarg;
+                        return PO_BAD_USAGE;
+                    }
                 } else {
                     bad_usage.message = "Invalid Accel Type Specified";
                     bad_usage.optarg = optarg;
@@ -606,7 +715,6 @@ int process_options (int argc, char *argv[])
                     return PO_BAD_USAGE;
                 }
                 break;
-
             case 'w':
                 ret = process_one_sided_options(c, optarg);
                 if (ret == PO_BAD_USAGE) {
@@ -625,7 +733,22 @@ int process_options (int argc, char *argv[])
                     return PO_BAD_USAGE;
                 }
                 break;
-
+            case 'c':
+                if (set_validate(atoi(optarg))) {
+                    bad_usage.message = "Invalid option or invalid argument";
+                }
+                break;
+            case 'b':
+                if (0 == strncasecmp(optarg, "single", 10)) {
+                    options.buf_num = SINGLE;
+                } else if (0 == strncasecmp(optarg, "multiple", 10)) {
+                    options.buf_num = MULTIPLE;
+                } else {
+                    bad_usage.message = "Please use 'single' or 'multiple' for buffer type";
+                    bad_usage.optarg = optarg;
+                    return PO_BAD_USAGE;
+                }
+                break;
             case ':':
                 bad_usage.message = "Option Missing Required Argument";
                 bad_usage.opt = optopt;
@@ -635,13 +758,56 @@ int process_options (int argc, char *argv[])
                 bad_usage.opt = optopt;
                 return PO_BAD_USAGE;
         }
-
     }
 
     if (accel_enabled) {
         if ((optind + 2) == argc) {
             options.src = argv[optind][0];
+            if (options.src == 'M')
+            {
+#ifdef _ENABLE_CUDA_KERNEL_
+                options.MMsrc = argv[optind][1];
+                if (options.MMsrc == '\0') {
+                    fprintf(stderr, "The M flag for destination buffer is "
+                            "deprecated. Please use MD or MH to set the "
+                            "effective location of CUDA Unified Memory buffers "
+                            "to be device or host respectively. Currently M "
+                            "flag is considered as MH\n");
+                    options.MMsrc = 'H';
+                } else if (options.MMsrc != 'D' && options.MMsrc != 'H') {
+                    fprintf(stderr, "Please use MD or MH to set the effective "
+                            "location of CUDA Unified Memory buffers to be "
+                            "device or host respectively\n");
+                    return PO_BAD_USAGE;
+                }
+#else
+                fprintf(stderr, "Managed memory support requires CUDA kernels.\n");
+                return PO_BAD_USAGE;
+#endif /* #ifdef _ENABLE_CUDA_KERNEL_ */
+            }
             options.dst = argv[optind + 1][0];
+            if (options.dst == 'M')
+            {
+#ifdef _ENABLE_CUDA_KERNEL_
+                options.MMdst = argv[optind+1][1];
+                if (options.MMdst == '\0') {
+                    fprintf(stderr, "The M flag for destination buffer is "
+                            "deprecated. Please use MD or MH to set the "
+                            "effective location of CUDA Unified Memory buffers "
+                            "to be device or host respectively. Currently M "
+                            "flag is considered as MH\n");
+                    options.MMdst = 'H';
+                } else if (options.MMdst != 'D' && options.MMdst != 'H') {
+                    fprintf(stderr, "Please use MD or MH to set the effective "
+                            "location of CUDA Unified Memory buffers to be "
+                            "device or host respectively\n");
+                    return PO_BAD_USAGE;
+                }
+#else
+                fprintf(stderr, "Managed memory support requires CUDA kernels.\n");
+                return PO_BAD_USAGE;
+#endif /* #ifdef _ENABLE_CUDA_KERNEL_ */
+            }
             /* No need to check if '-d' is given */
             if (NONE == options.accel) {
                 setAccel(options.src);
@@ -656,12 +822,16 @@ int process_options (int argc, char *argv[])
 }
 
 /* Set the initial accelerator type */
-int setAccel(char buf_type) {
+int setAccel(char buf_type)
+{
     switch (buf_type) {
         case 'H':
             break;
-        case 'D':
         case 'M':
+            /* For managed memory benchmarks, use multiple buffers to report
+             * accurate performance numbers */
+            options.buf_num = MULTIPLE;
+        case 'D':
             if (options.bench != PT2PT && options.bench != ONE_SIDED && options.bench != MBW_MR) {
                 bad_usage.opt = buf_type;
                 bad_usage.message = "This argument is only supported for one-sided and pt2pt benchmarks";
@@ -670,8 +840,10 @@ int setAccel(char buf_type) {
             if (NONE == options.accel) {
 #if defined(_ENABLE_OPENACC_) && !defined(_ENABLE_CUDA_)
                 options.accel = OPENACC;
-#else
+#elif defined(_ENABLE_CUDA_)
                 options.accel = CUDA;
+#elif defined(_ENABLE_ROCM_)
+                options.accel = ROCM;
 #endif
             }
             break;
