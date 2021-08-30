@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         container:
-          - amazonlinux2-gcc
+          - amazonlinux2-gnu
           - amazonlinux2-llvm
           - centos7-gnu
           - centos7-llvm
