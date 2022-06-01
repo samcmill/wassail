@@ -1,0 +1,33 @@
+name: Doxygen
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install dependencies
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates doxygen file gnupg libtool make pkg-config software-properties-common wget
+
+    - name: autogen
+      run: ./autogen.sh
+
+    - name: configure
+      run: ./configure
+
+    - name: make docs
+      uses: mattnotmitt/doxygen-action@v1.9.2
+
+    - name: deploy docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/html
