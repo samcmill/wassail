@@ -8,10 +8,10 @@ toolset = USERARG.get('toolset', 'gnu')
 apt = []
 
 if toolset == 'nvhpc':
-  Stage0 += baseimage(image='nvcr.io/nvidia/nvhpc:21.7-devel-cuda11.4-ubuntu20.04')
+  Stage0 += baseimage(image='nvcr.io/nvidia/nvhpc:22.3-devel-cuda11.6-ubuntu20.04')
   toolchain = hpccm.toolchain(CC='nvc', CXX='nvc++', CXXFLAGS='-O1')
 elif toolset == 'oneapi':
-  Stage0 += baseimage(image='intel/oneapi-hpckit:2021.3-devel-ubuntu18.04')
+  Stage0 += baseimage(image='intel/oneapi-hpckit:devel-ubuntu18.04')
   toolchain = hpccm.toolchain(CC='icx', CXX='icpx')
 else:
   if image == 'ubuntu:20.04':

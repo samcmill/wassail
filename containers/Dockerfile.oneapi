@@ -1,6 +1,6 @@
 # wassail container
 
-FROM intel/oneapi-hpckit:2021.3-devel-ubuntu18.04
+FROM intel/oneapi-hpckit:devel-ubuntu18.04
 
 # Python
 RUN apt-get update -y && \

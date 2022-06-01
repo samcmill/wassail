@@ -1,6 +1,6 @@
 # wassail container
 
-FROM nvcr.io/nvidia/nvhpc:21.7-devel-cuda11.4-ubuntu20.04
+FROM nvcr.io/nvidia/nvhpc:22.3-devel-cuda11.6-ubuntu20.04
 
 # Python
 RUN apt-get update -y && \
