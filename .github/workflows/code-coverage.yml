@@ -5,26 +5,26 @@ on: push
 jobs:
   build:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-24.04
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
 
     - name: install dependencies
       run: |
         sudo apt-get update -y
-        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg lcov libtool make pkg-config libdispatch-dev libibumad-dev libopenmpi-dev libpciaccess-dev libssh-dev openmpi-bin openssh-client pciutils-dev software-properties-common wget
-        sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-        sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
+        sudo apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg lcov libtool make pkg-config libibumad-dev libopenmpi-dev libpciaccess-dev libssh-dev openmpi-bin openssh-client pciutils-dev software-properties-common wget
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+        sudo dpkg -i cuda-keyring_1.1-1_all.deb
         sudo apt-get update -y
-        sudo apt-get install -y cuda-nvml-dev-10-1
-        echo "CPATH=/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
+        sudo apt-get install -y cuda-nvml-dev-13-1
+        echo "CPATH=/usr/local/cuda-13.1/include:$CPATH" >> $GITHUB_ENV
 
     - name: autogen
       run: ./autogen.sh
 
     - name: configure
-      run: ./configure --enable-code-coverage
+      run: ./configure --enable-code-coverage --disable-python
 
     - name: make
       run: make -j$(nproc)
