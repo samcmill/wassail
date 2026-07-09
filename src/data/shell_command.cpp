@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
+#include <mutex>
 #include <poll.h>
 #include <shared_mutex>
 #include <signal.h>

@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <memory>
+#include <mutex>
 #include <shared_mutex>
 #include <stdexcept>
 #include <time.h>
