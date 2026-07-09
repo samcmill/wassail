@@ -8,36 +8,33 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-18.04]
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
         compiler: [gcc, clang]
         mpi: [mpich, openmpi]
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: install dependencies
       run: |
         sudo apt-get update -y
-        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg libtool make pkg-config libdispatch-dev libibumad-dev libpciaccess-dev libssh-dev libudev-dev openssh-client software-properties-common wget
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf autoconf-archive automake ca-certificates file gnupg libtool make pkg-config libibumad-dev libpciaccess-dev libssh-dev libudev-dev openssh-client software-properties-common wget
         if [ "${{ matrix.mpi }}" = "mpich" ]; then
           sudo apt-get install -y libmpich-dev mpich
         else
           sudo apt-get install -y libopenmpi-dev openmpi-bin
         fi
-        if [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
-          sudo apt-get install -y pciutils-dev
-          sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-          sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
-          sudo apt-get update -y
-          sudo apt-get install -y cuda-nvml-dev-10-1
-          echo "CPATH=/usr/local/cuda-10.1/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
-        elif [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-          sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
-          sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
-          sudo apt-get update -y
-          sudo apt-get install -y cuda-nvml-dev-11-0
-          echo "CPATH=/usr/local/cuda-11.0/targets/x86_64-linux/include:$CPATH" >> $GITHUB_ENV
+        if [ "${{ matrix.os }}" = "ubuntu-26.04" ]; then
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2604/x86_64/cuda-keyring_1.1-1_all.deb
+        elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
         fi
+        sudo dpkg -i cuda-keyring_1.1-1_all.deb
+        sudo apt-get update -y
+        sudo apt-get install -y cuda-nvml-dev-13-1
+        echo "CPATH=/usr/local/cuda-13.1/include:$CPATH" >> $GITHUB_ENV
 
     - name: set compiler
       run: |
