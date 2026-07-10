@@ -1,7 +1,7 @@
 # wassail
 
-[![Build status](https://img.shields.io/github/actions/workflow/status/smcmillan/wassail/linux.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/linux.yml)
-[![Build status](https://img.shields.io/github/actions/workflow/status/smcmillan/wassail/macos.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/macos.yml)
+[![Build status](https://img.shields.io/github/actions/workflow/status/smcmillan/wassail/.github/workflows/linux.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/linux.yml)
+[![Build status](https://img.shields.io/github/actions/workflow/status/smcmillan/wassail/.github/workflows/macos.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/macos.yml)
 [![Coverage Status](https://coveralls.io/repos/github/samcmill/wassail/badge.svg?branch=master)](https://coveralls.io/github/samcmill/wassail?branch=master)
 [![Coverity Status](https://scan.coverity.com/projects/20226/badge.svg)](https://scan.coverity.com/projects/samcmill-wassail)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://samcmill.github.io/wassail)
