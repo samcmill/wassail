@@ -33,7 +33,7 @@ void py_check(py::module &m) {
       .def("add_rule", &wassail::check::rules_engine::add_rule)
       /* https://github.com/pybind/pybind11/issues/1153 */
       .def("check",
-           (std::shared_ptr<wassail::result>(wassail::check::rules_engine::*)(
+           (std::shared_ptr<wassail::result> (wassail::check::rules_engine::*)(
                const json &))(&wassail::check::rules_engine::check));
 
   py::module check_cpu =

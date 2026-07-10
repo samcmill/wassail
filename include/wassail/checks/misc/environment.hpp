@@ -86,7 +86,7 @@ namespace wassail {
         std::string name() const { return "misc/environment"; };
       };
     } // namespace misc
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

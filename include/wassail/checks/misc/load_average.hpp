@@ -38,7 +38,7 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] load Reference load average
          */
-        load_average(float load) : load_average(load, minute_t::ONE){};
+        load_average(float load) : load_average(load, minute_t::ONE) {};
 
         /*! Construct an instance
          *  \param[in] load Reference load average
@@ -105,7 +105,7 @@ namespace wassail {
         std::string name() const { return "misc/load_average"; };
       };
     } // namespace misc
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

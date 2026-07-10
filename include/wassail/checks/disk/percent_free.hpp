@@ -32,7 +32,7 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] fs Mount point to check
          */
-        percent_free(std::string fs) : percent_free(fs, 0.0){};
+        percent_free(std::string fs) : percent_free(fs, 0.0) {};
 
         /*! Construct an instance
          *  \param[in] fs Mount point to check
@@ -92,7 +92,7 @@ namespace wassail {
         std::string name() const { return "disk/percent_free"; };
       };
     } // namespace disk
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

@@ -201,7 +201,9 @@ namespace wassail {
         j["configuration"]["mpi_impl"] = "openmpi";
         break;
       }
-      default: { throw std::runtime_error("unknown MPI implementation"); }
+      default: {
+        throw std::runtime_error("unknown MPI implementation");
+      }
       }
 
       j["configuration"]["mpirun_args"] = d.mpirun_args;

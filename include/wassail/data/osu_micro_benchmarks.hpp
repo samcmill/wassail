@@ -35,14 +35,15 @@ namespace wassail {
 
       /*! Construct an instance
        */
-      osu_micro_benchmarks() : osu_micro_benchmarks(2, osu_benchmark_t::INIT){};
+      osu_micro_benchmarks()
+          : osu_micro_benchmarks(2, osu_benchmark_t::INIT) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
        */
       osu_micro_benchmarks(uint32_t num_procs)
           : osu_micro_benchmarks(num_procs, 0, "", "", osu_benchmark_t::INIT,
-                                 60, mpi_impl_t::OPENMPI){};
+                                 60, mpi_impl_t::OPENMPI) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -52,7 +53,7 @@ namespace wassail {
       osu_micro_benchmarks(uint32_t num_procs, osu_benchmark_t osu_benchmark,
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : osu_micro_benchmarks(num_procs, 0, "", "", osu_benchmark, 60,
-                                 mpi_impl){};
+                                 mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -64,7 +65,7 @@ namespace wassail {
                            osu_benchmark_t osu_benchmark,
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : osu_micro_benchmarks(num_procs, 0, hostfile, "", osu_benchmark, 60,
-                                 mpi_impl){};
+                                 mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -77,7 +78,7 @@ namespace wassail {
                            osu_benchmark_t osu_benchmark,
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : osu_micro_benchmarks(num_procs, 0, hostlist, "", osu_benchmark, 60,
-                                 mpi_impl){};
+                                 mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -94,7 +95,7 @@ namespace wassail {
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : mpirun(num_procs, per_node, hostfile, mpirun_args,
                    osu_program(osu_benchmark), "", timeout, mpi_impl),
-            osu_benchmark(osu_benchmark){};
+            osu_benchmark(osu_benchmark) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -112,7 +113,7 @@ namespace wassail {
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : mpirun(num_procs, per_node, hostlist, mpirun_args,
                    osu_program(osu_benchmark), "", timeout, mpi_impl),
-            osu_benchmark(osu_benchmark){};
+            osu_benchmark(osu_benchmark) {};
 
       /*! Unique name for this building block */
       std::string name() const { return "osu_micro_benchmarks"; };

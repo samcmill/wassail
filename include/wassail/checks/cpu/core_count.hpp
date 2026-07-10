@@ -30,7 +30,7 @@ namespace wassail {
         } config;                 /*!< Check building block configuration */
 
         /*! Construct an instance */
-        core_count() : core_count(0){};
+        core_count() : core_count(0) {};
 
         /*! Construct an instance
          *  \param[in] num_cores Reference number of cores
@@ -87,7 +87,7 @@ namespace wassail {
         std::string name() const { return "cpu/core_count"; };
       };
     } // namespace cpu
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

@@ -54,5 +54,5 @@ namespace wassail {
         return check(static_cast<json>(d));
       }
     } // namespace misc
-  }   // namespace check
+  } // namespace check
 } // namespace wassail

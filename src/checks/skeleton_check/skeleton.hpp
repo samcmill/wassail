@@ -66,7 +66,7 @@ namespace wassail {
         std::string name() const { return "skeleton"; };
       };
     } // namespace skeleton
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

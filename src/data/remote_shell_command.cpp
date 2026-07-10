@@ -94,8 +94,8 @@ namespace wassail {
     remote_shell_command::~remote_shell_command() = default;
     remote_shell_command::remote_shell_command(remote_shell_command &&) =
         default;
-    remote_shell_command &remote_shell_command::
-    operator=(remote_shell_command &&) = default;
+    remote_shell_command &
+    remote_shell_command::operator=(remote_shell_command &&) = default;
 
     bool remote_shell_command::enabled() const {
 #ifdef WITH_DATA_REMOTE_SHELL_COMMAND

@@ -74,7 +74,7 @@ namespace wassail {
     std::chrono::time_point<std::chrono::system_clock> timestamp;
 
     /*! Constructor */
-    result(){};
+    result() {};
 
     /*! Constructor */
     result(std::string _brief) { brief = _brief; };

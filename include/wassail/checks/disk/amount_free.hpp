@@ -32,7 +32,7 @@ namespace wassail {
         /*! Construct an instance
          *  \param[in] fs Mount point to check
          */
-        amount_free(std::string fs) : amount_free(fs, 0){};
+        amount_free(std::string fs) : amount_free(fs, 0) {};
 
         /*! Construct an instance
          *  \param[in] fs Mount point to check
@@ -94,7 +94,7 @@ namespace wassail {
         std::string name() const { return "disk/amount_free"; };
       };
     } // namespace disk
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

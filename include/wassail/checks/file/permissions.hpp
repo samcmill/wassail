@@ -79,7 +79,7 @@ namespace wassail {
         std::string name() const { return "file/permissions"; };
       };
     } // namespace file
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

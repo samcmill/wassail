@@ -118,7 +118,7 @@ namespace wassail {
         /* Load symbols */
         auto const _umad_init = load_symbol<int()>("umad_init");
         auto const _umad_get_cas_names =
-            load_symbol<int(char(*)[UMAD_CA_NAME_LEN], int)>(
+            load_symbol<int(char (*)[UMAD_CA_NAME_LEN], int)>(
                 "umad_get_cas_names");
         auto const _umad_get_ca =
             load_symbol<int(char *, umad_ca_t *)>("umad_get_ca");

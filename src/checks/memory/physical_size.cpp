@@ -65,5 +65,5 @@ namespace wassail {
         return check(static_cast<json>(d));
       }
     } // namespace memory
-  }   // namespace check
+  } // namespace check
 } // namespace wassail

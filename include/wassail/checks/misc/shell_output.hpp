@@ -93,7 +93,7 @@ namespace wassail {
         std::string name() const { return "misc/shell_output"; };
       };
     } // namespace misc
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

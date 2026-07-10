@@ -70,8 +70,8 @@ namespace wassail {
     }
     shell_command::~shell_command() = default;
     shell_command::shell_command(shell_command &&) = default; // LCOV_EXCL_LINE
-    shell_command &shell_command::
-    operator=(shell_command &&) = default; // LCOV_EXCL_LINE
+    shell_command &
+    shell_command::operator=(shell_command &&) = default; // LCOV_EXCL_LINE
 
     bool shell_command::enabled() const {
 #ifdef HAVE_SHELL_COMMAND

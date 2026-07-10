@@ -8,4 +8,4 @@ BraceWrapping:
 IncludeBlocks: Preserve
 Language: Cpp
 NamespaceIndentation: All
-Standard: Cpp11
+Standard: c++17

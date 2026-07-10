@@ -36,8 +36,8 @@ namespace wassail {
     getloadavg::getloadavg() : pimpl{std::make_unique<impl>()} {}
     getloadavg::~getloadavg() = default;
     getloadavg::getloadavg(getloadavg &&) = default; // LCOV_EXCL_LINE
-    getloadavg &getloadavg::
-    operator=(getloadavg &&) = default; // LCOV_EXCL_LINE
+    getloadavg &
+    getloadavg::operator=(getloadavg &&) = default; // LCOV_EXCL_LINE
 
     bool getloadavg::enabled() const {
 #ifdef HAVE_GETLOADAVG

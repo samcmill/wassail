@@ -48,7 +48,7 @@ namespace wassail {
    * \return formatted string
    */
   template <typename... T>
-  std::string format(const std::string &fmt, const T &... args) {
+  std::string format(const std::string &fmt, const T &...args) {
     return fmt::vformat(fmt, {fmt::make_format_args(args...)});
   }
 

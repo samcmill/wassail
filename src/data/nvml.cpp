@@ -31,7 +31,7 @@ namespace wassail {
       struct nvlink {
         bool active = false;      /*!< NvLink active state */
         unsigned int version = 0; /*!< NvLink version */
-      };                          /*!< NvLink attributes */
+      }; /*!< NvLink attributes */
 
       /* \brief GPU device attributes */
       struct gpu {
@@ -132,7 +132,7 @@ namespace wassail {
         std::string serial;       /*!< GPU serial number */
         std::string uuid;         /*!< GPU UUID */
         std::string vbios;        /*!< VBIOS version */
-      };                          /*!< GPU device attributes */
+      }; /*!< GPU device attributes */
 
       /*! \brief GPUs */
       struct {

@@ -47,7 +47,9 @@ namespace wassail {
         return libexecdir + "/osu-micro-benchmarks/mpi/collective/osu_reduce";
         break;
       }
-      default: { throw std::runtime_error("unknown OSU Micro-Benchmark"); }
+      default: {
+        throw std::runtime_error("unknown OSU Micro-Benchmark");
+      }
       }
     }
 
@@ -213,7 +215,9 @@ namespace wassail {
 
         break;
       }
-      default: { throw std::runtime_error("unknown OSU Micro-Benchmark"); }
+      default: {
+        throw std::runtime_error("unknown OSU Micro-Benchmark");
+      }
       }
     }
   } // namespace data

@@ -42,8 +42,8 @@ namespace wassail {
     environment::environment() : pimpl{std::make_unique<impl>()} {}
     environment::~environment() = default;
     environment::environment(environment &&) = default; // LCOV_EXCL_LINE
-    environment &environment::
-    operator=(environment &&) = default; // LCOV_EXCL_LINE
+    environment &
+    environment::operator=(environment &&) = default; // LCOV_EXCL_LINE
 
     bool environment::enabled() const {
 #ifdef WITH_DATA_ENVIRONMENT

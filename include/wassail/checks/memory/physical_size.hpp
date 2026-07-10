@@ -30,12 +30,12 @@ namespace wassail {
         } config;                 /*!< Check building block configuration */
 
         /*! Construct an instance */
-        physical_size() : physical_size(0, 0){};
+        physical_size() : physical_size(0, 0) {};
 
         /*! Construct an instance
          *  \param[in] mem_size Reference physical memory size
          */
-        physical_size(uint64_t mem_size) : physical_size(mem_size, 0){};
+        physical_size(uint64_t mem_size) : physical_size(mem_size, 0) {};
 
         /*! Construct an instance
          *  \param[in] mem_size Reference physical memory size in bytes
@@ -101,7 +101,7 @@ namespace wassail {
         std::string name() const { return "memory/physical_size"; };
       };
     } // namespace memory
-  }   // namespace check
+  } // namespace check
 } // namespace wassail
 
 #endif

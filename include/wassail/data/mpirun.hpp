@@ -48,15 +48,15 @@ namespace wassail {
       std::string program_args; /*!< Arguments to pass to the MPI program */
 
       /*! Construct an instance */
-      mpirun() : shell_command(""){};
+      mpirun() : shell_command("") {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
        * \param[in] program MPI program to launch
        */
       mpirun(uint32_t num_procs, std::string program)
-          : mpirun(num_procs, 0, "", "", program, "", 60,
-                   mpi_impl_t::OPENMPI){};
+          : mpirun(num_procs, 0, "", "", program, "", 60, mpi_impl_t::OPENMPI) {
+            };
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -64,7 +64,7 @@ namespace wassail {
        * \param[in] mpi_impl MPI implementation
        */
       mpirun(uint32_t num_procs, std::string program, mpi_impl_t mpi_impl)
-          : mpirun(num_procs, 0, "", "", program, "", 60, mpi_impl){};
+          : mpirun(num_procs, 0, "", "", program, "", 60, mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -74,7 +74,7 @@ namespace wassail {
        */
       mpirun(uint32_t num_procs, std::string hostfile, std::string program,
              mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
-          : mpirun(num_procs, 0, hostfile, "", program, "", 60, mpi_impl){};
+          : mpirun(num_procs, 0, hostfile, "", program, "", 60, mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start
@@ -84,7 +84,7 @@ namespace wassail {
        */
       mpirun(uint32_t num_procs, std::vector<std::string> hostlist,
              std::string program, mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
-          : mpirun(num_procs, 0, hostlist, "", program, "", 60, mpi_impl){};
+          : mpirun(num_procs, 0, hostlist, "", program, "", 60, mpi_impl) {};
 
       /*! Construct an instance.
        * \param[in] num_procs Number of MPI processes to start

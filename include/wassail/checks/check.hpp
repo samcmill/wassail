@@ -23,7 +23,7 @@ namespace wassail {
       virtual ~common() = default;
 
       /*! Constructor */
-      common(){};
+      common() {};
 
       /*! Constructor
        *  \param[in] brief result brief format template

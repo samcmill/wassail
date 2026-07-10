@@ -56,7 +56,7 @@ namespace wassail {
       rules_engine()
           : common("Checking data against rules", "Rule criteria not met",
                    "Unable to perform comparison: '{0}'",
-                   "Rule criteria met"){};
+                   "Rule criteria met") {};
 
       /*! \brief Constructor
        *  \param[in] brief format template for result brief
@@ -69,7 +69,7 @@ namespace wassail {
        */
       rules_engine(std::string brief, std::string detail_yes,
                    std::string detail_maybe, std::string detail_no)
-          : common(brief, detail_yes, detail_maybe, detail_no){};
+          : common(brief, detail_yes, detail_maybe, detail_no) {};
 
       /*! \brief Add new rule
        *
@@ -93,7 +93,7 @@ namespace wassail {
        *  \return result object
        */
       template <typename... T>
-      std::shared_ptr<wassail::result> check(const json &j, const T &... args) {
+      std::shared_ptr<wassail::result> check(const json &j, const T &...args) {
         auto r = rules_engine::check(j);
 
         r->brief = wassail::format(fmt_str.brief, args...);

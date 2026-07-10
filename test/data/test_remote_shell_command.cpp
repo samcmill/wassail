@@ -83,7 +83,7 @@ TEST_CASE("remote_shell_command bogus host") {
     REQUIRE(j["data"].size() == 1);
     REQUIRE(j["data"][0]["data"]["returncode"].get<int>() != 0);
     // Some implementations do not generate stderr?
-    //REQUIRE(j["data"][0]["data"]["stderr"].get<std::string>() != "");
+    // REQUIRE(j["data"][0]["data"]["stderr"].get<std::string>() != "");
   }
   else {
     REQUIRE_THROWS(d.evaluate());
