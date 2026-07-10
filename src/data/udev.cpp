@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <list>
 #include <memory>
+#include <mutex>
 #include <shared_mutex>
 #include <stdexcept>
 #include <wassail/data/udev.hpp>

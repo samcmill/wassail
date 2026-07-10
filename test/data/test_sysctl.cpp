@@ -10,6 +10,7 @@
 #include "3rdparty/catch/catch_reporter_automake.hpp"
 
 #include <chrono>
+#include <regex>
 #include <string>
 #include <wassail/data/sysctl.hpp>
 
@@ -22,7 +23,16 @@ TEST_CASE("sysctl basic usage") {
 
     /* This is a subset of the data fields */
     REQUIRE(j["name"] == "sysctl");
-    REQUIRE(j["data"]["hw"]["cpufrequency_max"].get<int64_t>() > 0);
+
+    // Bug on Apple silicon returns 0 for the CPU frequency
+    // https://forums.developer.apple.com/forums/thread/671792
+    if (not std::regex_search(
+            j.at(json::json_pointer("/data/machdep/cpu/brand_string"))
+                .get<std::string>(),
+            std::regex("^Apple"))) {
+      REQUIRE(j["data"]["hw"]["cpufrequency_max"].get<int64_t>() > 0);
+    }
+
     REQUIRE(j["data"]["hw"]["memsize"].get<int64_t>() > 0);
     REQUIRE(j["data"]["hw"]["packages"].get<int32_t>() > 0);
     REQUIRE(j["data"]["kern"]["version"].size() > 0);
@@ -203,6 +213,6 @@ TEST_CASE("sysctl factory evaluate") {
   if (not jout.is_null()) {
     REQUIRE(jout["name"] == "sysctl");
     REQUIRE(jout.count("data") == 1);
-    REQUIRE(jout["data"]["hw"]["cpufrequency_max"].get<int64_t>() > 0);
+    REQUIRE(jout["data"]["machdep"]["cpu"]["core_count"].get<int32_t>() > 0);
   }
 }

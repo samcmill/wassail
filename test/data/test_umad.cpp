@@ -14,13 +14,14 @@
 #include <sys/stat.h>
 #include <wassail/data/umad.hpp>
 
-TEST_CASE("umad basic usage") {
+TEST_CASE("umad basic usage", "[!mayfail]") {
   auto d = wassail::data::umad();
 
   if (d.enabled()) {
     d.evaluate();
     json j = d;
 
+    // Some systems may have devices without the corresponding sysfs entry?
     struct stat s;
     if (stat("/sys/class/infiniband_mad/abi_version", &s) == 0) {
       /* will only pass on machines that actually have a device */
@@ -184,7 +185,7 @@ TEST_CASE("umad incomplete JSON conversion") {
   REQUIRE(jout["data"]["devices"].size() == 0);
 }
 
-TEST_CASE("umad factory evaluate") {
+TEST_CASE("umad factory evaluate", "[!mayfail]") {
   auto jin = R"({ "name": "umad" })"_json;
 
   auto jout = wassail::data::evaluate(jin);
@@ -193,6 +194,7 @@ TEST_CASE("umad factory evaluate") {
     REQUIRE(jout["name"] == "umad");
     REQUIRE(jout.count("data") == 1);
 
+    // Some systems may have devices without the corresponding sysfs entry?
     struct stat s;
     if (stat("/sys/class/infiniband_mad/abi_version", &s) == 0) {
       /* will only pass on machines that actually have a device */
