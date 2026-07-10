@@ -15,7 +15,6 @@ jobs:
           - amazonlinux2-gnu
           - amazonlinux2-llvm
           - nvhpc
-          - oneapi
           - rockylinux8-gnu
           - rockylinux8-llvm
           - ubuntu16-gnu
