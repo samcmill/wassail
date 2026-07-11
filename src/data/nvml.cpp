@@ -72,7 +72,7 @@ namespace wassail {
         } cuda_compute_capability; /*!< CUDA compute capability */
 
         struct {
-          bool current; /*!< Current ECC mode */
+          bool current = false; /*!< Current ECC mode */
           struct {
             struct {
               unsigned long long corrected = 0;   /*!< Corrected ECC errors */
