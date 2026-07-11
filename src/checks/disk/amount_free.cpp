@@ -18,7 +18,7 @@ namespace wassail {
     namespace disk {
       std::shared_ptr<wassail::result> amount_free::check(const json &j) {
         bool found = false;
-        uint64_t amount = 0.0;
+        uint64_t amount = 0;
 
         if (j.value("name", "") == "getfsstat") {
           for (auto i : j.value(json::json_pointer("/data/file_systems"),

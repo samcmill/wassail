@@ -13,6 +13,7 @@
 #include <chrono>
 #include <limits.h>
 #include <shared_mutex>
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <wassail/common.hpp>
@@ -29,11 +30,14 @@ namespace wassail {
       bool collected_ = false;
 
       /*! Get the hostname of the system
+       *  \throws std::runtime_error() if gethostname() fails
        *  \return Hostname
        */
       std::string get_hostname() {
         char hostname[_POSIX_HOST_NAME_MAX];
-        gethostname(hostname, _POSIX_HOST_NAME_MAX);
+        if (gethostname(hostname, _POSIX_HOST_NAME_MAX) != 0) {
+          throw std::runtime_error("gethostname failed");
+        }
         return std::string(hostname);
       }
 
