@@ -42,7 +42,7 @@ namespace wassail {
         } bar1;                         /*!< BAR1 memory */
 
         std::string board_part_number; /*!< Board part number */
-        uint16_t brand;                /*!< Brand of the device */
+        uint16_t brand = 0;            /*!< Brand of the device */
 
         struct {
           struct {
@@ -64,7 +64,7 @@ namespace wassail {
           } target;                    /*!< Target application clock */
         } clock;                       /*!< Device clock */
 
-        uint16_t compute_mode; /*!< Current compute mode */
+        uint16_t compute_mode = 0; /*!< Current compute mode */
 
         struct {
           int major = 0;           /*!< Major version */
@@ -75,16 +75,16 @@ namespace wassail {
           bool current; /*!< Current ECC mode */
           struct {
             struct {
-              unsigned long long corrected;   /*!< Corrected ECC errors */
-              unsigned long long uncorrected; /*!< Uncorrected ECC errors */
-            } aggregate;                      /*!< Aggregate ECC errors */
+              unsigned long long corrected = 0;   /*!< Corrected ECC errors */
+              unsigned long long uncorrected = 0; /*!< Uncorrected ECC errors */
+            } aggregate;                          /*!< Aggregate ECC errors */
             struct {
-              unsigned long long corrected;   /*!< Corrected ECC errors */
-              unsigned long long uncorrected; /*!< Uncorrected ECC errors */
-            } volatile_;                      /*!< Volatile ECC errors */
-          } errors;                           /*!< ECC errors */
-          bool pending;                       /*!< Pending ECC mode */
-        } ecc;                                /*!< ECC information */
+              unsigned long long corrected = 0;   /*!< Corrected ECC errors */
+              unsigned long long uncorrected = 0; /*!< Uncorrected ECC errors */
+            } volatile_;                          /*!< Volatile ECC errors */
+          } errors;                               /*!< ECC errors */
+          bool pending = false;                   /*!< Pending ECC mode */
+        } ecc;                                    /*!< ECC information */
 
         unsigned int index = 0; /*!< GPU index */
 
@@ -102,23 +102,23 @@ namespace wassail {
           unsigned long long used = 0;  /*!< Allocated FB memory, bytes */
         } memory;                       /*!< Frame buffer memory */
 
-        unsigned int minor_number; /*!< Minor number for the device */
-        std::string name;          /*!< GPU product name */
-        std::list<nvlink> nvlinks; /*!< List of device's NvLinks */
+        unsigned int minor_number = 0; /*!< Minor number for the device */
+        std::string name;              /*!< GPU product name */
+        std::list<nvlink> nvlinks;     /*!< List of device's NvLinks */
 
         struct {
           unsigned int bus = 0;       /*!< Bus on which the device resides */
           std::string bus_id;         /*!< domain:bus:device.function tuple */
-          unsigned int device;        /*!< Device's ID on the bus */
+          unsigned int device = 0;    /*!< Device's ID on the bus */
           unsigned int device_id = 0; /*!< combined device and vendor IDs */
-          unsigned int
-              domain; /*!< PCI domain on which the device's bus resides */
+          unsigned int domain =
+              0; /*!< PCI domain on which the device's bus resides */
           unsigned int generation = 0;   /*!< PCIE link generation */
           unsigned int subsystem_id = 0; /*!< sub-system device ID */
           unsigned int width = 0;        /*!< PCIE link width */
         } pcie;                          /*!< PCIE information */
 
-        int pstate; /*!< Power state */
+        int pstate = 0; /*!< Power state */
 
         struct {
           unsigned int double_bit =
@@ -128,19 +128,19 @@ namespace wassail {
                                           multiple single bit errors */
         } retired_pages;               /*!< Retired pages information */
 
-        unsigned int temperature; /*!< Temperature, Celsius */
-        std::string serial;       /*!< GPU serial number */
-        std::string uuid;         /*!< GPU UUID */
-        std::string vbios;        /*!< VBIOS version */
+        unsigned int temperature = 0; /*!< Temperature, Celsius */
+        std::string serial;           /*!< GPU serial number */
+        std::string uuid;             /*!< GPU UUID */
+        std::string vbios;            /*!< VBIOS version */
       }; /*!< GPU device attributes */
 
       /*! \brief GPUs */
       struct {
-        int cuda_driver_version;    /*!< CUDA driver version */
-        std::list<gpu> devices;     /*!< List of GPU devices */
-        std::string driver_version; /*!< Driver version */
-        std::string nvml_version;   /*!< NVML library version */
-      } data;                       /*!< GPU devices */
+        int cuda_driver_version = 0; /*!< CUDA driver version */
+        std::list<gpu> devices;      /*!< List of GPU devices */
+        std::string driver_version;  /*!< Driver version */
+        std::string nvml_version;    /*!< NVML library version */
+      } data;                        /*!< GPU devices */
 
       /* \brief Mutex to control concurrent reads and writes */
       std::shared_timed_mutex rw_mutex;
@@ -301,7 +301,7 @@ namespace wassail {
         auto const _nvmlDeviceGetBrand =
             load_symbol<nvmlReturn_t(nvmlDevice_t, nvmlBrandType_t *)>(
                 "nvmlDeviceGetBrand");
-        nvmlBrandType_t brand;
+        nvmlBrandType_t brand = NVML_BRAND_UNKNOWN;
         rv = _nvmlDeviceGetBrand(device, &brand);
         if_nvml_success(rv, [&]() { gpu.brand = brand; });
       }
@@ -348,7 +348,7 @@ namespace wassail {
         auto const _nvmlDeviceGetComputeMode =
             load_symbol<nvmlReturn_t(nvmlDevice_t, nvmlComputeMode_t *)>(
                 "nvmlDeviceGetComputeMode");
-        nvmlComputeMode_t compute_mode;
+        nvmlComputeMode_t compute_mode = NVML_COMPUTEMODE_DEFAULT;
         rv = _nvmlDeviceGetComputeMode(device, &compute_mode);
         if_nvml_success(rv, [&]() { gpu.compute_mode = compute_mode; });
       }
@@ -460,7 +460,8 @@ namespace wassail {
         auto const _nvmlDeviceGetEccMode = load_symbol<nvmlReturn_t(
             nvmlDevice_t, nvmlEnableState_t *, nvmlEnableState_t *)>(
             "nvmlDeviceGetEccMode");
-        nvmlEnableState_t ecc_current, ecc_pending;
+        nvmlEnableState_t ecc_current = NVML_FEATURE_DISABLED,
+                          ecc_pending = NVML_FEATURE_DISABLED;
         rv = _nvmlDeviceGetEccMode(device, &ecc_current, &ecc_pending);
         if_nvml_success(rv, [&]() {
           gpu.ecc.current = ecc_current == NVML_FEATURE_ENABLED;
@@ -470,7 +471,7 @@ namespace wassail {
         auto const _nvmlDeviceGetTotalEccErrors = load_symbol<nvmlReturn_t(
             nvmlDevice_t, nvmlMemoryErrorType_t, nvmlEccCounterType_t,
             unsigned long long *)>("nvmlDeviceGetTotalEccErrors");
-        unsigned long long ecc_count;
+        unsigned long long ecc_count = 0;
         rv = _nvmlDeviceGetTotalEccErrors(device,
                                           NVML_MEMORY_ERROR_TYPE_CORRECTED,
                                           NVML_AGGREGATE_ECC, &ecc_count);
@@ -545,7 +546,7 @@ namespace wassail {
         auto const _nvmlDeviceGetMinorNumber =
             load_symbol<nvmlReturn_t(nvmlDevice_t, unsigned int *)>(
                 "nvmlDeviceGetMinorNumber");
-        unsigned int minor_number;
+        unsigned int minor_number = 0;
         rv = _nvmlDeviceGetMinorNumber(device, &minor_number);
         if_nvml_success(rv, [&]() { gpu.minor_number = minor_number; });
       }
@@ -555,7 +556,7 @@ namespace wassail {
         auto const _nvmlDeviceGetPowerState =
             load_symbol<nvmlReturn_t(nvmlDevice_t, nvmlPstates_t *)>(
                 "nvmlDeviceGetPowerState");
-        nvmlPstates_t pstate;
+        nvmlPstates_t pstate = NVML_PSTATE_UNKNOWN;
         rv = _nvmlDeviceGetPowerState(device, &pstate);
         if_nvml_success(rv, [&]() { gpu.pstate = pstate; });
       }
@@ -607,7 +608,7 @@ namespace wassail {
         auto const _nvmlDeviceGetTemperature = load_symbol<nvmlReturn_t(
             nvmlDevice_t, nvmlTemperatureSensors_t, unsigned int *)>(
             "nvmlDeviceGetTemperature");
-        unsigned int temperature;
+        unsigned int temperature = 0;
         rv = _nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU,
                                        &temperature);
         if_nvml_success(rv, [&]() { gpu.temperature = temperature; });
