@@ -123,7 +123,7 @@ namespace wassail {
         struct {
           unsigned int double_bit =
               0; /*!< Number of retired pages due to a double bit error */
-          bool pending;                /*!< Pages pending retirement? */
+          bool pending = false;        /*!< Pages pending retirement? */
           unsigned int single_bit = 0; /*!< Number of retired pages due to
                                           multiple single bit errors */
         } retired_pages;               /*!< Retired pages information */
