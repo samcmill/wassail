@@ -1,32 +1,35 @@
 name: Container build
 
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        container:
-          - amazonlinux2-gnu
-          - amazonlinux2-llvm
-          - nvhpc
-          - rockylinux8-gnu
-          - rockylinux8-llvm
-          - ubuntu16-gnu
-          - ubuntu16-llvm
-          - ubuntu18-gnu
-          - ubuntu18-llvm
-          - ubuntu20-gnu
-          - ubuntu20-llvm
+        include:
+          - cc: gcc
+            cxx: g++
+            image: amazonlinux:2
+          - cc: clang
+            cxx: clang++
+            image: amazonlinux:2
+          - cc: gcc
+            cxx: g++
+            image: rockylinux:8
+          - cc: clang
+            cxx: clang++
+            image: rockylinux:8
+          - cc: gcc
+            cxx: g++
+            image: ubuntu:20.04
+          - cc: clang
+            cxx: clang++
+            image: ubuntu:20.04
     
     steps:
-    - uses: actions/checkout@v6
-
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v4
 
@@ -37,7 +40,12 @@ jobs:
       uses: docker/build-push-action@v7
       with:
         context: ./containers
-        file: ./containers/Dockerfile.${{ matrix.container }}
+        file: ./containers/Dockerfile
         platforms: linux/amd64
         push: false
-        tags: wassail:${{ matrix.container }}
+        build-args: |
+          BRANCH=${{ github.ref }}
+          CC=${{ matrix.cc }}
+          CXX=${{ matrix.cxx }}
+          IMAGE=${{ matrix.image }}
+          REPO=${{ github.server_url }}/${{ github.repository }}
