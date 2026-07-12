@@ -46,7 +46,7 @@ jobs:
         platforms: linux/amd64
         push: false
         build-args: |
-          BRANCH=${{ github.ref }}
+          BRANCH=${{ github.ref_name }}
           CC=${{ matrix.cc }}
           CXX=${{ matrix.cxx }}
           IMAGE=${{ matrix.image }}
