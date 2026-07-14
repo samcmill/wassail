@@ -174,13 +174,13 @@ AC_CHECK_HEADERS([pci/pci.h])
 AC_CHECK_HEADERS([pciaccess.h])
 AC_CHECK_HEADERS([libssh/libsshpp.hpp])
 AC_CHECK_HEADERS([execution])
-AC_CHECK_HEADERS([dlfcn.h mntent.h poll.h signal.h sys/mount.h sys/param.h])
+AC_CHECK_HEADERS([dlfcn.h mntent.h poll.h signal.h spawn.h])
+AC_CHECK_HEADERS([sys/mount.h sys/param.h])
 AC_CHECK_HEADERS([sys/resource.h sys/stat.h sys/statvfs.h sys/sysctl.h])
 AC_CHECK_HEADERS([sys/sysinfo.h sys/ucred.h sys/utsname.h sys/wait.h unistd.h])
-AC_FUNC_FORK
-AC_CHECK_FUNCS([dup2 execvp getfsstat getloadavg getmntent getrlimit killpg])
-AC_CHECK_FUNCS([pipe poll setpgid stat statvfs sysconf sysctlbyname])
-AC_CHECK_FUNCS([sysinfo uname waitpid])
+AC_CHECK_FUNCS([getfsstat getloadavg getmntent getrlimit killpg])
+AC_CHECK_FUNCS([pipe poll posix_spawnp setpgid stat statvfs])
+AC_CHECK_FUNCS([sysconf sysctlbyname sysinfo uname waitpid])
 AC_CHECK_MEMBERS([struct stat.st_atime, struct stat.st_ctime,
                   struct stat.st_mtime, struct stat.st_atimespec,
                   struct stat.st_ctimespec, struct stat.st_mtimespec],
@@ -360,15 +360,14 @@ AS_IF([test "x$ac_cv_header_libssh_libsshpp_hpp" = "xyes" &&
 dnl shell_command data source
 AS_IF([test "x$ac_cv_header_poll_h" = "xyes" &&
        test "x$ac_cv_header_signal_h" = "xyes" &&
+       test "x$ac_cv_header_spawn_h" = "xyes" &&
        test "x$ac_cv_header_sys_wait_h" = "xyes" &&
        test "x$ac_cv_header_unistd_h" = "xyes" &&
-       test "x$ac_cv_func_dup2" = "xyes" &&
-       test "x$ac_cv_func_execvp" = "xyes" &&
        test "x$ac_cv_func_killpg" = "xyes" &&
        test "x$ac_cv_func_pipe" = "xyes" &&
        test "x$ac_cv_func_poll" = "xyes" &&
+       test "x$ac_cv_func_posix_spawnp" = "xyes" &&
        test "x$ac_cv_func_setpgid" = "xyes" &&
-       test "x$ac_cv_func_vfork" = "xyes" &&
        test "x$ac_cv_func_waitpid" = "xyes"],
       [AM_CONDITIONAL(WITH_DATA_SHELL_COMMAND, true)
        AC_DEFINE(WITH_DATA_SHELL_COMMAND,,[shell_command data source])],
