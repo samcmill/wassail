@@ -16,15 +16,15 @@
 #include <poll.h>
 #include <shared_mutex>
 #include <signal.h>
+#include <spawn.h>
 #include <stdexcept>
 #include <string>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <wassail/data/shell_command.hpp>
 
-#if defined HAVE_DUP2 && defined HAVE_EXECVP && defined HAVE_KILLPG &&         \
-    defined HAVE_PIPE && defined HAVE_POLL && defined HAVE_SETPGID &&          \
-    defined HAVE_VFORK && defined HAVE_WAITPID
+#if defined HAVE_KILLPG && defined HAVE_PIPE && defined HAVE_POLL &&           \
+    defined HAVE_POSIX_SPAWNP && defined HAVE_SETPGID && defined HAVE_WAITPID
 #define HAVE_SHELL_COMMAND
 #endif
 
@@ -114,41 +114,46 @@ namespace wassail {
       }
       /* LCOV_EXCL_STOP */
 
-      // fork the child process to execute the command
-      pid_t child = vfork();
+      // Set up file actions: close unused pipe ends, wire stdin/stdout/stderr
+      posix_spawn_file_actions_t fa;
+      posix_spawn_file_actions_init(&fa);
+      posix_spawn_file_actions_addclose(&fa, in[1]);
+      posix_spawn_file_actions_addclose(&fa, out[0]);
+      posix_spawn_file_actions_addclose(&fa, err[0]);
+      posix_spawn_file_actions_adddup2(&fa, in[0], STDIN_FILENO);
+      posix_spawn_file_actions_adddup2(&fa, out[1], STDOUT_FILENO);
+      posix_spawn_file_actions_adddup2(&fa, err[1], STDERR_FILENO);
+
+      // Place the child in its own process group
+      posix_spawnattr_t attr;
+      posix_spawnattr_init(&attr);
+      posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETPGROUP);
+      posix_spawnattr_setpgroup(&attr, 0);
+
+      char *argv[] = {(char *)"/bin/sh", (char *)"-c",
+                      (char *)d.command.c_str(), NULL};
+      pid_t child = -1;
+
+      int spawn_err = posix_spawnp(&child, argv[0], &fa, &attr, argv, NULL);
+
+      posix_spawn_file_actions_destroy(&fa);
+      posix_spawnattr_destroy(&attr);
 
       /* LCOV_EXCL_START */
-      if (child == -1) {
-        wassail::internal::logger()->error("Failed to fork child process");
-        exit(255);
-      }
-      /* LCOV_EXCL_STOP */
-      else if (child == 0) {
-        // child will not be producing any input
+      if (spawn_err != 0) {
+        wassail::internal::logger()->error("Failed to spawn child process");
+        close(in[0]);
         close(in[1]);
         close(out[0]);
+        close(out[1]);
         close(err[0]);
-
-        // map stdout and stderr to internal pipes
-        /* LCOV_EXCL_START */
-        if (dup2(in[0], STDIN_FILENO) < 0 or dup2(out[1], STDOUT_FILENO) < 0 or
-            dup2(err[1], STDERR_FILENO) < 0) {
-          wassail::internal::logger()->error(
-              "Failed to redirect stdout and/or stderr");
-          exit(255);
-        }
-        /* LCOV_EXCL_STOP */
-
-        // create a new process group
-        setpgid(child, 0);
-
-        // build argv and execute command
-        char *argv[] = {(char *)"/bin/sh", (char *)"-c",
-                        (char *)d.command.c_str(), NULL};
-        execvp(argv[0], argv);
-
-        // child will never reach here
+        close(err[1]);
+        return -1;
       }
+      /* LCOV_EXCL_STOP */
+
+      // Apply double-setpgid to close the race before the first killpg
+      setpgid(child, 0);
 
       // no output from the parent
       close(in[0]);
@@ -263,11 +268,13 @@ namespace wassail {
           /* LCOV_EXCL_STOP */
         }
       }
-      else {
-        waitpid(child, &status, 0);
-      }
 
-      data.returncode = WEXITSTATUS(status);
+      waitpid(child, &status, 0);
+
+      if (WIFEXITED(status))
+        data.returncode = WEXITSTATUS(status);
+      else if (WIFSIGNALED(status))
+        data.returncode = 128 + WTERMSIG(status);
 
       // close pipes
       close(out[0]);
