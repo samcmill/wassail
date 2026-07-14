@@ -41,15 +41,15 @@ namespace wassail {
         mode_t mode;       /*!< protection mode of file */
         ino_t ino;         /*!< file serial number */
         nlink_t nlink;     /*!< number of hard links */
-        uid_t uid;         /*<! user ID of file */
-        gid_t gid;         /*<! group ID of file */
-        dev_t rdev;        /*<! device ID */
-        double atime;      /*<! time of last access */
-        double mtime;      /*<! time of last modification */
-        double ctime;      /*<! time of last file status change */
-        off_t size;        /*<! file size, in bytes */
-        blkcnt_t blocks;   /*<! blocks allocated for file */
-        blksize_t blksize; /*<! blocksize for file system I/O */
+        uid_t uid;         /*!< user ID of file */
+        gid_t gid;         /*!< group ID of file */
+        dev_t rdev;        /*!< device ID */
+        double atime;      /*!< time of last access */
+        double mtime;      /*!< time of last modification */
+        double ctime;      /*!< time of last file status change */
+        off_t size;        /*!< file size, in bytes */
+        blkcnt_t blocks;   /*!< blocks allocated for file */
+        blksize_t blksize; /*!< blocksize for file system I/O */
       } data;              /*!< file information data */
 
       /* \brief Mutex to control concurrent reads and writes */
