@@ -2,6 +2,9 @@ name: Container build
 
 on: push
 
+permissions:
+  contents: read
+
 jobs:
   build:
 

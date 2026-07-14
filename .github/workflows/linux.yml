@@ -2,6 +2,9 @@ name: Linux build
 
 on: push
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
