@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <cstdlib>
 #include <iterator>
 #include <regex>
 #include <stdexcept>
@@ -37,11 +36,11 @@ namespace wassail {
         json temp;
 
         temp["user"] = it->str(1);
-        temp["pid"] = std::atoi(it->str(2).c_str());
-        temp["pcpu"] = std::atof(it->str(3).c_str());
-        temp["pmem"] = std::atof(it->str(4).c_str());
-        temp["vsz"] = std::atoi(it->str(5).c_str());
-        temp["rss"] = std::atoi(it->str(6).c_str());
+        temp["pid"] = std::stoi(it->str(2));
+        temp["pcpu"] = std::stof(it->str(3));
+        temp["pmem"] = std::stof(it->str(4));
+        temp["vsz"] = std::stoi(it->str(5));
+        temp["rss"] = std::stoi(it->str(6));
         temp["tt"] = it->str(7);
         temp["state"] = it->str(8);
         temp["start"] = it->str(9);
