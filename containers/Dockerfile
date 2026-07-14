@@ -4,7 +4,7 @@ ARG CFLAGS=
 ARG CXX=g++
 ARG CXXFLAGS=
 ARG LDFLAGS=
-ARG BRANCH=master
+ARG BRANCH=main
 ARG REPO=https://github.com/samcmill/wassail
 
 FROM ${IMAGE} AS base

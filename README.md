@@ -1,11 +1,11 @@
 # wassail
 
-[![Build status](https://img.shields.io/github/actions/workflow/status/samcmill/wassail/linux.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/linux.yml)
-[![Build status](https://img.shields.io/github/actions/workflow/status/samcmill/wassail/macos.yml?branch=master)](https://github.com/samcmill/wassail/actions/workflows/macos.yml)
-[![Coverage Status](https://coveralls.io/repos/github/samcmill/wassail/badge.svg?branch=master)](https://coveralls.io/github/samcmill/wassail?branch=master)
+[![Build status](https://img.shields.io/github/actions/workflow/status/samcmill/wassail/linux.yml?branch=main)](https://github.com/samcmill/wassail/actions/workflows/linux.yml)
+[![Build status](https://img.shields.io/github/actions/workflow/status/samcmill/wassail/macos.yml?branch=main)](https://github.com/samcmill/wassail/actions/workflows/macos.yml)
+[![Coverage Status](https://coveralls.io/repos/github/samcmill/wassail/badge.svg?branch=main)](https://coveralls.io/github/samcmill/wassail?branch=main)
 [![Coverity Status](https://scan.coverity.com/projects/20226/badge.svg)](https://scan.coverity.com/projects/samcmill-wassail)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://samcmill.github.io/wassail)
-[![License](https://img.shields.io/github/license/samcmill/wassail)](https://github.com/samcmill/wassail/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/samcmill/wassail)](https://github.com/samcmill/wassail/blob/main/LICENSE)
 
 wassail is a set of C++ building blocks to check the health of
 UNIX-based systems.  Python bindings are also included.
