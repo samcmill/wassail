@@ -775,7 +775,7 @@ namespace wassail {
             json::json_pointer("/ecc/errors/volatile/uncorrected"), 0ULL);
         gpu.ecc.pending = i.value(json::json_pointer("/ecc/pending"), false);
 
-        gpu.index = i.value("/index", 0);
+        gpu.index = i.value("index", 0);
 
         gpu.inforom.checksum =
             i.value(json::json_pointer("/inforom/checksum"), 0);

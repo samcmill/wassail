@@ -72,7 +72,7 @@ namespace wassail {
           add_rule([](json j) {
             return j.contains(json::json_pointer("/data/loads_scale"));
           });
-          float scale = j.value(json::json_pointer("/data/loads_scale"), 0.0);
+          float scale = j.value(json::json_pointer("/data/loads_scale"), 1.0);
 
           if (config.minute == minute_t::ONE) {
             /* 1 minute load average */
