@@ -22,7 +22,6 @@ RUN yum install -y \
         file \
         git \
         libpciaccess-devel \
-        libssh-devel \
         libtool \
         make \
         pciutils-devel \
