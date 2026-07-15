@@ -8,7 +8,9 @@
 #include "config.h"
 #include "internal.hpp"
 
+#include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
@@ -125,6 +127,10 @@ namespace wassail {
 #endif
 
           d.common::evaluate_common();
+        }
+        else {
+          wassail::internal::logger()->error("stat(\"{0}\") failed: {1}",
+                                             d.path, std::strerror(errno));
         }
 #else
         throw std::runtime_error("stat() is not available");

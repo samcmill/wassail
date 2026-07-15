@@ -6,7 +6,10 @@
  */
 
 #include "config.h"
+#include "internal.hpp"
 
+#include <cerrno>
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
@@ -90,6 +93,10 @@ namespace wassail {
           data.loads_scale = 1 << SI_LOAD_SHIFT;
 
           d.common::evaluate_common();
+        }
+        else {
+          wassail::internal::logger()->error("sysinfo() failed: {}",
+                                             std::strerror(errno));
         }
 #else
         throw std::runtime_error("sysinfo data source is not available");
