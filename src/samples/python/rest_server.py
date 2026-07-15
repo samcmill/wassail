@@ -37,7 +37,7 @@ def data(d):
         j = json.loads(str(d))
         return(j)
     except RuntimeError as e:
-        return {'error': str(e)}
+        return {'error': 'An internal error has occurred'}
 
 @app.route('/data/environment')
 def environment():
