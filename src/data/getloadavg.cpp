@@ -6,8 +6,11 @@
  */
 
 #include "config.h"
+#include "internal.hpp"
 
+#include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
@@ -64,6 +67,10 @@ namespace wassail {
           data.load15 = loadavg[2];
 
           d.common::evaluate_common();
+        }
+        else {
+          wassail::internal::logger()->error("getloadavg() failed: {}",
+                                             std::strerror(errno));
         }
 
 #else

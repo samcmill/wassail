@@ -6,8 +6,11 @@
  */
 
 #include "config.h"
+#include "internal.hpp"
 
+#include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
@@ -73,6 +76,10 @@ namespace wassail {
           data.machine = name.machine;
 
           d.common::evaluate_common();
+        }
+        else {
+          wassail::internal::logger()->error("uname() failed: {}",
+                                             std::strerror(errno));
         }
 #else
         throw std::runtime_error("uname() is not available");
