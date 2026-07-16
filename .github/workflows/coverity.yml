@@ -35,7 +35,7 @@ jobs:
       run: ./autogen.sh
 
     - name: configure
-      run: ./configure --disable-python
+      run: ./configure
 
     - name: make
       run: |
