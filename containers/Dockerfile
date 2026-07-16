@@ -10,9 +10,9 @@ ARG REPO=https://github.com/samcmill/wassail
 FROM ${IMAGE} AS base
 
 ######
-### Amazon Linux 2
+### Amazon Linux 2023
 #####
-FROM base AS base-amazonlinux2
+FROM base AS base-amazonlinux2023
 RUN yum install -y \
         autoconf \
         autoconf-archive \
@@ -22,6 +22,7 @@ RUN yum install -y \
         file \
         git \
         libpciaccess-devel \
+        libssh-devel \
         libtool \
         make \
         pciutils-devel \
@@ -33,12 +34,12 @@ RUN yum install -y \
         tbb && \
     rm -rf /var/cache/yum/*
 
-FROM base-amazonlinux2 AS clang-amazonlinux2
+FROM base-amazonlinux2023 AS clang-amazonlinux2023
 RUN yum install -y \
         clang && \
     rm -rf /var/cache/yum/*
 
-FROM base-amazonlinux2 AS gcc-amazonlinux2
+FROM base-amazonlinux2023 AS gcc-amazonlinux2023
 RUN yum install -y \
         gcc \
         gcc-c++ && \
@@ -102,9 +103,11 @@ RUN apt-get update -y && \
         libtool \
         libudev-dev \
         make \
-        python3 \
-        python3-dev && \
-    rm -rf /var/lib/apt/lists/*
+        python3.9 \
+        python3.9-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+ENV CPATH=/usr/include/python3.9:$CPATH
 
 FROM base-ubuntu20.04 AS clang-ubuntu20.04
 RUN apt-get update -y && \
