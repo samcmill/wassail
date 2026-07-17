@@ -66,7 +66,7 @@ AC_ARG_ENABLE([python],
     [],
     [enable_python=yes])
 if test "x${enable_python}" = "xyes"; then
-    PC_INIT([2.7])
+    PC_INIT([3.9])
     PC_PYTHON_CHECK_HEADERS(,[AC_MSG_WARN(could not find Python headers)])
     PC_PYTHON_CHECK_EXTENSION_SUFFIX
     PC_PYTHON_CHECK_SITE_DIR

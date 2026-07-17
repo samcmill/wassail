@@ -270,7 +270,10 @@ class Test(unittest.TestCase):
             s = str(d)
             j = json.loads(s)
             self.assertEqual(j['name'], 'sysctl')
-            self.assertGreater(j['data']['hw']['cpufrequency_max'], 0)
+            # Bug on Apple silicon returns 0 for the CPU frequency
+            # https://forums.developer.apple.com/forums/thread/671792
+            if not j['data']['machdep']['cpu']['brand_string'].startswith('Apple'):
+                self.assertGreater(j['data']['hw']['cpufrequency_max'], 0)
             self.assertGreater(j['data']['hw']['memsize'], 0)
             self.assertGreater(j['data']['hw']['packages'], 0)
             self.assertGreater(len(j['data']['kern']['version']), 0)
