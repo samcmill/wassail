@@ -79,7 +79,7 @@ namespace wassail {
 #else
       std::for_each(
 #endif
-                    first, last, f);
+          first, last, f);
     }
   } // namespace internal
 
