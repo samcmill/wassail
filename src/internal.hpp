@@ -70,12 +70,12 @@ namespace wassail {
      */
     template <class it, class func>
     void for_each(it first, it last, func f) {
-#if __cpp_lib_execution >= 201603L
-      std::for_each(std::execution::par,
-#elif HAVE_LIBDISPATCH
+#if HAVE_LIBDISPATCH
       wassail::internal::libdispatch::parallel_for_each(
 #elif HAVE_TBB
       tbb::parallel_for_each(
+#elif __cpp_lib_execution >= 201603L
+      std::for_each(std::execution::par,
 #else
       std::for_each(
 #endif
