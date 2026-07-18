@@ -1,4 +1,5 @@
 ARG IMAGE=rockylinux:8
+ARG SHORT_IMAGE=${IMAGE//:/}
 ARG CC=gcc
 ARG CFLAGS=
 ARG CXX=g++
@@ -46,6 +47,137 @@ RUN yum install -y \
     rm -rf /var/cache/yum/*
 
 ######
+### OneAPI (Ubuntu 26.04)
+######
+FROM base AS base-oneapi
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libibumad-dev \
+        libpciaccess-dev \
+        libpci-dev \
+        libssh-dev \
+        libtool \
+        libudev-dev \
+        make \
+        python3 \
+        python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+FROM base-oneapi AS icx-oneapi
+
+######
+### OpenSUSE Leap 15.6
+######
+FROM base AS base-opensuse15
+RUN zypper install -y \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libpciaccess-devel \
+        libssh-devel \
+        libtool \
+        make \
+        pciutils-devel \
+        procps \
+        python39 \
+        python39-devel \
+        rdma-core-devel \
+        systemd-devel \
+        tbb-devel && \
+    zypper clean -a && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+ENV CPATH="/usr/include/python3.9"
+
+FROM base-opensuse15 AS clang-opensuse15
+RUN zypper install -y \
+        clang && \
+    zypper clean -a
+
+FROM base-opensuse15 AS gcc-opensuse15
+RUN zypper install -y \
+        gcc \
+        gcc-c++ \
+        openmpi4-devel && \
+    zypper clean -a
+ENV PATH="/usr/lib64/mpi/gcc/openmpi4/bin:$PATH" \
+    LD_LIBRARY_PATH="/usr/lib64/mpi/gcc/openmpi4/lib64"
+
+######
+### OpenSUSE Leap 16.0
+######
+FROM base AS base-opensuse16
+RUN zypper install -y \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libpciaccess-devel \
+        libssh-devel \
+        libtool \
+        make \
+        pciutils-devel \
+        procps \
+        python3 \
+        python3-devel \
+        rdma-core-devel \
+        systemd-devel \
+        tbb-devel && \
+    zypper clean -a
+
+FROM base-opensuse16 AS clang-opensuse16
+RUN zypper install -y \
+        clang && \
+    zypper clean -a
+
+FROM base-opensuse16 AS gcc-opensuse16
+RUN zypper install -y \
+        gcc \
+        gcc-c++ \
+        openmpi5-devel && \
+    zypper clean -a
+ENV PATH="/usr/lib64/mpi/gcc/openmpi5/bin:$PATH" \
+    LD_LIBRARY_PATH="/usr/lib64/mpi/gcc/openmpi5/lib64"
+
+######
+### NVHPC (Ubuntu 24.04)
+######
+FROM base AS base-nvhpc
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libibumad-dev \
+        libpciaccess-dev \
+        libssh-dev \
+        libtool \
+        libudev-dev \
+        make \
+        python3 \
+        python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+FROM base-nvhpc AS nvc-nvhpc
+
+######
 ### Rockylinux 8
 ######
 FROM base AS base-rockylinux8
@@ -71,7 +203,7 @@ RUN yum install -y dnf-utils && \
         systemd-devel \
         tbb && \
     rm -rf /var/cache/yum/*
-ENV CPATH=/usr/include/python3.9:$CPATH
+ENV CPATH="/usr/include/python3.9"
 
 FROM base-rockylinux8 AS clang-rockylinux8
 RUN yum install -y \
@@ -83,6 +215,82 @@ RUN yum install -y \
         gcc \
         gcc-c++ && \
     rm -rf /var/cache/yum/*
+
+######
+### Rockylinux 9
+######
+FROM base AS base-rockylinux9
+RUN  dnf install -y dnf-utils && \
+     dnf config-manager --set-enabled crb && \
+     dnf install -y \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libpciaccess-devel \
+        libssh-devel \
+        libtool \
+        make \
+        pciutils-devel \
+        procps \
+        python \
+        python-devel \
+        rdma-core-devel \
+        systemd-devel \
+        tbb && \
+    dnf clean all
+
+FROM base-rockylinux9 AS clang-rockylinux9
+RUN dnf install -y \
+        clang && \
+    dnf clean all
+
+FROM base-rockylinux9 AS gcc-rockylinux9
+RUN dnf install -y \
+        gcc \
+        gcc-c++ && \
+    dnf clean all
+
+######
+### Rockylinux 10
+######
+FROM base AS base-rockylinux10
+RUN  dnf install -y dnf-utils && \
+     dnf config-manager --set-enabled crb && \
+     dnf install -y \
+        autoconf \
+        autoconf-archive \
+        automake \
+        ca-certificates \
+        diffutils \
+        file \
+        git \
+        libpciaccess-devel \
+        libssh-devel \
+        libtool \
+        make \
+        pciutils-devel \
+        procps \
+        python \
+        python-devel \
+        rdma-core-devel \
+        systemd-devel \
+        tbb && \
+    dnf clean all
+
+FROM base-rockylinux10 AS clang-rockylinux10
+RUN dnf install -y \
+        clang && \
+    dnf clean all
+
+FROM base-rockylinux10 AS gcc-rockylinux10
+RUN dnf install -y \
+        gcc \
+        gcc-c++ && \
+    dnf clean all
 
 ######
 ### Ubuntu 20.04
@@ -107,7 +315,7 @@ RUN apt-get update -y && \
         python3.9-dev && \
     rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-ENV CPATH=/usr/include/python3.9:$CPATH
+ENV CPATH="/usr/include/python3.9"
 
 FROM base-ubuntu20.04 AS clang-ubuntu20.04
 RUN apt-get update -y && \
@@ -128,7 +336,7 @@ RUN apt-get update -y && \
 ######
 ### wassail
 ######
-FROM ${CC}-${IMAGE//:/} AS build
+FROM ${CC}-${SHORT_IMAGE} AS build
 ARG BRANCH
 ARG CC
 ARG CFLAGS

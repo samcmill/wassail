@@ -16,11 +16,13 @@
 #include <memory>
 #include <utility>
 #include <wassail/fmt/format.h>
-#if defined(HAVE_EXECUTION_H) && __cpp_lib_execution >= 201603L
+#if HAVE_EXECUTION
 #include <execution>
-#elif HAVE_DISPATCH_DISPATCH_H
+#endif
+#if HAVE_DISPATCH_DISPATCH_H
 #include <dispatch/dispatch.h>
-#elif HAVE_TBB_PARALLEL_FOR_EACH_H
+#endif
+#if HAVE_TBB_PARALLEL_FOR_EACH_H
 #include <tbb/parallel_for_each.h>
 #endif
 

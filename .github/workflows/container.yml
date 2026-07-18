@@ -19,12 +19,50 @@ jobs:
           - cc: clang
             cxx: clang++
             image: amazonlinux:2023
+          - cc: nvc
+            cxx: nvc++
+            image: nvcr.io/nvidia/nvhpc:26.5-devel-cuda13.2-ubuntu24.04
+            short_image: nvhpc
+          - cc: icx
+            cxx: icpx
+            image: intel/oneapi:2026.1.0-devel-ubuntu24.04
+            short_image: oneapi
+          - cc: gcc
+            cxx: g++
+            image: opensuse/leap:15.6
+            short_image: opensuse15
+          - cc: clang
+            cxx: clang++
+            image: opensuse/leap:15.6
+            short_image: opensuse15
+          - cc: gcc
+            cxx: g++
+            image: opensuse/leap:16.0
+            short_image: opensuse16
+          - cc: clang
+            cxx: clang++
+            image: opensuse/leap:16.0
+            short_image: opensuse16
           - cc: gcc
             cxx: g++
             image: rockylinux:8
           - cc: clang
             cxx: clang++
             image: rockylinux:8
+          - cc: gcc
+            cxx: g++
+            image: rockylinux:9
+          - cc: clang
+            cxx: clang++
+            image: rockylinux:9
+          - cc: gcc
+            cxx: g++
+            image: rockylinux/rockylinux:10
+            short_image: rockylinux10
+          - cc: clang
+            cxx: clang++
+            image: rockylinux/rockylinux:10
+            short_image: rockylinux10
           - cc: gcc
             cxx: g++
             image: ubuntu:20.04
