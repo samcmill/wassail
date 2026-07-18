@@ -92,3 +92,4 @@ jobs:
           CXX=${{ matrix.cxx }}
           IMAGE=${{ matrix.image }}
           REPO=${{ github.server_url }}/${{ github.repository }}
+          SHORT_IMAGE=${{ matrix.short_image }}
