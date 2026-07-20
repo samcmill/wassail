@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <cstdlib>
 #include <iterator>
 #include <regex>
 #include <stdexcept>
@@ -123,8 +122,8 @@ namespace wassail {
 
         apply_regex(stdout, re, [&j](iter it) {
           j["data"]["latency"].push_back(
-              {{"size", std::atoi(it->str(1).c_str())},
-               {"latency", std::atof(it->str(2).c_str())}});
+              {{"size", std::stoi(it->str(1))},
+               {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -138,8 +137,8 @@ namespace wassail {
 
         apply_regex(stdout, re, [&j](iter it) {
           j["data"]["latency"].push_back(
-              {{"size", std::atoi(it->str(1).c_str())},
-               {"latency", std::atof(it->str(2).c_str())}});
+              {{"size", std::stoi(it->str(1))},
+               {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -153,8 +152,8 @@ namespace wassail {
 
         apply_regex(stdout, re, [&j](iter it) {
           j["data"]["bandwidth"].push_back(
-              {{"size", std::atoi(it->str(1).c_str())},
-               {"bandwidth", std::atof(it->str(2).c_str())}});
+              {{"size", std::stoi(it->str(1))},
+               {"bandwidth", std::stod(it->str(2))}});
         });
 
         break;
@@ -165,7 +164,7 @@ namespace wassail {
         std::regex re("This is a test with (\\d+) processes");
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["nprocs"] = std::atoi(it->str(1).c_str());
+          j["data"]["nprocs"] = std::stoi(it->str(1));
         });
 
         break;
@@ -177,10 +176,10 @@ namespace wassail {
                       "(\\d+) ms\\n");
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["nprocs"] = std::atoi(it->str(1).c_str());
-          j["data"]["min"] = std::atoi(it->str(2).c_str());
-          j["data"]["max"] = std::atoi(it->str(3).c_str());
-          j["data"]["avg"] = std::atoi(it->str(4).c_str());
+          j["data"]["nprocs"] = std::stoi(it->str(1));
+          j["data"]["min"] = std::stoi(it->str(2));
+          j["data"]["max"] = std::stoi(it->str(3));
+          j["data"]["avg"] = std::stoi(it->str(4));
         });
 
         break;
@@ -194,8 +193,8 @@ namespace wassail {
 
         apply_regex(stdout, re, [&j](iter it) {
           j["data"]["latency"].push_back(
-              {{"size", std::atoi(it->str(1).c_str())},
-               {"latency", std::atof(it->str(2).c_str())}});
+              {{"size", std::stoi(it->str(1))},
+               {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -209,8 +208,8 @@ namespace wassail {
 
         apply_regex(stdout, re, [&j](iter it) {
           j["data"]["latency"].push_back(
-              {{"size", std::atoi(it->str(1).c_str())},
-               {"latency", std::atof(it->str(2).c_str())}});
+              {{"size", std::stoi(it->str(1))},
+               {"latency", std::stod(it->str(2))}});
         });
 
         break;
