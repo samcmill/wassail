@@ -58,7 +58,7 @@ TEST_CASE("shell_output basic JSON input (shell_command)") {
   REQUIRE(r4->issue == wassail::result::issue_t::YES);
 }
 
-TEST_CASE("shell_oput basic JSON input (remote_shell_command)") {
+TEST_CASE("shell_output basic JSON input (remote_shell_command)") {
   auto j = R"(
     {
       "data": [
@@ -102,9 +102,25 @@ TEST_CASE("shell_oput basic JSON input (remote_shell_command)") {
   REQUIRE(r1->issue == wassail::result::issue_t::YES);
   REQUIRE(r1->children.size() == 2);
   REQUIRE(r1->children[0]->issue == wassail::result::issue_t::YES);
-  REQUIRE(r1->children[0]->detail ==
-          "Observed output 'bar 1\n' does not match expected output 'bar\n'");
   REQUIRE(r1->children[1]->issue == wassail::result::issue_t::YES);
+
+  /* The child order is not guaranteed to be deterministic */
+  if (r1->children[0]->system_id[0] == "node1") {
+    REQUIRE(r1->children[0]->detail ==
+            "Observed output 'bar 1\n' does not match expected output 'bar\n'");
+    REQUIRE(r1->children[1]->detail ==
+            "Observed output 'bar 2\n' does not match expected output 'bar\n'");
+  }
+  else if (r1->children[1]->system_id[0] == "node1") {
+    REQUIRE(r1->children[0]->detail ==
+            "Observed output 'bar 2\n' does not match expected output 'bar\n'");
+    REQUIRE(r1->children[1]->detail ==
+            "Observed output 'bar 1\n' does not match expected output 'bar\n'");
+  }
+  else {
+    /* should never reach here */
+    REQUIRE(false);
+  }
 
   auto c2 = wassail::check::misc::shell_output("bar 2\n");
   auto r2 = c2.check(j);

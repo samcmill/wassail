@@ -23,6 +23,11 @@
 #include <unistd.h>
 #include <wassail/data/shell_command.hpp>
 
+#if defined __APPLE__
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
+#endif
+
 #if defined HAVE_KILLPG && defined HAVE_PIPE && defined HAVE_POLL &&           \
     defined HAVE_POSIX_SPAWNP && defined HAVE_SETPGID && defined HAVE_WAITPID
 #define HAVE_SHELL_COMMAND
@@ -134,7 +139,7 @@ namespace wassail {
                       (char *)d.command.c_str(), NULL};
       pid_t child = -1;
 
-      int spawn_err = posix_spawnp(&child, argv[0], &fa, &attr, argv, NULL);
+      int spawn_err = posix_spawnp(&child, argv[0], &fa, &attr, argv, environ);
 
       posix_spawn_file_actions_destroy(&fa);
       posix_spawnattr_destroy(&attr);

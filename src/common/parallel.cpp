@@ -10,11 +10,11 @@
 namespace wassail {
   namespace internal {
     bool parallel() {
-#if __cpp_lib_execution >= 201603L
-      return true;
-#elif HAVE_LIBDISPATCH
+#if HAVE_LIBDISPATCH
       return true;
 #elif HAVE_TBB
+      return true;
+#elif __cpp_lib_execution >= 201603L && defined __APPLE__
       return true;
 #else
       return false;

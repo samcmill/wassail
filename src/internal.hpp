@@ -16,11 +16,13 @@
 #include <memory>
 #include <utility>
 #include <wassail/fmt/format.h>
-#if defined(HAVE_EXECUTION_H) && __cpp_lib_execution >= 201603L
+#if HAVE_EXECUTION
 #include <execution>
-#elif HAVE_DISPATCH_DISPATCH_H
+#endif
+#if HAVE_DISPATCH_DISPATCH_H
 #include <dispatch/dispatch.h>
-#elif HAVE_TBB_PARALLEL_FOR_EACH_H
+#endif
+#if HAVE_TBB_PARALLEL_FOR_EACH_H
 #include <tbb/parallel_for_each.h>
 #endif
 
@@ -68,16 +70,16 @@ namespace wassail {
      */
     template <class it, class func>
     void for_each(it first, it last, func f) {
-#if __cpp_lib_execution >= 201603L
-      std::for_each(std::execution::par,
-#elif HAVE_LIBDISPATCH
+#if HAVE_LIBDISPATCH
       wassail::internal::libdispatch::parallel_for_each(
 #elif HAVE_TBB
       tbb::parallel_for_each(
+#elif __cpp_lib_execution >= 201603L
+      std::for_each(std::execution::par,
 #else
       std::for_each(
 #endif
-                    first, last, f);
+          first, last, f);
     }
   } // namespace internal
 
