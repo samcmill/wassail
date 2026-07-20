@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <cstdlib>
 #include <iterator>
 #include <regex>
 #include <stdexcept>
@@ -34,10 +33,10 @@ namespace wassail {
 
       for (auto it = std::sregex_iterator(stdout.begin(), stdout.end(), re);
            it != std::sregex_iterator(); ++it) {
-        j["data"]["copy"] = std::atof(it->str(1).c_str());
-        j["data"]["scale"] = std::atof(it->str(2).c_str());
-        j["data"]["add"] = std::atof(it->str(3).c_str());
-        j["data"]["triad"] = std::atof(it->str(4).c_str());
+        j["data"]["copy"] = std::stod(it->str(1));
+        j["data"]["scale"] = std::stod(it->str(2));
+        j["data"]["add"] = std::stod(it->str(3));
+        j["data"]["triad"] = std::stod(it->str(4));
       }
     }
   } // namespace data
