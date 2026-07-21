@@ -33,14 +33,7 @@ dnl Use serial-tests to get more verbose output
 AM_INIT_AUTOMAKE([-Wall -Werror foreign serial-tests])
 
 AC_CONFIG_MACRO_DIRS([m4])
-m4_include([m4/ax_check_compile_flag.m4])
 m4_include([m4/ax_code_coverage.m4])
-m4_include([m4/ax_cxx_compile_stdcxx.m4])
-m4_include([m4/ax_cxx_compile_stdcxx_14.m4])
-m4_include([m4/ax_cxx_compile_stdcxx_17.m4])
-m4_include([m4/ax_prog_doxygen.m4])
-m4_include([m4/ax_subdirs_configure.m4])
-m4_include([m4/python.m4])
 
 AM_SILENT_RULES([yes])
 
@@ -66,18 +59,11 @@ AC_ARG_ENABLE([python],
     [],
     [enable_python=yes])
 if test "x${enable_python}" = "xyes"; then
-    PC_INIT([3.9])
-    PC_PYTHON_CHECK_HEADERS(,[AC_MSG_WARN(could not find Python headers)])
-    PC_PYTHON_CHECK_EXTENSION_SUFFIX
-    PC_PYTHON_CHECK_SITE_DIR
+    AM_PATH_PYTHON([3.9])
+    AX_PYTHON_DEVEL([>= '3.9'])
     AM_CONDITIONAL(WITH_PYTHON, true)
     AX_CHECK_COMPILE_FLAG([-fvisibility=hidden],
                           [PYBIND11_EXTRA_CXXFLAGS="-fvisibility=hidden"])
-    AC_SUBST(pythondir)
-    AS_IF([test "x$PYTHON_EXTENSION_SUFFIX" = "x"],
-          AC_SUBST(PYTHON_EXTENSION_SUFFIX, [.so])
-          AC_SUBST(PYTHON_EXTENSION_SUFFIX))
-    AC_SUBST(PYTHON_INCLUDES)
     AC_SUBST(PYBIND11_EXTRA_CXXFLAGS)
 else
     AM_CONDITIONAL(WITH_PYTHON, false)
@@ -134,7 +120,6 @@ AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
             CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"])
 
 dnl Check required features
-AC_HEADER_STDC
 AC_CHECK_HEADERS([cassert],,AC_MSG_ERROR(cassert is required))
 AC_CHECK_HEADERS([fcntl.h],,AC_MSG_ERROR(fcntl.h is required))
 AC_CHECK_HEADERS([limits.h],,AC_MSG_ERROR(limits.h is required))
