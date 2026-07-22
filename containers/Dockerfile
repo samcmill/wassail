@@ -98,7 +98,6 @@ RUN zypper install -y \
         tbb-devel && \
     zypper clean -a && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-ENV CPATH="/usr/include/python3.9"
 
 FROM base-opensuse15 AS clang-opensuse15
 RUN zypper install -y \
@@ -204,7 +203,6 @@ RUN yum install -y dnf-utils && \
         systemd-devel \
         tbb && \
     rm -rf /var/cache/yum/*
-ENV CPATH="/usr/include/python3.9"
 
 FROM base-rockylinux8 AS clang-rockylinux8
 RUN yum install -y \
@@ -316,7 +314,6 @@ RUN apt-get update -y && \
         python3.9-dev && \
     rm -rf /var/lib/apt/lists/* && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-ENV CPATH="/usr/include/python3.9"
 
 FROM base-ubuntu20.04 AS clang-ubuntu20.04
 RUN apt-get update -y && \
@@ -354,5 +351,5 @@ RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch ${BRANCH} $
     make -j$(nproc) && \
     make -j$(nproc) check && \
     make -j$(nproc) install && \
-    make -j$(nproc) installcheck && \
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}/usr/local/lib" make -j$(nproc) installcheck && \
     rm -rf /var/tmp/wassail

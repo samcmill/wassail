@@ -34,9 +34,10 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign serial-tests])
 
 AC_CONFIG_MACRO_DIRS([m4])
 m4_include([m4/ax_code_coverage.m4])
-dnl distutils.sysconfig has been removed as Python 3.12.
-dnl autotools-archive version 2022.02.11 order later is necessary to
-dnl properly fallback when distutils is not available.
+dnl autotools-archive version 2022.02.11 or later is necessary to
+dnl properly fallback when distutils is not available.  Bundle it
+dnl until the necessary version of autotools-archive is available on
+dnl all supported OSes.
 m4_include([m4/ax_python_devel.m4])
 
 AM_SILENT_RULES([yes])
