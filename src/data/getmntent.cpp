@@ -8,7 +8,9 @@
 #include "config.h"
 #include "internal.hpp"
 
+#include <cerrno>
 #include <cstdio>
+#include <cstring>
 #include <list>
 #include <shared_mutex>
 #include <string>
@@ -95,7 +97,15 @@ namespace wassail {
         }
 
         struct mntent *mnt;
-        while ((mnt = ::getmntent(fp)) != NULL) {
+        while (mnt = ::getmntent(fp)) {
+          if (mnt == NULL) {
+            if (errno != 0) {
+              wassail::internal::logger()->error(
+                  "getmntent(\"{0}\") failed: {1}", mtab, std::strerror(errno));
+            }
+            break;
+          }
+
           if (mnt->mnt_dir != NULL) {
             struct statvfs vfs;
             int rv = statvfs(mnt->mnt_dir, &vfs);
@@ -117,6 +127,11 @@ namespace wassail {
               item.type = mnt->mnt_type;
 
               data.file_systems.push_back(item);
+            }
+            else {
+              wassail::internal::logger()->error("statvfs(\"{0}\") failed: {1}",
+                                                 mnt->mnt_dir,
+                                                 std::strerror(errno));
             }
           }
         }
