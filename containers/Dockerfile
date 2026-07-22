@@ -5,6 +5,7 @@ ARG CFLAGS=
 ARG CXX=g++
 ARG CXXFLAGS=
 ARG LDFLAGS=
+ARG PYTHON=
 ARG BRANCH=main
 ARG REPO=https://github.com/samcmill/wassail
 
@@ -343,13 +344,15 @@ ARG CFLAGS
 ARG CXX
 ARG CXXFLAGS
 ARG LDFLAGS
+ARG PYTHON
 ARG REPO
 
 RUN mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch ${BRANCH} ${REPO} wassail && cd - && \
     cd /var/tmp/wassail && \
     ./autogen.sh && \
-    cd /var/tmp/wassail &&  CC=${CC} CXX=${CXX} CFLAGS=${CFLAGS} CXXFLAGS=${CXXFLAGS} LDFLAGS=${LDFLAGS} ./configure --prefix=/usr/local && \
+    cd /var/tmp/wassail &&  CC=${CC} CXX=${CXX} CFLAGS=${CFLAGS} CXXFLAGS=${CXXFLAGS} LDFLAGS=${LDFLAGS} PYTHON=${PYTHON} ./configure --prefix=/usr/local && \
     make -j$(nproc) && \
     make -j$(nproc) check && \
     make -j$(nproc) install && \
+    make -j$(nproc) installcheck && \
     rm -rf /var/tmp/wassail
