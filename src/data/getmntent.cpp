@@ -97,12 +97,10 @@ namespace wassail {
         }
 
         struct mntent *mnt;
-        while (mnt = ::getmntent(fp)) {
-          if (mnt == NULL) {
-            if (errno != 0) {
-              wassail::internal::logger()->error(
-                  "getmntent(\"{0}\") failed: {1}", mtab, std::strerror(errno));
-            }
+        while ((mnt = ::getmntent(fp)) != NULL) {
+          if (errno != 0) {
+            wassail::internal::logger()->error("getmntent(\"{0}\") failed: {1}",
+                                               mtab, std::strerror(errno));
             break;
           }
 
