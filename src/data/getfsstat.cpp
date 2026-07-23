@@ -57,7 +57,14 @@ namespace wassail {
       void evaluate(getfsstat &d, bool force);
 
     private:
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
       int flags = MNT_NOWAIT; /*!< getfsstat() flag, return immediately */
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
     };
 
     getfsstat::getfsstat() : pimpl{std::make_unique<impl>()} {}
