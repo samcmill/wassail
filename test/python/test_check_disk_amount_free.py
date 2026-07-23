@@ -1,4 +1,5 @@
 import json
+import os
 import unittest
 import wassail
 
@@ -52,6 +53,8 @@ class Test(unittest.TestCase):
         r2 = c2.check(j)
         self.assertEqual(r2.issue, wassail.issue_t.YES)
 
+    # will only pass on machines that actually have a mtab
+    @unittest.skip(not os.path.exists('/etc/mtab'))
     def test_getmntent(self):
         """getmntent input"""
         d = wassail.data.getmntent()

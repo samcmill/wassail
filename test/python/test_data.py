@@ -73,7 +73,8 @@ class Test(unittest.TestCase):
             s = str(d)
             j = json.loads(s)
             self.assertEqual(j['name'], 'getmntent')
-            self.assertGreaterEqual(len(j['data']['file_systems']), 1)
+            if os.path.exists('/etc/mtab'):
+                self.assertGreaterEqual(len(j['data']['file_systems']), 1)
         else:
             with self.assertRaises(RuntimeError):
                 d.evaluate()

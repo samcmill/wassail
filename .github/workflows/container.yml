@@ -49,6 +49,9 @@ jobs:
           - cc: clang
             cxx: clang++
             image: rockylinux:8
+            # clang has a dependency on 3.12, so both 3.9 and 3.12
+            # end up installed.  Select 3.9.
+            python: /usr/bin/python3.9
           - cc: gcc
             cxx: g++
             image: rockylinux:9
@@ -90,6 +93,7 @@ jobs:
           BRANCH=${{ github.ref_name }}
           CC=${{ matrix.cc }}
           CXX=${{ matrix.cxx }}
+          ${{ matrix.python != '' && format('PYTHON={0}', matrix.python) || '' }}
           IMAGE=${{ matrix.image }}
           REPO=${{ github.server_url }}/${{ github.repository }}
           ${{ matrix.short_image != '' && format('SHORT_IMAGE={0}', matrix.short_image) || '' }}
