@@ -96,6 +96,10 @@ namespace wassail {
           return;
         }
 
+        /* An error has occurred if getmntent() returns NULL and errno
+         * is set.  Reset errno to 0 to clear out any possible previous issues.
+         */
+        errno = 0;
         struct mntent *mnt;
         while ((mnt = ::getmntent(fp)) != NULL) {
           if (errno != 0) {
@@ -132,6 +136,8 @@ namespace wassail {
                                                  std::strerror(errno));
             }
           }
+
+          errno = 0;
         }
 
         endmntent(fp);
