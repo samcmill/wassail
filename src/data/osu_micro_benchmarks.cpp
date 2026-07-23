@@ -121,9 +121,8 @@ namespace wassail {
         j["data"]["latency"] = json::array();
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["latency"].push_back(
-              {{"size", std::stoi(it->str(1))},
-               {"latency", std::stod(it->str(2))}});
+          j["data"]["latency"].push_back({{"size", std::stoi(it->str(1))},
+                                          {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -136,9 +135,8 @@ namespace wassail {
         j["data"]["latency"] = json::array();
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["latency"].push_back(
-              {{"size", std::stoi(it->str(1))},
-               {"latency", std::stod(it->str(2))}});
+          j["data"]["latency"].push_back({{"size", std::stoi(it->str(1))},
+                                          {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -192,9 +190,8 @@ namespace wassail {
         j["data"]["latency"] = json::array();
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["latency"].push_back(
-              {{"size", std::stoi(it->str(1))},
-               {"latency", std::stod(it->str(2))}});
+          j["data"]["latency"].push_back({{"size", std::stoi(it->str(1))},
+                                          {"latency", std::stod(it->str(2))}});
         });
 
         break;
@@ -207,9 +204,8 @@ namespace wassail {
         j["data"]["latency"] = json::array();
 
         apply_regex(stdout, re, [&j](iter it) {
-          j["data"]["latency"].push_back(
-              {{"size", std::stoi(it->str(1))},
-               {"latency", std::stod(it->str(2))}});
+          j["data"]["latency"].push_back({{"size", std::stoi(it->str(1))},
+                                          {"latency", std::stod(it->str(2))}});
         });
 
         break;
