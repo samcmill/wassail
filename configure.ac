@@ -35,7 +35,11 @@ dnl code coverage macro
 AM_INIT_AUTOMAKE([-Wall -Wno-portability -Werror foreign serial-tests])
 
 AC_CONFIG_MACRO_DIRS([m4])
-dnl autotools-archive version 2022.02.11 or later is necessary to
+dnl autoconf-archive version 2019.01.06 introduced a breaking change
+dnl in the code coverage macro.  Until no supported OSes provide the
+dnl older version, bundle it to ensure the right version is used.
+m4_include([m4/ax_code_coverage.m4])
+dnl autoconf-archive version 2022.02.11 or later is necessary to
 dnl properly fallback when distutils is not available.  Bundle it
 dnl until the necessary version of autotools-archive is available on
 dnl all supported OSes.
