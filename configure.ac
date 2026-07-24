@@ -30,10 +30,11 @@ AC_DEFINE(LOGGER, "wassail_logger", [Logger name])
 AC_DEFINE(SPDLOG_FMT_EXTERNAL, [], [Use external fmtlib with spdlog])
 
 dnl Use serial-tests to get more verbose output
-AM_INIT_AUTOMAKE([-Wall -Werror foreign serial-tests])
+dnl Use -Wno-portability to workaround modern bash syntax issues in the
+dnl code coverage macro
+AM_INIT_AUTOMAKE([-Wall -Wno-portability -Werror foreign serial-tests])
 
 AC_CONFIG_MACRO_DIRS([m4])
-m4_include([m4/ax_code_coverage.m4])
 dnl autotools-archive version 2022.02.11 or later is necessary to
 dnl properly fallback when distutils is not available.  Bundle it
 dnl until the necessary version of autotools-archive is available on
