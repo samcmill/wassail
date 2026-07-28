@@ -68,10 +68,10 @@ void py_data(py::module &m) {
       .def(py::init<uint32_t, std::string>())
       .def(py::init<uint32_t, std::string, wassail::data::mpirun::mpi_impl_t>())
       .def(py::init<uint32_t, std::string, std::string>())
-      .def(py::init<uint32_t, std::vector<std::string>, std::string>())
+      .def(py::init<uint32_t, std::list<std::string>, std::string>())
       .def(py::init<uint32_t, uint32_t, std::string, std::string, std::string,
                     std::string, uint8_t, wassail::data::mpirun::mpi_impl_t>())
-      .def(py::init<uint32_t, uint32_t, std::vector<std::string>, std::string,
+      .def(py::init<uint32_t, uint32_t, std::list<std::string>, std::string,
                     std::string, std::string, uint8_t,
                     wassail::data::mpirun::mpi_impl_t>())
       .def("__str__",
@@ -103,13 +103,13 @@ void py_data(py::module &m) {
       .def(py::init<uint32_t, std::string,
                     wassail::data::osu_micro_benchmarks::osu_benchmark_t,
                     wassail::data::mpirun::mpi_impl_t>())
-      .def(py::init<uint32_t, std::vector<std::string>,
+      .def(py::init<uint32_t, std::list<std::string>,
                     wassail::data::osu_micro_benchmarks::osu_benchmark_t,
                     wassail::data::mpirun::mpi_impl_t>())
       .def(py::init<uint32_t, uint32_t, std::string, std::string,
                     wassail::data::osu_micro_benchmarks::osu_benchmark_t,
                     uint8_t, wassail::data::mpirun::mpi_impl_t>())
-      .def(py::init<uint32_t, uint32_t, std::vector<std::string>, std::string,
+      .def(py::init<uint32_t, uint32_t, std::list<std::string>, std::string,
                     wassail::data::osu_micro_benchmarks::osu_benchmark_t,
                     uint8_t, wassail::data::mpirun::mpi_impl_t>())
       .def("__str__",

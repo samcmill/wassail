@@ -9,8 +9,8 @@
 #ifndef _WASSAIL_DATA_MPIRUN_HPP
 #define _WASSAIL_DATA_MPIRUN_HPP
 
+#include <list>
 #include <string>
-#include <vector>
 #include <wassail/data/shell_command.hpp>
 
 namespace wassail {
@@ -32,7 +32,7 @@ namespace wassail {
 
       std::string hostfile; /*!< Path to file containing list of hosts */
 
-      std::vector<std::string> hostlist; /*!< List of hosts */
+      std::list<std::string> hostlist; /*!< List of hosts */
 
       std::string mpirun_args; /*!< extra mpirun arguments */
 
@@ -82,7 +82,7 @@ namespace wassail {
        * \param[in] program MPI program to launch
        * \param[in] mpi_impl MPI implementation
        */
-      mpirun(uint32_t num_procs, std::vector<std::string> hostlist,
+      mpirun(uint32_t num_procs, std::list<std::string> hostlist,
              std::string program, mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : mpirun(num_procs, 0, hostlist, "", program, "", 60, mpi_impl) {};
 
@@ -112,7 +112,7 @@ namespace wassail {
        * \param[in] mpi_impl MPI implementation
        */
       mpirun(uint32_t num_procs, uint32_t per_node,
-             std::vector<std::string> hostlist, std::string mpirun_args,
+             std::list<std::string> hostlist, std::string mpirun_args,
              std::string program, std::string program_args, uint8_t timeout,
              mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI);
 
