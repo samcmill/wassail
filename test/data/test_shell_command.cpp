@@ -100,7 +100,7 @@ TEST_CASE("shell_command long string") {
   // the string should be longer than the chunk size of 4096 bytes,
   // and also not a multiple of the chunk size, so use 16400 (4*4100)
   auto d = wassail::data::shell_command(
-      "env LC_ALL=C tr -dc '[:alnum'] < /dev/urandom | dd bs=4 count=4100");
+      "env LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | dd bs=4 count=4100 iflag=fullblock");
 
   if (d.enabled()) {
     d.evaluate();
