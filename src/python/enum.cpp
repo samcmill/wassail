@@ -5,16 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-/* warning: ISO C++1z does not allow ‘register’ storage class specifier
-   [-Wregister] */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wregister"
-#include <pybind11/pybind11.h>
-
 #include <pybind11/cast.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#pragma GCC diagnostic pop
-
 #include <wassail/json/json.hpp>
 #include <wassail/wassail.hpp>
 
