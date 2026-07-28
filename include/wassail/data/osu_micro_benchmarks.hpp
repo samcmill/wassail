@@ -73,8 +73,7 @@ namespace wassail {
        * \param[in] osu_benchmark OSU micro-benchmark to launch
        * \param[in] mpi_impl MPI implementation
        */
-      osu_micro_benchmarks(uint32_t num_procs,
-                           std::vector<std::string> hostlist,
+      osu_micro_benchmarks(uint32_t num_procs, std::list<std::string> hostlist,
                            osu_benchmark_t osu_benchmark,
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)
           : osu_micro_benchmarks(num_procs, 0, hostlist, "", osu_benchmark, 60,
@@ -107,7 +106,7 @@ namespace wassail {
        * \param[in] mpi_impl MPI implementation
        */
       osu_micro_benchmarks(uint32_t num_procs, uint32_t per_node,
-                           std::vector<std::string> hostlist,
+                           std::list<std::string> hostlist,
                            std::string mpirun_args,
                            osu_benchmark_t osu_benchmark, uint8_t timeout,
                            mpi_impl_t mpi_impl = mpi_impl_t::OPENMPI)

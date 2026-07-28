@@ -9,9 +9,9 @@
 #include "3rdparty/catch/catch.hpp"
 #include "3rdparty/catch/catch_reporter_automake.hpp"
 
+#include <list>
 #include <string>
 #include <unistd.h>
-#include <vector>
 #include <wassail/data/mpirun.hpp>
 
 /* Some tests may fail if mpi is not setup */
@@ -50,8 +50,8 @@ TEST_CASE("mpirun hostfile usage") {
 }
 
 TEST_CASE("mpirun hostlist usage") {
-  auto d1 = wassail::data::mpirun(
-      2, std::vector<std::string>({"node1", "node2"}), "a.out");
+  auto d1 = wassail::data::mpirun(2, std::list<std::string>({"node1", "node2"}),
+                                  "a.out");
 
   if (getuid() == 0 and d1.allow_run_as_root) {
     REQUIRE(d1.command == "mpirun -n 2 -H node1,node2 --allow-run-as-root -x "
@@ -63,7 +63,7 @@ TEST_CASE("mpirun hostlist usage") {
   }
 
   auto d2 =
-      wassail::data::mpirun(2, std::vector<std::string>({"node1", "node2"}),
+      wassail::data::mpirun(2, std::list<std::string>({"node1", "node2"}),
                             "a.out", wassail::data::mpirun::mpi_impl_t::MPICH);
   REQUIRE(d2.command ==
           "MPIEXEC_TIMEOUT=60 mpirun -n 2 -hosts node1,node2 a.out");

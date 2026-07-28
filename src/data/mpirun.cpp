@@ -8,10 +8,10 @@
 #include "internal.hpp"
 
 #include <cstdlib>
+#include <list>
 #include <numeric>
 #include <stdexcept>
 #include <string>
-#include <vector>
 #include <wassail/data/mpirun.hpp>
 
 namespace wassail {
@@ -27,7 +27,7 @@ namespace wassail {
     }
 
     mpirun::mpirun(uint32_t num_procs, uint32_t per_node,
-                   std::vector<std::string> hostlist, std::string mpirun_args,
+                   std::list<std::string> hostlist, std::string mpirun_args,
                    std::string program, std::string program_args,
                    uint8_t timeout, mpi_impl_t mpi_impl)
         : mpi_impl(mpi_impl), hostlist(hostlist), mpirun_args(mpirun_args),
@@ -65,7 +65,8 @@ namespace wassail {
           /* create comma separated list */
           command += wassail::format(
               " -hosts {0}",
-              std::accumulate(hostlist.begin() + 1, hostlist.end(), hostlist[0],
+              std::accumulate(std::next(hostlist.begin()), hostlist.end(),
+                              hostlist.front(),
                               [](const std::string &a, std::string b) {
                                 return a + "," + b;
                               }));
@@ -105,7 +106,8 @@ namespace wassail {
           /* create comma separated list */
           command += wassail::format(
               " -H {0}",
-              std::accumulate(hostlist.begin() + 1, hostlist.end(), hostlist[0],
+              std::accumulate(std::next(hostlist.begin()), hostlist.end(),
+                              hostlist.front(),
                               [](const std::string &a, std::string b) {
                                 return a + "," + b;
                               }));
@@ -153,7 +155,7 @@ namespace wassail {
 
       d.hostfile = j.value(json::json_pointer("/configuration/hostfile"), "");
       d.hostlist = j.value(json::json_pointer("/configuration/hostlist"),
-                           std::vector<std::string>({}));
+                           std::list<std::string>({}));
 
       std::string mpi_impl =
           j.value(json::json_pointer("/configuration/mpi_impl"), "");
