@@ -35,6 +35,9 @@ wassail.spec
 Makefile
 .deps/
 .dirstamp
+config.guess~
+config.sub~
+configure~
 
 # https://www.gnu.org/software/libtool/
 
@@ -87,6 +90,7 @@ __pycache__
 *.gcno
 *.gcda
 *.gcov
+/aminclude_static.am
 /wassail-*-coverage.info
 /wassail-*-coverage/*
 
@@ -107,3 +111,7 @@ __pycache__
 
 # Dist packages
 /wassail-*.tar.gz
+
+# Misc
+.DS_Store
+.dockerignore
