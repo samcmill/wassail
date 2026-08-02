@@ -22,6 +22,40 @@
 #include <libudev.h>
 #endif
 
+/* The udev path may contain elements not allowed by the JSON specification,
+ * such as numbers with leading zeros.  When a JSON data structure is created in
+ * place, i.e., `json j = json::object(); j[json::json_pointer("/a/b/01/c/d")] =
+ * "foo";`, the nlohmann JSON implementation infers the type of each token, so
+ * "01" is processed as a number, and thus is invalid.  However, if the data
+ * structure is created iteratively, then each token is always mapped to string
+ * key; "01" is a valid JSON string.  Walk the JSON pointer and create JSON
+ * objects if the token does not already exist as a key.
+ */
+json::json_pointer initialize_pointer_object(json &root,
+                                             const std::string &str) {
+  auto ptr = json::json_pointer(str);
+
+  /* Walk the parent hierarchy using native pointer deconstruction */
+  if (!ptr.empty()) {
+    auto parent = ptr.parent_pointer();
+
+    /* Use a mini-recursive check to ensure nested parents exist */
+    auto init_parents = [](auto &self, json &j,
+                           const json::json_pointer &p) -> void {
+      if (p.empty())
+        return;
+      self(self, j, p.parent_pointer());
+      if (j[p].is_null()) {
+        j[p] = json::object();
+      }
+    };
+
+    init_parents(init_parents, root, parent);
+  }
+
+  return ptr;
+}
+
 namespace wassail {
   namespace data {
     /* \cond pimpl */
@@ -136,7 +170,13 @@ namespace wassail {
 
           /* path is equivalent to a json pointer, e.g.,
            * /sys/devices/virtual/net/eth0 */
-          data.devices[json::json_pointer(path)] = json::object();
+          try {
+            data.devices[json::json_pointer(path)] = json::object();
+          }
+          catch (const json::parse_error &e) {
+            wassail::internal::logger()->warn(
+                "unable to process JSON pointer '{0}': {1}", path, e.what());
+          }
 
           /* get attributes */
           for (struct udev_list_entry *attr =
@@ -145,13 +185,20 @@ namespace wassail {
             const char *name = _udev_list_entry_get_name(attr);
             const char *value = _udev_device_get_sysattr_value(device, name);
 
-            if (value != NULL) {
-              data.devices[json::json_pointer(std::string(path) + "/" +
-                                              std::string(name))] = value;
+            std::string jstr = std::string(path) + "/" + std::string(name);
+            auto jptr = initialize_pointer_object(data.devices, jstr);
+
+            try {
+              if (value != NULL) {
+                data.devices[jptr] = value;
+              }
+              else {
+                data.devices[jptr] = nullptr;
+              }
             }
-            else {
-              data.devices[json::json_pointer(std::string(path) + "/" +
-                                              std::string(name))] = nullptr;
+            catch (const json::parse_error &e) {
+              wassail::internal::logger()->warn(
+                  "unable to process JSON pointer '{0}': {1}", jstr, e.what());
             }
           }
         }
