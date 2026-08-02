@@ -42,6 +42,7 @@ nobase_pkginclude_HEADERS += data/uname.hpp
 
 # Third party
 nobase_pkginclude_HEADERS += json/json.hpp
+nobase_pkginclude_HEADERS += fmt/base.h
 nobase_pkginclude_HEADERS += fmt/core.h
 nobase_pkginclude_HEADERS += fmt/format.h
 nobase_pkginclude_HEADERS += fmt/format-inl.h
