@@ -9,10 +9,10 @@
 #include "internal.hpp"
 
 #include <cerrno>
+#include <cstring>
 #include <list>
 #include <memory>
 #include <shared_mutex>
-#include <stdexcept>
 #include <string>
 #include <wassail/data/getpwent.hpp>
 #ifdef HAVE_PWD_H
@@ -66,8 +66,11 @@ namespace wassail {
 #ifdef WITH_DATA_GETPWENT
         std::shared_lock<std::shared_timed_mutex> lock(d.mutex);
 
+        setpwent(); // Rewind the database stream
+
         errno = 0;
         struct passwd *pw;
+
         while ((pw = ::getpwent()) != NULL) {
           if (errno != 0) {
             wassail::internal::logger()->error("getpwent() failed: {}",
