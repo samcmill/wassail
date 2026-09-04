@@ -167,13 +167,14 @@ AC_CHECK_HEADERS([libudev.h])
 AC_CHECK_HEADERS([nvml.h])
 AC_CHECK_HEADERS([pci/pci.h])
 AC_CHECK_HEADERS([pciaccess.h])
+AC_CHECK_HEADERS([pwd.h])
 AC_CHECK_HEADERS([libssh/libsshpp.hpp])
 AC_CHECK_HEADERS([execution])
 AC_CHECK_HEADERS([dlfcn.h mntent.h poll.h signal.h spawn.h])
 AC_CHECK_HEADERS([sys/mount.h sys/param.h])
 AC_CHECK_HEADERS([sys/resource.h sys/stat.h sys/statvfs.h sys/sysctl.h])
 AC_CHECK_HEADERS([sys/sysinfo.h sys/ucred.h sys/utsname.h sys/wait.h unistd.h])
-AC_CHECK_FUNCS([getfsstat getloadavg getmntent getrlimit killpg])
+AC_CHECK_FUNCS([getfsstat getloadavg getmntent getpwent getrlimit killpg])
 AC_CHECK_FUNCS([pipe poll posix_spawnp setpgid stat statvfs])
 AC_CHECK_FUNCS([sysconf sysctlbyname sysinfo uname waitpid])
 AC_CHECK_MEMBERS([struct stat.st_atime, struct stat.st_ctime,
@@ -310,6 +311,14 @@ AS_IF([test "x$ac_cv_header_mntent_h" = "xyes" &&
        AC_DEFINE(WITH_DATA_GETMNTENT,,[getmntent data source])],
       [AM_CONDITIONAL(WITH_DATA_GETMNTENT, false)
        AC_MSG_WARN([disabling getmntent data source])])
+
+dnl getpwent data source
+AS_IF([test "x$ac_cv_header_pwd_h" = "xyes" &&
+       test "x$ac_cv_func_getpwent" = "xyes"],
+      [AM_CONDITIONAL(WITH_DATA_GETPWENT, true)
+       AC_DEFINE(WITH_DATA_GETPWENT,,[getpwent data source])],
+      [AM_CONDITIONAL(WITH_DATA_GETPWENT, false)
+       AC_MSG_WARN([disabling getpwent data source])])
 
 dnl getrlimit data source
 AS_IF([test "x$ac_cv_header_sys_resource_h" = "xyes" &&

@@ -34,6 +34,9 @@ getfsstat_test_SOURCES = test_getfsstat.cpp
 check_PROGRAMS += getmntent.test
 getmntent_test_SOURCES = test_getmntent.cpp
 
+check_PROGRAMS += getpwent.test
+getpwent_test_SOURCES = test_getpwent.cpp
+
 check_PROGRAMS += getrlimit.test
 getrlimit_test_SOURCES = test_getrlimit.cpp
 

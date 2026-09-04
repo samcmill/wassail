@@ -54,5 +54,9 @@ check_PROGRAMS += misc_shell_output.test
 misc_shell_output_test_SOURCES = $(top_srcdir)/test/tostring.h \
                                  test_misc_shell_output.cpp
 
+check_PROGRAMS += user_exists.test
+user_exists_test_SOURCES = $(top_srcdir)/test/tostring.h \
+                           test_user_exists.cpp
+
 # Declare tests
 TESTS = $(check_PROGRAMS)

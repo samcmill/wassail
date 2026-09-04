@@ -14,6 +14,7 @@
 #include <wassail/data/getfsstat.hpp>
 #include <wassail/data/getloadavg.hpp>
 #include <wassail/data/getmntent.hpp>
+#include <wassail/data/getpwent.hpp>
 #include <wassail/data/getrlimit.hpp>
 #include <wassail/data/mpirun.hpp>
 #include <wassail/data/nvml.hpp>
@@ -77,6 +78,10 @@ namespace wassail {
       }
       else if (name == "getmntent") {
         wassail::data::getmntent d = j;
+        return evaluate_(d);
+      }
+      else if (name == "getpwent") {
+        wassail::data::getpwent d = j;
         return evaluate_(d);
       }
       else if (name == "getrlimit") {

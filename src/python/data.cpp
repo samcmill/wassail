@@ -38,6 +38,7 @@ void py_data(py::module &m) {
   MAKE_DATA_CLASS(data, getfsstat)
   MAKE_DATA_CLASS(data, getloadavg)
   MAKE_DATA_CLASS(data, getmntent)
+  MAKE_DATA_CLASS(data, getpwent)
   MAKE_DATA_CLASS(data, getrlimit)
   MAKE_DATA_CLASS(data, nvml)
   MAKE_DATA_CLASS(data, pciaccess)

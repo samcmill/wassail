@@ -1,0 +1,59 @@
+{
+  "$id": "https://github.com/samcmill/wassail/src/data/getpwent.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "wassail getpwent building block",
+  "type": "object",
+  "required": [ "data", "hostname", "name", "timestamp", "uid", "version" ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "object",
+          "properties": {
+            "pw_dir": {
+              "description": "home directory",
+              "type": "string"
+            },
+            "pw_gid": {
+              "description": "user gid",
+              "type": "number"
+            },
+            "pw_name": {
+              "description": "user name",
+              "type": "string"
+            },
+            "pw_shell": {
+              "description": "default shell",
+              "type": "string"
+            },
+            "pw_uid": {
+              "description": "user uid",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "hostname": {
+      "description": "Hostname of the system where the data source was invoked",
+      "type": "string"
+    },
+    "name": {
+      "description": "building block name",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "Timestamp corresponding to when the data source was invoked",
+      "type": "number"
+    },
+    "uid": {
+      "description": "User ID of the user who invoked the data source",
+      "type": "number"
+    },
+    "version": {
+      "description": "version",
+      "type": "number"
+    }
+  }
+}

@@ -39,6 +39,10 @@ libwassail_data_la_SOURCES += getmntent.cpp \
     $(top_srcdir)/include/wassail/data/getmntent.hpp
 dist_schema_DATA += getmntent.json
 
+libwassail_data_la_SOURCES += getpwent.cpp \
+    $(top_srcdir)/include/wassail/data/getpwent.hpp
+dist_schema_DATA += getpwent.json
+
 libwassail_data_la_SOURCES += getrlimit.cpp \
     $(top_srcdir)/include/wassail/data/getrlimit.hpp
 dist_schema_DATA += getrlimit.json
