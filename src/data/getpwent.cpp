@@ -72,12 +72,6 @@ namespace wassail {
         struct passwd *pw;
 
         while ((pw = ::getpwent()) != NULL) {
-          if (errno != 0) {
-            wassail::internal::logger()->error("getpwent() failed: {}",
-                                               std::strerror(errno));
-            break;
-          }
-
           pw_item item;
 
           item.pw_name = pw->pw_name;
@@ -89,6 +83,11 @@ namespace wassail {
           data.users.push_back(item);
 
           errno = 0;
+        }
+
+        if (errno != 0) {
+          wassail::internal::logger()->error("getpwent() failed: {}",
+                                             std::strerror(errno));
         }
 
         endpwent(); // Close the database stream
