@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['memory_0',['memory',['../classwassail_1_1data_1_1nvml_1_1impl.html#aa70708e1a0800ddc92c52949a07bf88a',1,'wassail::data::nvml::impl::gpu']]],
+  ['memory_0',['memory',['../classwassail_1_1data_1_1nvml_1_1impl.html#a3c96c671dce3141c4be99859aeec72e6',1,'wassail::data::nvml::impl::gpu']]],
   ['minor_5fnumber_1',['minor_number',['../classwassail_1_1data_1_1nvml_1_1impl.html#ab2d5ed03ae2e745f564599f851be4729',1,'wassail::data::nvml::impl::gpu']]],
   ['mntfromname_2',['mntfromname',['../classwassail_1_1data_1_1getfsstat_1_1impl.html#a77f5eabf4eb2b303a3b7d33a99707d8a',1,'wassail::data::getfsstat::impl::fs_item']]],
   ['mntonname_3',['mntonname',['../classwassail_1_1data_1_1getfsstat_1_1impl.html#a8370d1d56c79b301167c77c585ae18fc',1,'wassail::data::getfsstat::impl::fs_item']]],

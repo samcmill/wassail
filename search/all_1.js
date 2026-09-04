@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['bar1_0',['bar1',['../classwassail_1_1data_1_1nvml_1_1impl.html#a7db4a7a3fe9a62937c783ea2ba379802',1,'wassail::data::nvml::impl::gpu']]],
+  ['bar1_0',['bar1',['../classwassail_1_1data_1_1nvml_1_1impl.html#a0f2a86882bdbf9824d4b3d8f1b821c23',1,'wassail::data::nvml::impl::gpu']]],
   ['base_5flid_1',['base_lid',['../classwassail_1_1data_1_1umad_1_1impl.html#a1486268e02ae5def605523f3ac5c3623',1,'wassail::data::umad::impl::port_item']]],
   ['bavail_2',['bavail',['../classwassail_1_1data_1_1getfsstat_1_1impl.html#a2855ea73df1e317e032e0ba32e704ad4',1,'wassail::data::getfsstat::impl::fs_item::bavail()'],['../classwassail_1_1data_1_1getmntent_1_1impl.html#a3debf60873c9e2487a937f52f606030e',1,'wassail::data::getmntent::impl::fs_item::bavail()']]],
   ['bfree_3',['bfree',['../classwassail_1_1data_1_1getfsstat_1_1impl.html#a5722cf1f72afb5f4fbae13dfde508306',1,'wassail::data::getfsstat::impl::fs_item::bfree()'],['../classwassail_1_1data_1_1getmntent_1_1impl.html#a7f7c156e5857c175a36d7335654f365e',1,'wassail::data::getmntent::impl::fs_item::bfree()']]],

@@ -5,7 +5,7 @@ var searchData=
   ['max_5fissue_2',['max_issue',['../classwassail_1_1result.html#aa51fdfa234c32629b024ce16b9150bc4',1,'wassail::result']]],
   ['max_5fpriority_3',['max_priority',['../classwassail_1_1result.html#a75771e2a5dd85e91fa8ebfed0f7be7f0',1,'wassail::result']]],
   ['maybe_4',['MAYBE',['../classwassail_1_1result.html#aabb2777af60c292a24ecd96955a70e30a2bdc01416a885dbb723dc23f956b78f2',1,'wassail::result']]],
-  ['memory_5',['memory',['../classwassail_1_1data_1_1nvml_1_1impl.html#aa70708e1a0800ddc92c52949a07bf88a',1,'wassail::data::nvml::impl::gpu']]],
+  ['memory_5',['memory',['../classwassail_1_1data_1_1nvml_1_1impl.html#a3c96c671dce3141c4be99859aeec72e6',1,'wassail::data::nvml::impl::gpu']]],
   ['minor_5fnumber_6',['minor_number',['../classwassail_1_1data_1_1nvml_1_1impl.html#ab2d5ed03ae2e745f564599f851be4729',1,'wassail::data::nvml::impl::gpu']]],
   ['minute_5ft_7',['minute_t',['../classwassail_1_1check_1_1misc_1_1load__average.html#a36a0b7b837249d547cb5859a345df46a',1,'wassail::check::misc::load_average']]],
   ['mntfromname_8',['mntfromname',['../classwassail_1_1data_1_1getfsstat_1_1impl.html#a77f5eabf4eb2b303a3b7d33a99707d8a',1,'wassail::data::getfsstat::impl::fs_item']]],
