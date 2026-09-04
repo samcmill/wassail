@@ -28,6 +28,7 @@ using json = nlohmann::json;
 #include <wassail/data/getfsstat.hpp>
 #include <wassail/data/getloadavg.hpp>
 #include <wassail/data/getmntent.hpp>
+#include <wassail/data/getpwent.hpp>
 #include <wassail/data/getrlimit.hpp>
 #include <wassail/data/mpirun.hpp>
 #include <wassail/data/nvml.hpp>
@@ -56,5 +57,6 @@ using json = nlohmann::json;
 #include <wassail/checks/misc/load_average.hpp>
 #include <wassail/checks/misc/shell_output.hpp>
 #include <wassail/checks/rules_engine.hpp>
+#include <wassail/checks/user/exists.hpp>
 
 #endif

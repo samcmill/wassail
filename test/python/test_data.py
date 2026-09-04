@@ -79,6 +79,16 @@ class Test(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 d.evaluate()
 
+    def test_getpwent(self):
+        """getpwent data source"""
+        d = wassail.data.getpwent()
+        if d.enabled():
+            d.evaluate()
+            s = str(d)
+            j = json.loads(s)
+            self.assertEqual(j['name'], 'getpwent')
+            self.assertGreaterEqual(len(j['data']['users']), 1)
+
     def test_getrlimit(self):
         """getrlimit data source"""
         d = wassail.data.getrlimit()

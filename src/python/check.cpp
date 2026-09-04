@@ -146,4 +146,16 @@ void py_check(py::module &m) {
                         &wassail::check::misc::shell_output::check))
       .def("check", py::overload_cast<wassail::data::shell_command &>(
                         &wassail::check::misc::shell_output::check));
+
+  py::module check_user =
+      check.def_submodule("user", "User check building blocks");
+
+  py::class_<wassail::check::user::exists>(check_user, "exists")
+      .def(py::init<std::string>())
+      .def(py::init<std::string, std::string, std::string, std::string,
+                    std::string>())
+      .def("check", py::overload_cast<const json &>(
+                        &wassail::check::user::exists::check))
+      .def("check", py::overload_cast<wassail::data::getpwent &>(
+                        &wassail::check::user::exists::check));
 }

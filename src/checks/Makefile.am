@@ -57,3 +57,7 @@ libwassail_checks_la_SOURCES += misc/load_average.cpp \
 libwassail_checks_la_SOURCES += misc/shell_output.cpp \
     $(top_srcdir)/include/wassail/checks/misc/shell_output.hpp \
     $(top_srcdir)/include/wassail/data/shell_command.hpp
+
+libwassail_checks_la_SOURCES += user/exists.cpp \
+    $(top_srcdir)/include/wassail/checks/user/exists.hpp \
+    $(top_srcdir)/include/wassail/data/getpwent.hpp
